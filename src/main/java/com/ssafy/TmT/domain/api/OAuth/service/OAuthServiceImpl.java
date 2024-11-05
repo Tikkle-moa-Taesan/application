@@ -5,10 +5,12 @@ import java.util.Map;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import com.ssafy.TmT.domain.api.OAuth.dto.OAuthResponse;
 
 @Service
 public class OAuthServiceImpl implements OAuthService {
@@ -28,7 +30,7 @@ public class OAuthServiceImpl implements OAuthService {
 	}
 
 	// code로 Access Token 교환
-	public String exchangeCodeForAccessToken(String code) {
+	public OAuthResponse exchangeCodeForAccessToken(String code) {
 		 RestTemplate restTemplate = new RestTemplate();
 		 String accessTokenUrl = "https://testapi.openbanking.or.kr/oauth/2.0/token";
 		 HttpHeaders headers = new HttpHeaders();
@@ -41,14 +43,10 @@ public class OAuthServiceImpl implements OAuthService {
 		 params.put("redirect_uri", REDIRECT_URI);
 
 		 HttpEntity<Map<String,Object>> request = new HttpEntity<>(params, headers);
-		// HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params,
-		// headers);
-		ResponseEntity<String> response = restTemplate.postForEntity(accessTokenUrl, request, String.class);
+		 
+		OAuthResponse response = restTemplate.exchange(accessTokenUrl, HttpMethod.POST, request, OAuthResponse.class).getBody();
 
-		// 실제 응답에서 access token 추출 예시
-		String accessToken = extractAccessToken(response.getBody());
-
-		return accessToken;
+		return response;
 	}
 
 	// 실제로는 JSON 응답에서 access token을 추출해야 합니다.
