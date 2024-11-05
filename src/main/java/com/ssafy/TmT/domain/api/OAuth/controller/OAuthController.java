@@ -1,5 +1,8 @@
 package com.ssafy.TmT.domain.api.OAuth.controller;
 
+import java.net.URI;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.TmT.domain.api.OAuth.dto.OAuthResponse;
 import com.ssafy.TmT.domain.api.OAuth.service.OAuthService;
 
 import lombok.RequiredArgsConstructor;
@@ -28,12 +32,10 @@ public class OAuthController {
         return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(redirectUrl)).build();
     }
 	
-	
-	
     // 리다이렉트된 후 code 값을 받아오는 엔드포인트
     @GetMapping("/callback")
-    public ResponseEntity<String> callback(@RequestParam("code") String code) {
-        String accessToken = oAuthService.exchangeCodeForAccessToken(code);
-        return ResponseEntity.ok("Access Token: " + accessToken);
+    public ResponseEntity<OAuthResponse> callback(@RequestParam("code") String code) {
+    	OAuthResponse response = oAuthService.exchangeCodeForAccessToken(code);
+        return ResponseEntity.ok(response);
     }
 }
