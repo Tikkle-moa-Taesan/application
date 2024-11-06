@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: TmT
+
+TnT:
+  secret-key: "yourSuperSecureSecretKeyWith32CharactersOrMore!"
+
+  # secret-key 가 인식이 안될수도 있음.
