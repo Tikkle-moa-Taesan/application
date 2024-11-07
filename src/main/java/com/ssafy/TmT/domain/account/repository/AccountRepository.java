@@ -7,7 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.ssafy.TmT.domain.account.entity.Account;
 
+// j p a 
+// java persistence api
 public interface AccountRepository extends JpaRepository<Account, Long> {
-//    Optional<List<Account>> findAllByMember_MemberId(Long memberId); // memberId로 계좌 조회
 	List<Account> findAllByMember_MemberId(Long memberId); // Optional 제거
 }
