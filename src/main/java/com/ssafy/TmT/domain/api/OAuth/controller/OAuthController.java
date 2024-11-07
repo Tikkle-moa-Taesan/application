@@ -1,19 +1,23 @@
 package com.ssafy.TmT.domain.api.OAuth.controller;
 
-import java.net.URI;
 
-import org.springframework.http.HttpStatus;
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.TmT.domain.api.OAuth.dto.OAuthResponse;
+import com.ssafy.TmT.domain.api.OAuth.dto.LoginRequest;
+import com.ssafy.TmT.domain.api.OAuth.dto.LoginResponse;
+import com.ssafy.TmT.domain.api.OAuth.dto.UrlResponse;
 import com.ssafy.TmT.domain.api.OAuth.service.OAuthService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,17 +29,26 @@ public class OAuthController {
 	
 	private final OAuthService oAuthService;
 	
-    // 사용자에게 인증 페이지로 리다이렉트
-    @GetMapping("/authorize")
-    public ResponseEntity<String> authorize() {
-        String redirectUrl = oAuthService.buildAuthorizeUrl();
-        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(redirectUrl)).build();
-    }
+	@GetMapping("/{provider}/url") 
+	@Operation(summary = "로그인 url 요청", description = "카카오 url을 요청합니다")
+	@ApiResponse(responseCode = "200", description = "요청 성공")
+	@ApiResponse(responseCode = "400", description = "요청 실패")
+	public ResponseEntity<UrlResponse> getLoginUrl(@PathVariable("provider") String provider) {
+	    if (!List.of("kakao", "naver", "google").contains(provider.toLowerCase())) {
+	        return ResponseEntity.badRequest().body(new UrlResponse("Invalid provider"));
+	    }
+		UrlResponse response = new UrlResponse(oAuthService.buildAuthUrl(provider));
+		return ResponseEntity.ok(response);
+	}
+
 	
-    // 리다이렉트된 후 code 값을 받아오는 엔드포인트
-    @GetMapping("/callback")
-    public ResponseEntity<OAuthResponse> callback(@RequestParam("code") String code) {
-    	OAuthResponse response = oAuthService.exchangeCodeForAccessToken(code);
-        return ResponseEntity.ok(response);
-    }
+	// 카카오 로그인
+	@Operation(summary = "카카오 로그인", description = "카카오 회원 정보를 가져옵니다")
+	@ApiResponse(responseCode = "200", description = "요청 성공")
+	@ApiResponse(responseCode = "400", description = "요청 실패")
+	@PostMapping("/kakao/login")
+	public ResponseEntity<LoginResponse> kakaoLogin(@RequestBody LoginRequest request) throws Exception {
+		LoginResponse response = oAuthService.getMemberInfo(request);
+		return ResponseEntity.ok(response);
+	}
 }
