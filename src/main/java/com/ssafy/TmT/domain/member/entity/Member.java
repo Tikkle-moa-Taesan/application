@@ -1,5 +1,6 @@
 package com.ssafy.TmT.domain.member.entity;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import com.ssafy.TmT.domain.account.entity.Account;
@@ -31,6 +32,9 @@ public class Member {
 
     @Column(name = "email", length = 100, nullable = false, unique = true)
     private String email;
+    
+    @Column(name = "created_at", nullable = true)
+    private Timestamp createdAt;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Account> accounts;

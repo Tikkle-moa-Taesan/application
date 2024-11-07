@@ -2,6 +2,8 @@ package com.ssafy.TmT.global.security.jwt;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 
+import com.ssafy.TmT.domain.member.dto.Profile;
 import com.ssafy.TmT.global.security.jwt.exception.InvalidTokenException;
 import com.ssafy.TmT.global.security.jwt.exception.TokenExpiredException;
 
@@ -39,12 +42,17 @@ public class JwtUtil {
     }
 	
     // AccessToken 생성 메서드
-    public String generateAccessToken(Long userId) {
+    public String generateAccessToken(Long memberId) {
         SecretKey secretKey = createSecretKey(); // SecretKey를 즉석에서 생성
         long now = System.currentTimeMillis();
+//        Map<String, Object> claims = new HashMap<>();
+//        claims.put("memberId", member.getMemberId());
+//        claims.put("email", member.getEmail());
+        // 더 넣을거 있으면 더 넣어야 함
         
         return Jwts.builder()
-                .claim("userId", userId) // 사용자 ID를 클레임으로 추가
+        		.claim("memberId", memberId)
+//        		.setClaims(claims)			// 사용자 정보 저장
                 .setIssuedAt(new Date(now)) // 토큰 발행 시간
                 .setExpiration(new Date(now + ACCESS_TOKEN_EXPIRY)) // 토큰 만료 시간
                 .signWith(secretKey,SignatureAlgorithm.HS256) // 시그니처 알고리즘과 SecretKey 지정
@@ -53,12 +61,12 @@ public class JwtUtil {
 	
 	
     // RefreshToken 생성 메서드
-    public String generateRefreshToken(Long userId) {
+    public String generateRefreshToken(Long memberId) {
         SecretKey secretKey = createSecretKey();
         long now = System.currentTimeMillis();
 
         return Jwts.builder()
-                .claim("userId", userId)
+                .claim("memberId", memberId)
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRY))
                 .signWith(secretKey,SignatureAlgorithm.HS256)
@@ -115,5 +123,13 @@ public class JwtUtil {
     	Long userId = getUserIdFromToken(accessToken);
     	return userId;
     }
+
+	public Long getAccessTokenExpiry() {
+		return ACCESS_TOKEN_EXPIRY;
+	}
+
+	public Long getRefreshTokenExpiry() {
+		return REFRESH_TOKEN_EXPIRY;
+	}
     
 }

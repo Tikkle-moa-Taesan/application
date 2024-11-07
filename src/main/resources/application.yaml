@@ -2,6 +2,39 @@ spring:
   application:
     name: TmT
 
+  datasource:
+    url: jdbc:mysql://localhost:3306/testDB?useSSL=false&serverTimezone=UTC
+    username: ssafy
+    password: ssafy
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: 494d31e54fba839b5ff76e4797f5a7d8
+            client-secret: your-client-secret
+            redirect-uri: "https://localhost:8080/login/oauth2/code/kakao"
+            authorization-grant-type: authorization_code
+            scope: 
+            client-name: Kakao
+            provider: kakao
+
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id           
+  jpa:
+    hibernate:
+      ddl-auto: update  # 자동으로 테이블을 생성 및 업데이트
+    show-sql: true      # 콘솔에 실행된 SQL 쿼리를 출력
+    properties:
+      hibernate:
+        format_sql: true  # SQL 쿼리를 보기 좋게 출력
+
 TnT:
   secret-key: "yourSuperSecureSecretKeyWith32CharactersOrMore!"
 
