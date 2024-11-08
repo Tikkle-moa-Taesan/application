@@ -8,11 +8,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.TmT.domain.account.dto.AccountResponse;
-import com.ssafy.TmT.domain.account.entity.Account;
 import com.ssafy.TmT.domain.account.exception.AccountNotFoundException;
 import com.ssafy.TmT.domain.account.repository.AccountRepository;
 import com.ssafy.TmT.domain.api.ApiUtil;
 import com.ssafy.TmT.global.security.jwt.JwtUtil;
+import com.ssafy.TmT.trashbin.Account;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -26,7 +26,7 @@ public class AccountServiceImpl implements AccountService {
 	
 	
 	@Override
-	public List<AccountResponse> findAllAccountsByMember(HttpHeaders headers) {
+	public List<AccountResponse> findAccountsByType(HttpHeaders headers) {
 		Long memberId  = jwtUtil.getMemberIdFromHeaders(headers);
 		List<Account> accounts = accountRepository.findAllByMember_MemberId(memberId);
 
