@@ -1,4 +1,4 @@
-package com.ssafy.TmT.domain.account.entity;
+package com.ssafy.TmT.trashbin;
 
 import java.math.BigDecimal;
 import java.util.List;

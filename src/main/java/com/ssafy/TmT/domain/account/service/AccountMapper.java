@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
 import com.ssafy.TmT.domain.account.dto.AccountResponse;
-import com.ssafy.TmT.domain.account.entity.Account;
+import com.ssafy.TmT.trashbin.Account;
 
 @Mapper
 public interface AccountMapper {

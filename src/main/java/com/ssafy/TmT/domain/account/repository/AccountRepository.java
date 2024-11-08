@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.ssafy.TmT.domain.account.entity.Account;
+import com.ssafy.TmT.trashbin.Account;
 
 // j p a 
 // java persistence api
