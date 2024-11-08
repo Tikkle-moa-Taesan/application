@@ -12,4 +12,4 @@ import lombok.Setter;
 public class UrlResponse {
 
 	private String url;
-}
+} 

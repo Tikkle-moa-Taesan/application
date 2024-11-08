@@ -3,7 +3,7 @@ package com.ssafy.TmT.domain.member.entity;
 import java.sql.Timestamp;
 import java.util.List;
 
-import com.ssafy.TmT.domain.account.entity.Account;
+import com.ssafy.TmT.trashbin.Account;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -26,7 +26,7 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id") // 컬럼 이름 명시
     private Long memberId;
-
+ 
     @Column(name = "name", length = 50, nullable = false)
     private String name;
 

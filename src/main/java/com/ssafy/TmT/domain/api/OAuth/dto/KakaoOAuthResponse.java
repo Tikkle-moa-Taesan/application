@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-@Setter
+@Setter 
 public class KakaoOAuthResponse {
 
     private String tokenType;           // 토큰 타입 (bearer)

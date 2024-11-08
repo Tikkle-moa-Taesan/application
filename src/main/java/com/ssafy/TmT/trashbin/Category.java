@@ -1,4 +1,4 @@
-package com.ssafy.TmT.domain.account.entity;
+package com.ssafy.TmT.trashbin;
 
 import java.util.List;
 
