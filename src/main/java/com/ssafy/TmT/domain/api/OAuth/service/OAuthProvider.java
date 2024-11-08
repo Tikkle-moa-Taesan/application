@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class OAuthProvider {
+public class OAuthProvider { 
 
 	private final ApiUtil apiUtil;
 
