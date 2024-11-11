@@ -132,5 +132,11 @@ public class JwtUtil {
 	public Long getRefreshTokenExpiry() {
 		return REFRESH_TOKEN_EXPIRY;
 	}
+
+
+	public boolean validateAccountId(String jwt, Long memberId) {
+		Long tokenMemberId = getMemberIdFromJwt(jwt);
+		return tokenMemberId == memberId;
+	}
     
 }

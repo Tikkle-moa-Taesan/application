@@ -16,4 +16,12 @@ public interface AccountDao {
 
 	// 3번 api. 총 자산 조회
 	BalanceDTO getTotalBalance(Long MemberId);
+
+	Long findMemberIdFromFreeAccount(Long accountId);
+
+	Long findMemberIdFromSavingsAccount(Long accountId);
+
+	SavingsAccountDTO findSavingsAccountByAccountId(Long accountId);
+
+	FreeAccountDTO findFreeAccountByAccountId(Long accountId);
 }
