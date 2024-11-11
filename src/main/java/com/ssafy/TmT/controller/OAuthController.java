@@ -23,19 +23,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/oauth")
 public class OAuthController {
 	
+	//https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=494d31e54fba839b5ff76e4797f5a7d8&redirect_uri=https://localhost:8080/login/oauth2/code/kakao
+
 	private final OAuthService oAuthService;
-	
-//	@GetMapping("/{provider}/url") 
-//	@Operation(summary = "로그인 url 요청", description = "카카오 url을 요청합니다")
-//	@ApiResponse(responseCode = "200", description = "요청 성공")
-//	@ApiResponse(responseCode = "400", description = "요청 실패")
-//	public ResponseEntity<UrlResponse> getLoginUrl(@PathVariable("provider") String provider) {
-//	    if (!List.of("kakao", "naver", "google").contains(provider.toLowerCase())) {
-//	        return ResponseEntity.badRequest().body(new UrlResponse("Invalid provider"));
-//	    }
-//		UrlResponse response = new UrlResponse(oAuthService.buildAuthUrl(provider));
-//		return ResponseEntity.ok(response);
-//	}
 	
 	// 카카오 로그인
 	@Operation(summary = "카카오 로그인", description = "카카오 회원 정보를 가져옵니다")
@@ -45,6 +35,7 @@ public class OAuthController {
 	public ResponseEntity<LoginResponse> kakaoLogin(@PathVariable String code) throws Exception {
 		System.out.println("카카오로그인 호출");
 		LoginResponse response = oAuthService.getMemberInfo(code);
+		System.out.println("jwt : " + response.getCustomAccessToken());
 		return ResponseEntity.ok(response);
 	}
 }

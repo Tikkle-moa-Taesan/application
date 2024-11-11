@@ -20,40 +20,56 @@ import lombok.extern.log4j.Log4j2;
 @RequiredArgsConstructor
 public class AccountService {
 
-	@Autowired
 	private final AccountDao accountDao;
 	
-	@Autowired
 	private final JwtUtil jwtUtil;
 	
 
 	public List<FreeAccountDTO> findFreeAccounts(String jwt) {
-		Long userId = jwtUtil.getMemberIdFromJwt(jwt);
-		List<FreeAccountDTO> accounts = accountDao.findFreeAccounts(userId);
+		Long memberId = jwtUtil.getMemberIdFromJwt(jwt);
+		List<FreeAccountDTO> accounts = accountDao.findFreeAccounts(memberId);
 		return accounts;
 	}
 
 	public List<SavingsAccountDTO> findSavingsAccounts(String jwt) {
-		Long userId = jwtUtil.getMemberIdFromJwt(jwt);
-		List<SavingsAccountDTO> accounts = accountDao.findSavingsAccounts(userId);
+		Long memberId = jwtUtil.getMemberIdFromJwt(jwt);
+		List<SavingsAccountDTO> accounts = accountDao.findSavingsAccounts(memberId);
 		return accounts;
 	}
 
 	public BalanceDTO getTotalBalance(String jwt) {
-		Long userId = jwtUtil.getMemberIdFromJwt(jwt);
+		Long memberId = jwtUtil.getMemberIdFromJwt(jwt);
 		
 		// 총 자산 찾기 위해서는 내 아이디를 가진 모든 계좌를 찾고, 그 금액을 갱신해야 함.
-		BalanceDTO balance = accountDao.getTotalBalance(userId);
+		BalanceDTO balance = accountDao.getTotalBalance(memberId);
 		
 		return balance;
 	}
 
 	public FreeAccountDTO getFreeAccountDetail(Long accountId, String jwt) {
-		return null;
+		// 계좌 주인 알아보기
+		Long memberId = accountDao.findMemberIdFromFreeAccount(accountId);
+		if (!jwtUtil.validateAccountId(jwt,memberId)) {
+			System.out.println("memberId값 : " + memberId);
+			System.out.println("여기서 예외 던저야함");
+			return null;
+		}
+		
+		FreeAccountDTO account = accountDao.findFreeAccountByAccountId(accountId);
+		return account;
 	}
 
-	public SavingsAccountDTO getSavingAccountDetail(Long accountId, HttpHeaders headers) {
-		return null;
+	public SavingsAccountDTO getSavingAccountDetail(Long accountId, String jwt) {
+		Long memberId = accountDao.findMemberIdFromSavingsAccount(accountId);
+		if (!jwtUtil.validateAccountId(jwt,memberId)) {
+			System.out.println("memberId값 : " + memberId);
+			System.out.println("여기서 예외 던저야함");
+			return null;
+		}
+		System.out.println("서비스 메서드 정상 실행");
+		SavingsAccountDTO account = accountDao.findSavingsAccountByAccountId(accountId);
+		System.out.println(account);
+		return account;
 	}
 
 }
