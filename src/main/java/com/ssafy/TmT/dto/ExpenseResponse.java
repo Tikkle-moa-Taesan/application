@@ -10,5 +10,7 @@ public class ExpenseResponse {
 
 	private Long lastMonthTotal;
 	private Long thisMonthTotal;
+	private Long lastWeekTotal;
+	private Long thisWeekTotal;
 	private Category category;
 }
