@@ -111,16 +111,17 @@ public class JwtUtil {
     // JWT의 모든 클레임 추출
     private Claims extractAllClaims(String token) {
         SecretKey secretKey = createSecretKey();
+        String pureToken = token.startsWith("Bearer ") ? token.substring(7).trim() : token;
+
         return Jwts.parserBuilder()
                 .setSigningKey(secretKey)
                 .build()
-                .parseClaimsJws(token)
+                .parseClaimsJws(pureToken)
                 .getBody();
     }
     
-    public Long getMemberIdFromHeaders(HttpHeaders headers) {
-    	String accessToken = extractAccessTokenFromHeaders(headers);
-    	Long memberId = getMemberIdFromToken(accessToken);
+    public Long getMemberIdFromJwt(String jwt) {
+    	Long memberId = getMemberIdFromToken(jwt);
     	return memberId;
     }
 

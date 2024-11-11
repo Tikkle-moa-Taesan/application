@@ -36,7 +36,7 @@ public class TransactionController {
 	
 	//
 	@GetMapping("/{transactionId}")
-	public ResponseEntity<AccountResponse> 상세계좌조회(HttpHeaders headers) {
+	public ResponseEntity<AccountResponse> getDetail(HttpHeaders headers) {
 		log.info("컨트롤러 : 상세 계좌 조회");
 		return ResponseEntity.ok(transactionService.findAccountById(headers));
 	}

@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,17 +32,17 @@ public class AccountController {
 	
 	// 1번 api. 자유 계좌 조회
 	@GetMapping("/free")
-	public ResponseEntity<List<FreeAccountDTO>> findFreeAccounts(HttpHeaders headers) {
-		log.info("컨트롤러 : 자유 계좌 조회");
-		List<FreeAccountDTO> response = accountService.findFreeAccounts(headers);	
+	public ResponseEntity<List<FreeAccountDTO>> findFreeAccounts(@RequestHeader("Authorization") String jwt) {
+		System.out.println("자유 계좌 조회");
+		List<FreeAccountDTO> response = accountService.findFreeAccounts(jwt);	
 		return ResponseEntity.ok(response);
 	}
 	
 	// 2번 api. 적금 계좌 조회
 	@GetMapping("/savings")
-	public ResponseEntity<List<SavingsAccountDTO>> findSavingsAccounts(HttpHeaders headers) {
+	public ResponseEntity<List<SavingsAccountDTO>> findSavingsAccounts(@RequestHeader("Authorization") String jwt) {
 		log.info("컨트롤러 : 적금 계좌 조회");
-		List<SavingsAccountDTO> response = accountService.findSavingsAccounts(headers);	
+		List<SavingsAccountDTO> response = accountService.findSavingsAccounts(jwt);	
 		return ResponseEntity.ok(response);
 	}
 	
@@ -50,8 +51,8 @@ public class AccountController {
 	// 6번 api
 	// 자산 페이지 - 자유 입출금 계좌 클릭 시
 	@GetMapping("/free/{accountId}")
-	public ResponseEntity<FreeAccountDTO> getFreeAccountDetail(@PathVariable Long accountId, HttpHeaders headers) {
-		FreeAccountDTO response = accountService.getFreeAccountDetail(accountId,headers);	
+	public ResponseEntity<FreeAccountDTO> getFreeAccountDetail(@PathVariable Long accountId, @RequestHeader("Authorization") String jwt) {
+		FreeAccountDTO response = accountService.getFreeAccountDetail(accountId,jwt);	
 		return ResponseEntity.ok(response);
 		// 이건 내부에서 자유입출금인지 / 적금인지 나누면 될것같음.
 	}
