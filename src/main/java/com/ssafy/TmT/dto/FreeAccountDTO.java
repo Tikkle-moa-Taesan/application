@@ -7,10 +7,10 @@ import lombok.Setter;
 @Setter
 public class FreeAccountDTO {
 
-	// 대략적으로 보이는 자유 입출금 계좌
+	// 자유 입출금 계좌
 	private Long accountId;
 	
-	// 잔액 필요
+	// 잔액
 	private Long balance;
 	
 	// 은행 이름

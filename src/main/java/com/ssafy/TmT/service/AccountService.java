@@ -27,20 +27,20 @@ public class AccountService {
 	private final JwtUtil jwtUtil;
 	
 
-	public List<FreeAccountDTO> findFreeAccounts(HttpHeaders headers) {
-		Long userId = jwtUtil.getMemberIdFromHeaders(headers);
+	public List<FreeAccountDTO> findFreeAccounts(String jwt) {
+		Long userId = jwtUtil.getMemberIdFromJwt(jwt);
 		List<FreeAccountDTO> accounts = accountDao.findFreeAccounts(userId);
 		return accounts;
 	}
 
-	public List<SavingsAccountDTO> findSavingsAccounts(HttpHeaders headers) {
-		Long userId = jwtUtil.getMemberIdFromHeaders(headers);
+	public List<SavingsAccountDTO> findSavingsAccounts(String jwt) {
+		Long userId = jwtUtil.getMemberIdFromJwt(jwt);
 		List<SavingsAccountDTO> accounts = accountDao.findSavingsAccounts(userId);
 		return accounts;
 	}
 
-	public BalanceDTO getTotalBalance(HttpHeaders headers) {
-		Long userId = jwtUtil.getMemberIdFromHeaders(headers);
+	public BalanceDTO getTotalBalance(String jwt) {
+		Long userId = jwtUtil.getMemberIdFromJwt(jwt);
 		
 		// 총 자산 찾기 위해서는 내 아이디를 가진 모든 계좌를 찾고, 그 금액을 갱신해야 함.
 		BalanceDTO balance = accountDao.getTotalBalance(userId);
@@ -48,7 +48,7 @@ public class AccountService {
 		return balance;
 	}
 
-	public FreeAccountDTO getFreeAccountDetail(Long accountId, HttpHeaders headers) {
+	public FreeAccountDTO getFreeAccountDetail(Long accountId, String jwt) {
 		return null;
 	}
 

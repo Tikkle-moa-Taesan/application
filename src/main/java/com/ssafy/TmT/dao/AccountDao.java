@@ -2,8 +2,6 @@ package com.ssafy.TmT.dao;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Mapper;
-
 import com.ssafy.TmT.dto.BalanceDTO;
 import com.ssafy.TmT.dto.FreeAccountDTO;
 import com.ssafy.TmT.dto.SavingsAccountDTO;

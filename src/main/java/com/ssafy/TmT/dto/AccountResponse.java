@@ -7,9 +7,16 @@ import lombok.Setter;
 @Setter
 public class AccountResponse {
 
+	// 계좌 id
 	private Long accountId;
+	
+	// 계좌 번호
 	private String accountNumber;
+	
+	// 계좌 이름
 	private String bankName;
-	private Float balance;
+	
+	// 잔액
+	private Long balance;
 	
 }
