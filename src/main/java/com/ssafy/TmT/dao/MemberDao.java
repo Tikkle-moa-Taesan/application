@@ -7,10 +7,12 @@ import com.ssafy.TmT.entity.Member;
 
 public interface MemberDao {
 
-	BalanceDTO getTotalBalance(Long memberId);
-
 	void regist(String subject);
 
 	Profile login(String subject);
+
+	Long getFreeAccountBalanceSum(Long memberId);
+
+	Long getSavingsAccountBalanceSum(Long memberId);
 
 }

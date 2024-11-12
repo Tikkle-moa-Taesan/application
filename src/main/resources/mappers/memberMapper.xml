@@ -4,18 +4,13 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ssafy.TmT.dao.MemberDao">
 
-	<select id="getTotalBalance" resultType="BalanceDTO">
-		SELECT total_balance
-		FROM Member
-		WHERE member_id = #{memberId}
-	</select>
-
 	<!-- 사용자 조회 쿼리 -->
 	<select id="login" parameterType="String" resultType="Profile">
 		SELECT
-        member_id AS memberId,
-        member_name AS memberName,
-        total_balance AS totalBalance
+		member_id AS memberId,
+		member_name AS memberName,
+		total_balance AS
+		totalBalance
 		FROM Member
 		WHERE subject = #{subject}
 	</select>
@@ -23,7 +18,21 @@
 	<!-- 사용자 등록 쿼리 -->
 	<!-- 회원가입 쿼리 -->
 	<insert id="regist" parameterType="String">
-		INSERT INTO Member (subject, member_name)
+		INSERT INTO Member (subject,
+		member_name)
 		VALUES (#{subject}, "testName")
 	</insert>
+
+	<!-- FreeAccount 잔액 합계 쿼리 -->
+	<select id="getFreeAccountBalanceSum" parameterType="Long"
+		resultType="Long">
+		SELECT SUM(balance) FROM FreeAccount WHERE member_id = #{memberId}
+	</select>
+
+	<!-- SavingsAccount 잔액 합계 쿼리 -->
+	<select id="getSavingsAccountBalanceSum" parameterType="Long"
+		resultType="Long">
+		SELECT SUM(balance) FROM SavingsAccount WHERE member_id = #{memberId}
+	</select>
+
 </mapper>
