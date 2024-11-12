@@ -24,11 +24,13 @@ public class MemberService {
 
 
 	public BalanceDTO getTotalBalance(String jwt) {
-		// 어떻게 total Balance 를 모을꺼냐
 		Long memberId = jwtUtil.getMemberIdFromJwt(jwt);
-		BalanceDTO response = memberDao.getTotalBalance(memberId);
+		Long total = getTotalBalance(memberId);
+		BalanceDTO response = new BalanceDTO(total);
 		return response;
 	}
+	
+	
 
 
 
@@ -50,6 +52,12 @@ public class MemberService {
 		Profile profile = memberDao.login(subject);
 		System.out.println("로그인 완료 : " + profile);
 		return profile;
+	}
+	
+	private Long getTotalBalance(Long memberId) {
+		Long freeAccountBalance = memberDao.getFreeAccountBalanceSum(memberId);
+		Long savingsAccountBalance = memberDao.getSavingsAccountBalanceSum(memberId);
+		return freeAccountBalance+savingsAccountBalance;
 	}
 	
 }

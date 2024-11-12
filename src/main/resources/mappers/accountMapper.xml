@@ -12,9 +12,10 @@
 	<select id="findFreeAccounts" parameterType="Long"
 		resultType="FreeAccountDTO">
 		SELECT
-		account_id AS accountId,
-		balance AS balance,
-		bank_name AS bankName
+		account_id,
+		balance,
+		bank_name,
+		account_name
 		FROM
 		FreeAccount
 		WHERE
@@ -35,11 +36,14 @@
 	<!-- 적금 계좌 조회 -->
 	<select id="findSavingsAccounts" resultType="SavingsAccountDTO">
 		SELECT
-		account_id AS accountId,
+		account_id AS
+		accountId,
 		balance AS balance,
 		bank_name AS bankName,
-		maturity_date AS maturityDate,
-		interest_rate AS interestRate
+		maturity_date AS
+		maturityDate,
+		interest_rate AS interestRate,
+		account_name
 		FROM
 		SavingsAccount
 		WHERE
@@ -51,15 +55,17 @@
 	<select id="findSavingsAccountByAccountId"
 		resultType="SavingsAccountDTO">
 		SELECT
-		account_id AS accountId,
-		balance AS balance,
-		bank_name AS bankName,
-		maturity_date AS maturityDate,
-		interest_rate AS interestRate
+		account_id,
+		balance,
+		bank_name,
+		maturity_date,
+		interest_rate,
+		account_name
 		FROM
 		SavingsAccount
 		WHERE
-		account_id = #{accountId}
+		account_id =
+		#{accountId}
 	</select>
 
 	<!-- 총 자산 조회 -->

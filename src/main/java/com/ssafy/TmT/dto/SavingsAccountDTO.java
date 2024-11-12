@@ -27,6 +27,9 @@ public class SavingsAccountDTO {
 	// 이율
 	private Float interestRate;
 	
+	// 통장 이름
+	private String accountName;
+	
 	
 	
 }

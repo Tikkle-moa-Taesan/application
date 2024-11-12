@@ -19,4 +19,6 @@ public class FreeAccountDTO {
 	// 차이를 표시하자.
 	private Long difference;	// 전날 대비 금액. 로직 처리 필요
 	
+	// 통장 이름
+	private String accountName;
 }
