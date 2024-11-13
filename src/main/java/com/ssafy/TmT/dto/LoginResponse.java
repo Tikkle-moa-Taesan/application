@@ -12,8 +12,8 @@ public class LoginResponse {
 	
 	private Profile profile;	// 처음 로그인했을 때 어떤 정보를 줘야할까?
 	
-	private String customAccessToken;
-	private String customRefreshToken;
+//	private String customAccessToken;
+//	private String customRefreshToken;
 	private Long accessTokenExpiry;
 	private Long refreshTokenExpiry;
 } 

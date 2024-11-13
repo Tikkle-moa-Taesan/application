@@ -85,9 +85,6 @@ public class AccountController {
 		SavingsAccountDTO response = accountService.getSavingAccountDetail(accountId,jwt);	
 		return ResponseEntity.ok(response);
 	}
-
-	
-	
 }
 
 // 11.08 메인페이지 컨트롤러 끝

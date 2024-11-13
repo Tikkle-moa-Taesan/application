@@ -1,6 +1,7 @@
 package com.ssafy.TmT.controller;
 
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +15,7 @@ import com.ssafy.TmT.service.OAuthService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,8 +36,9 @@ public class OAuthController {
 	@GetMapping("/kakao/login/{code}")
 	public ResponseEntity<LoginResponse> kakaoLogin(@PathVariable String code) throws Exception {
 		System.out.println("카카오로그인 호출");
-		LoginResponse response = oAuthService.getMemberInfo(code);
-		System.out.println("jwt : Bearer " + response.getCustomAccessToken());
-		return ResponseEntity.ok(response);
+		HttpHeaders headers = new HttpHeaders();
+		LoginResponse loginResponse = oAuthService.getMemberInfo(code, headers);
+		oAuthService.setCookie(headers);
+		return ResponseEntity.ok().headers(headers).body(loginResponse);
 	}
 }
