@@ -17,7 +17,6 @@ import com.ssafy.TmT.util.JwtUtil;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-
 @Service
 @Log4j2
 @RequiredArgsConstructor
