@@ -1,5 +1,6 @@
 package com.ssafy.TmT.service;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,6 +11,8 @@ import com.ssafy.TmT.dto.Profile;
 import com.ssafy.TmT.util.ApiUtil;
 import com.ssafy.TmT.util.JwtUtil;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -22,7 +25,7 @@ public class OAuthService {
 	private final MemberService memberService;
 	
 //	@Transactional
-    public LoginResponse getMemberInfo(String code) throws Exception {
+    public LoginResponse getMemberInfo(String code, HttpHeaders headers) throws Exception {
     
     	// 인증코드로 카카오 엑세스 토큰 발급받기
     	KakaoOAuthResponse kakaoToken = oAuthProvider.getKakaoAccessToken(code);
@@ -45,10 +48,20 @@ public class OAuthService {
         // 응답에 만료 시간 정보 추가
         Long accessTokenExpiry = jwtUtil.getAccessTokenExpiry();
         Long refreshTokenExpiry = jwtUtil.getRefreshTokenExpiry();
-
-    	LoginResponse response = new LoginResponse(profile,customAccessToken,customRefreshToken,accessTokenExpiry,refreshTokenExpiry);
-    	return response;
+        
+        System.out.println("쿠키 추가");
+        
+        // 쿠키 추가
+        jwtUtil.setAccessToken(headers,customAccessToken);
+        jwtUtil.setRefreshToken(headers,customRefreshToken);	
+        
+    	LoginResponse loginResponse = new LoginResponse(profile,accessTokenExpiry,refreshTokenExpiry);
+    	return loginResponse;
     }
+
+	public void setCookie(HttpHeaders headers) {
+	
+	}
 
 }
 

@@ -11,6 +11,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 
 import com.ssafy.TmT.dto.Profile;
 import com.ssafy.TmT.exception.InvalidTokenException;
@@ -21,6 +22,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.Cookie;
 
 @Configuration
 public class JwtUtil {
@@ -34,7 +36,7 @@ public class JwtUtil {
     
     // RefreshToken 유효 시간: 7일 (ms 단위)
     private static final long REFRESH_TOKEN_EXPIRY = 1000L * 60 * 60 * 24 * 7;
-	
+
     // SecretKey 즉시 생성 메서드
     private SecretKey createSecretKey() {
         byte[] keyBytes = secretKeyString.getBytes(StandardCharsets.UTF_8);
@@ -137,6 +139,47 @@ public class JwtUtil {
 	public boolean validateAccountId(String jwt, Long memberId) {
 		Long tokenMemberId = getMemberIdFromJwt(jwt);
 		return tokenMemberId == memberId;
+	}
+
+//	public Cookie createAccessTokenCookie(String customAccessToken) {
+//	    Cookie accessTokenCookie = new Cookie("accessCookie", customAccessToken);
+//        accessTokenCookie.setHttpOnly(true);
+//        accessTokenCookie.setSecure(false);	// true : https only 
+//        accessTokenCookie.setPath("/");
+//        accessTokenCookie.setMaxAge((int) ACCESS_TOKEN_EXPIRY); 
+//		return accessTokenCookie;
+//	}
+//
+//	public Cookie createRefreshTokenCookie(String customRefreshToken) {
+//        Cookie refreshTokenCookie = new Cookie("refreshCookie", customRefreshToken);
+//        refreshTokenCookie.setHttpOnly(true);
+//        refreshTokenCookie.setSecure(false); 
+//        refreshTokenCookie.setPath("/");
+//        refreshTokenCookie.setMaxAge((int) REFRESH_TOKEN_EXPIRY);
+//		return refreshTokenCookie;
+//	}
+	
+	  public void setAccessToken(HttpHeaders headers, String accessToken) {
+	  ResponseCookie accessTokenCookie = ResponseCookie.from("accessToken", accessToken)
+	          .httpOnly(true)
+	          .secure(true)  // HTTPS 환경에서는 true로 설정
+	          .path("/")
+	          .maxAge(ACCESS_TOKEN_EXPIRY) // 1시간
+	          .sameSite("None") // CSRF protection
+	          .build();
+	  headers.add("Set-Cookie", accessTokenCookie.toString());
+	}
+
+	public void setRefreshToken(HttpHeaders headers, String jwtRefreshToken) {
+	  ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", jwtRefreshToken)
+	          .httpOnly(true)
+	          .secure(true)  // HTTPS 환경에서는 true로 설정
+	          .path("/")
+	          .maxAge(REFRESH_TOKEN_EXPIRY) // 쿠키의 유효기간을 refreshToken과 동일하게 설정
+	          .sameSite("None")
+	//          .sameSite("Lax")
+	          .build();
+	  headers.add("Set-Cookie", refreshTokenCookie.toString());
 	}
     
 }
