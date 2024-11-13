@@ -12,11 +12,17 @@ public class SavingsAccountDTO {
 	// 적금 계좌
 	private Long accountId;
 	
-	// 잔액 필요
-	private Long balance;
+	// 계좌 번호
+	private Long accountNumber;
+	
+	// 통장 이름
+	private String accountName;
 	
 	// 은행 이름
 	private String bankName;
+	
+	// 잔액 필요
+	private Long balance;
 	
 	// 차이를 표시하자.
 	private Long difference;	// 전날 대비 금액. 로직 처리 필요
@@ -26,9 +32,7 @@ public class SavingsAccountDTO {
 	
 	// 이율
 	private Float interestRate;
-	
-	// 통장 이름
-	private String accountName;
+
 	
 	
 	

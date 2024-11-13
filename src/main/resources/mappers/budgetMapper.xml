@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.TmT.dao.BudgetDao">
+
+
+<select id="getCategoryExpense" parameterType="long" resultType="Category">
+    SELECT 
+        food_expense,
+        living_expense,
+        housing_communication_expense,
+        finance_expense,
+        transportation_expense,
+        childcare_expense,
+        leisure_culture_expense,
+        pet_expense,
+        event_gift_expense
+    FROM Budget
+    WHERE member_id = #{memberId}
+</select>
+
+
+
+<select id="getExpenseStatistics" parameterType="long" resultType="StatisticsDTO">
+    SELECT 
+        (SELECT COALESCE(SUM(amount), 0)
+         FROM BudgetTransaction
+         WHERE member_id = #{memberId}
+           AND transaction_type = 'expense'
+           AND DATE_FORMAT(transaction_datetime, '%Y-%m') = DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y-%m')) AS lastMonthExpense,
+        
+        (SELECT COALESCE(SUM(amount), 0)
+         FROM BudgetTransaction
+         WHERE member_id = #{memberId}
+           AND transaction_type = 'expense'
+           AND DATE_FORMAT(transaction_datetime, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')) AS thisMonthExpense,
+        
+        (SELECT COALESCE(SUM(amount), 0)
+         FROM BudgetTransaction
+         WHERE member_id = #{memberId}
+           AND transaction_type = 'expense'
+           AND WEEK(transaction_datetime, 1) = WEEK(DATE_SUB(NOW(), INTERVAL 1 WEEK), 1)) AS lastWeekExpense,
+
+        (SELECT COALESCE(SUM(amount), 0)
+         FROM BudgetTransaction
+         WHERE member_id = #{memberId}
+           AND transaction_type = 'expense'
+           AND WEEK(transaction_datetime, 1) = WEEK(NOW(), 1)) AS thisWeekExpense
+</select>
+
+<select id="findBudgetRate" parameterType="long" resultType="BudgetRateDTO">
+    SELECT 
+        month_budget,
+        (food_expense + living_expense + housing_communication_expense + 
+         finance_expense + transportation_expense + childcare_expense + 
+         leisure_culture_expense + pet_expense + event_gift_expense) AS thisMonthExpense
+    FROM Budget
+    WHERE member_id = #{memberId}
+</select>
+
+
+</mapper>
