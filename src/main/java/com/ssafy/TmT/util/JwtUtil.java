@@ -36,7 +36,6 @@ public class JwtUtil {
     
     // RefreshToken 유효 시간: 7일 (ms 단위)
     private static final long REFRESH_TOKEN_EXPIRY = 1000L * 60 * 60 * 24 * 7;
-
     // SecretKey 즉시 생성 메서드
     private SecretKey createSecretKey() {
         byte[] keyBytes = secretKeyString.getBytes(StandardCharsets.UTF_8);
