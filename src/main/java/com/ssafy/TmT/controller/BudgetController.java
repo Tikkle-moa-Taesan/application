@@ -35,7 +35,7 @@ public class BudgetController {
 	// 지출 통계
 	// 4번 api. 지출 통계 조회
 	@GetMapping("/expense")
-	@Operation(summary = "4. 지출 통계 조회", description = "JWT를 이용해 총 자산을 조회합니다.")
+	@Operation(summary = "4. 지출 통계 조회", description = "JWT를 이용해 지출 통계를 조회합니다.")
 	@ApiResponse(responseCode = "200", description = "요청 성공")
 	@ApiResponse(responseCode = "400", description = "요청 실패")
 	public ResponseEntity<ExpenseResponse> calculateExpenseSummary(@RequestHeader("Authorization") String jwt) {
@@ -47,6 +47,9 @@ public class BudgetController {
 	
 	// 5번 api. 예산 통계 : 이번달, 저번달, 이번주, 저번주 예산 가져옴
 	@GetMapping("/rate")
+	@Operation(summary = "5. 예산 통계 조회", description = "예산과 예산대비 몇프로 썼는지 조회합니다.")
+	@ApiResponse(responseCode = "200", description = "요청 성공")
+	@ApiResponse(responseCode = "400", description = "요청 실패")
 	public ResponseEntity<BudgetRateDTO> totalBudget(@RequestHeader("Authorization") String jwt) {
 		System.out.println("예산 통계 가져오기");
 		BudgetRateDTO response = budgetService.findBudgetRate(jwt);
