@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.TmT.dto.BalanceDTO;
 import com.ssafy.TmT.dto.FreeAccountDTO;
 import com.ssafy.TmT.dto.SavingsAccountDTO;
 import com.ssafy.TmT.service.AccountService;
@@ -33,7 +34,7 @@ public class AccountController {
 	@ApiResponse(responseCode = "200", description = "요청 성공")
 	@ApiResponse(responseCode = "400", description = "요청 실패")
 	public ResponseEntity<List<FreeAccountDTO>> findFreeAccounts(@RequestHeader("Authorization") String jwt) {
-		System.out.println("자유 계좌 조회");
+		log.info("컨트롤러 : 자유 계좌 조회");
 		List<FreeAccountDTO> response = accountService.findFreeAccounts(jwt);	
 		return ResponseEntity.ok(response);
 	}
@@ -49,7 +50,17 @@ public class AccountController {
 		return ResponseEntity.ok(response);
 	}
 	
-
+	// 3번 api. 총 자산 조회
+	@GetMapping("/balance")
+	@Operation(summary = "3. 총 자산 조회", description = "JWT를 이용해 총 자산을 조회합니다.")
+	@ApiResponse(responseCode = "200", description = "요청 성공")
+	@ApiResponse(responseCode = "400", description = "요청 실패")
+	public ResponseEntity<BalanceDTO> getTotalBalance(@RequestHeader("Authorization") String jwt) {
+		log.info("컨트롤러 : 총 자산 조회");
+		BalanceDTO response = accountService.getTotalBalance(jwt);
+		return ResponseEntity.ok(response);
+	}
+	
 	
 	// 6번 api
 	// 자산 페이지 - 자유 입출금 계좌 클릭 시
@@ -58,9 +69,9 @@ public class AccountController {
 	@ApiResponse(responseCode = "200", description = "요청 성공")
 	@ApiResponse(responseCode = "400", description = "요청 실패")
 	public ResponseEntity<FreeAccountDTO> getFreeAccountDetail(@PathVariable Long accountId, @RequestHeader("Authorization") String jwt) {
-		FreeAccountDTO response = accountService.getFreeAccountDetail(accountId,jwt);	
+		log.info("컨트롤러 : 자유 계좌 단일 조회");
+		FreeAccountDTO response = accountService.findFreeAccountDetail(accountId,jwt);	
 		return ResponseEntity.ok(response);
-		// 이건 내부에서 자유입출금인지 / 적금인지 나누면 될것같음.
 	}
 	
 	// 7번 api
@@ -70,10 +81,12 @@ public class AccountController {
 	@ApiResponse(responseCode = "200", description = "요청 성공")
 	@ApiResponse(responseCode = "400", description = "요청 실패")
 	public ResponseEntity<SavingsAccountDTO> getSavingAccountDetail(@PathVariable Long accountId, @RequestHeader("Authorization") String jwt) {
-		System.out.println("컨트롤러 호출");
+		System.out.println("적금 계좌 단일 조회");
 		SavingsAccountDTO response = accountService.getSavingAccountDetail(accountId,jwt);	
 		return ResponseEntity.ok(response);
 	}
+
+	
 	
 }
 

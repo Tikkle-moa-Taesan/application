@@ -35,7 +35,7 @@ public class OAuthController {
 	public ResponseEntity<LoginResponse> kakaoLogin(@PathVariable String code) throws Exception {
 		System.out.println("카카오로그인 호출");
 		LoginResponse response = oAuthService.getMemberInfo(code);
-		System.out.println("jwt : " + response.getCustomAccessToken());
+		System.out.println("jwt : Bearer " + response.getCustomAccessToken());
 		return ResponseEntity.ok(response);
 	}
 }

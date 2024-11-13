@@ -1,9 +1,8 @@
 package com.ssafy.TmT.dao;
 
 
-import com.ssafy.TmT.dto.BalanceDTO;
+import com.ssafy.TmT.dto.Category;
 import com.ssafy.TmT.dto.Profile;
-import com.ssafy.TmT.entity.Member;
 
 public interface MemberDao {
 
@@ -11,8 +10,27 @@ public interface MemberDao {
 
 	Profile login(String subject);
 
-	Long getFreeAccountBalanceSum(Long memberId);
+	
+	// getTotalBalance
+//	Long getFreeAccountBalanceSum(Long memberId);
 
-	Long getSavingsAccountBalanceSum(Long memberId);
+//	Long getSavingsAccountBalanceSum(Long memberId);
+	
+	
+	// getExpenseStatistics
+//	Long getTotalBalance(Long memberId);
+
+	Long getLastMonthExpense(Long memberId);
+
+	Long getThisMonthExpense(Long memberId);
+
+	Long getThisWeekExpense(Long memberId);
+
+	Long getLastWeekExpense(Long memberId);
+
+	Category getExpenseWithCategory(Long memberId);
+
+	Long getThisMonthBudget(Long memberId);
+
 
 }

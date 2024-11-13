@@ -2,9 +2,11 @@ package com.ssafy.TmT.dao;
 
 import java.util.List;
 
+import com.ssafy.TmT.dto.AccountDTO;
 import com.ssafy.TmT.dto.BalanceDTO;
 import com.ssafy.TmT.dto.FreeAccountDTO;
 import com.ssafy.TmT.dto.SavingsAccountDTO;
+import com.ssafy.TmT.dto.SearchCondition;
 
 public interface AccountDao {
 
@@ -17,11 +19,12 @@ public interface AccountDao {
 	// 3번 api. 총 자산 조회
 	BalanceDTO getTotalBalance(Long MemberId);
 
-	Long findMemberIdFromFreeAccount(Long accountId);
-
-	Long findMemberIdFromSavingsAccount(Long accountId);
-
 	SavingsAccountDTO findSavingsAccountByAccountId(Long accountId);
 
 	FreeAccountDTO findFreeAccountByAccountId(Long accountId);
+	
+	List<AccountDTO> findAccountsBySearchCondition(SearchCondition searchCondition);
+
+//	Long findMemberIdByAccountId(Long accountId);
+	
 }

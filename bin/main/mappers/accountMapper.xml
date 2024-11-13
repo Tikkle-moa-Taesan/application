@@ -6,52 +6,49 @@
 <mapper namespace="com.ssafy.TmT.dao.AccountDao">
 
 	<!-- 자유 계좌 조회 -->
-	<!-- BascColumns 를 공통 컬럼으로 사용 -->
-
-
 	<select id="findFreeAccounts" parameterType="Long"
 		resultType="FreeAccountDTO">
 		SELECT
 		account_id,
-		balance,
+		account_number,
+		account_name,
 		bank_name,
-		account_name
+		balance
 		FROM
-		FreeAccount
+		Account
 		WHERE
 		member_id = #{memberId}
+		AND
+		account_type = "free"
 	</select>
-
-	<select id="findFreeAccountByAccountId" parameterType="Long"
-		resultType="FreeAccountDTO">
+	
+		<!-- 적금 계좌 조회 -->
+	<select id="findSavingsAccounts" parameterType="Long"
+		resultType="SavingsAccountDTO">
 		SELECT
-		*
+		account_id,
+		account_number,
+		account_name,
+		bank_name,
+		balance,
+		maturity_date,
+		interest_rate
 		FROM
-		FreeAccount
+		Account
 		WHERE
-		account_id = #{accountId}
+		member_id =
+		#{memberId}
+		AND
+		account_type = "savings"
 	</select>
-
-
-	<!-- 적금 계좌 조회 -->
-	<select id="findSavingsAccounts" resultType="SavingsAccountDTO">
-		SELECT
-		account_id AS
-		accountId,
-		balance AS balance,
-		bank_name AS bankName,
-		maturity_date AS
-		maturityDate,
-		interest_rate AS interestRate,
-		account_name
-		FROM
-		SavingsAccount
-		WHERE
-		member_id = #{memberId}
-
-	</select>
-
-	<!-- 적금 계좌 조회 -->
+	
+	    <!-- Account 잔액 합계 조회 -->
+    <select id="getTotalBalance" parameterType="Long" resultType="Long">
+        SELECT SUM(balance) FROM Account WHERE member_id = #{memberId}
+    </select>
+	
+	
+		<!-- 적금 계좌 조회 -->
 	<select id="findSavingsAccountByAccountId"
 		resultType="SavingsAccountDTO">
 		SELECT
@@ -62,32 +59,42 @@
 		interest_rate,
 		account_name
 		FROM
-		SavingsAccount
-		WHERE
-		account_id =
-		#{accountId}
-	</select>
-
-	<!-- 총 자산 조회 -->
-	<select id="getTotalBalance" resultType="BalanceDTO">
-	</select>
-
-	<select id="findMemberIdFromFreeAccount" resultType="Long">
-		SELECT
-		member_id
-		FROM
-		FreeAccount
+		Account
 		WHERE
 		account_id = #{accountId}
+		AND
+		account_type = "savings"
 	</select>
-
-	<select id="findMemberIdFromSavingsAccount" resultType="Long">
+	
+		<select id="findFreeAccountByAccountId" parameterType="Long"
+		resultType="FreeAccountDTO">
 		SELECT
-		member_id
+		account_id,
+		account_number,
+		account_name,
+		bank_name,
+		balance
 		FROM
-		SavingsAccount
+		Account
 		WHERE
 		account_id = #{accountId}
+		AND
+		account_type = "free"
+	</select>
+	
+	
+	
+		<!-- 계좌 조회 (동적 쿼리로 계좌 유형별 조회) -->
+	<select id="findAccountsBySearchCondition" parameterType="SearchCondition"
+		resultType="AccountDTO">
+				SELECT
+				account_id,
+				account_number,
+				account_name,
+				bank_name,
+				balance
+				FROM Account
+				WHERE member_id = #{memberId} 
 	</select>
 
 </mapper>

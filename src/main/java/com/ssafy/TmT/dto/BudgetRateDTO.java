@@ -1,6 +1,5 @@
 package com.ssafy.TmT.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,9 +7,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ExpenseResponse {
+public class BudgetRateDTO {
 
-	private ExpenseDTO expense;
+	// 이번 달 예산
+	private Long monthBudget;
 	
-	private BudgetRateDTO budgetRate;
+	// 이번 달 지출
+	private Long thisMonthExpense;
 }
