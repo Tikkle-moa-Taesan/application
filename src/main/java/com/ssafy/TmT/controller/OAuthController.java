@@ -30,7 +30,7 @@ public class OAuthController {
 	private final OAuthService oAuthService;
 	
 	// 카카오 로그인
-	@Operation(summary = "카카오 로그인", description = "카카오 회원 정보를 가져옵니다")
+	@Operation(summary = "0. 카카오 로그인", description = "카카오 회원 정보를 가져옵니다")
 	@ApiResponse(responseCode = "200", description = "요청 성공")
 	@ApiResponse(responseCode = "400", description = "요청 실패")
 	@GetMapping("/kakao/login/{code}")
