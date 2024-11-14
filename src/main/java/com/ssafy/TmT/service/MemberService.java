@@ -7,12 +7,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.TmT.dao.BudgetDao;
 import com.ssafy.TmT.dao.MemberDao;
-import com.ssafy.TmT.dto.BalanceDTO;
 import com.ssafy.TmT.dto.BudgetRateDTO;
 import com.ssafy.TmT.dto.Category;
 import com.ssafy.TmT.dto.ExpenseResponse;
 import com.ssafy.TmT.dto.IdTokenPayload;
 import com.ssafy.TmT.dto.Profile;
+import com.ssafy.TmT.dto.account.BalanceResponse;
 import com.ssafy.TmT.entity.Member;
 import com.ssafy.TmT.util.JwtUtil;
 

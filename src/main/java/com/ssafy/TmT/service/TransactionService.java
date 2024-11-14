@@ -2,10 +2,10 @@ package com.ssafy.TmT.service;
 
 import java.util.List;
 
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
-import com.ssafy.TmT.dto.AccountResponse;
 import com.ssafy.TmT.dto.ExpenseResponse;
 import com.ssafy.TmT.dto.TransactionDTO;
 
@@ -21,8 +21,5 @@ public class TransactionService {
 		return null;
 	}
 
-	public AccountResponse findAccountById(HttpHeaders headers) {
-		return null;
-	}
 
 }

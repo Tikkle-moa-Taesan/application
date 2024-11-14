@@ -7,12 +7,10 @@
 
 	<!-- 자유 계좌 조회 -->
 	<select id="findFreeAccounts" parameterType="Long"
-		resultType="FreeAccountDTO">
+		resultType="FreeAccountResponse">
 		SELECT
 		account_id,
-		account_number,
 		account_name,
-		bank_name,
 		balance
 		FROM
 		Account
@@ -24,7 +22,29 @@
 	
 		<!-- 적금 계좌 조회 -->
 	<select id="findSavingsAccounts" parameterType="Long"
-		resultType="SavingsAccountDTO">
+		resultType="SavingsAccountResponse">
+		SELECT
+		account_id,
+		account_name,
+		balance
+		FROM
+		Account
+		WHERE
+		member_id =
+		#{memberId}
+		AND
+		account_type = "savings"
+	</select>
+	
+	    <!-- Account 잔액 합계 조회 -->
+    <select id="getTotalBalance" parameterType="Long" resultType="BalanceResponse">
+        SELECT SUM(balance) AS total FROM Account WHERE member_id = #{memberId}
+    </select>
+	
+	
+		<!-- 적금 계좌 조회 -->
+	<select id="findSavingsAccountByAccountId"
+		resultType="SavingsAccountDetailDTO">
 		SELECT
 		account_id,
 		account_number,
@@ -36,65 +56,24 @@
 		FROM
 		Account
 		WHERE
-		member_id =
-		#{memberId}
-		AND
-		account_type = "savings"
-	</select>
-	
-	    <!-- Account 잔액 합계 조회 -->
-    <select id="getTotalBalance" parameterType="Long" resultType="BalanceDTO">
-        SELECT SUM(balance) AS total FROM Account WHERE member_id = #{memberId}
-    </select>
-	
-	
-		<!-- 적금 계좌 조회 -->
-	<select id="findSavingsAccountByAccountId"
-		resultType="SavingsAccountDTO">
-		SELECT
-		account_id,
-		balance,
-		bank_name,
-		maturity_date,
-		interest_rate,
-		account_name
-		FROM
-		Account
-		WHERE
 		account_id = #{accountId}
 		AND
 		account_type = "savings"
 	</select>
 	
-		<select id="findFreeAccountByAccountId" parameterType="Long"
-		resultType="FreeAccountDTO">
-		SELECT
-		account_id,
-		account_number,
-		account_name,
-		bank_name,
-		balance
-		FROM
-		Account
-		WHERE
-		account_id = #{accountId}
-		AND
-		account_type = "free"
-	</select>
-	
-	
-	
-		<!-- 계좌 조회 (동적 쿼리로 계좌 유형별 조회) -->
-	<select id="findAccountsBySearchCondition" parameterType="SearchCondition"
-		resultType="AccountDTO">
-				SELECT
-				account_id,
-				account_number,
-				account_name,
-				bank_name,
-				balance
-				FROM Account
-				WHERE member_id = #{memberId} 
-	</select>
+<select id="findFreeAccountByAccountId" parameterType="Long" resultType="FreeAccountDetailDTO">
+    SELECT
+        account_id,
+        account_number,
+        account_name,
+        bank_name,
+        balance
+    FROM
+        Account
+    WHERE
+        account_id = #{accountId}
+        AND account_type = 'free'
+</select>
+
 
 </mapper>

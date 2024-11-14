@@ -11,9 +11,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.TmT.dto.BalanceDTO;
-import com.ssafy.TmT.dto.FreeAccountDTO;
-import com.ssafy.TmT.dto.SavingsAccountDTO;
+import com.ssafy.TmT.dto.FreeAccountDetailResponse;
+import com.ssafy.TmT.dto.account.BalanceResponse;
+import com.ssafy.TmT.dto.account.FreeAccountResponse;
+import com.ssafy.TmT.dto.account.SavingsAccountResponse;
 import com.ssafy.TmT.service.AccountService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,11 +35,9 @@ public class AccountController {
 	@Operation(summary = "1. 자유 계좌 전체 조회", description = "JWT를 이용해 자유 입출금 계좌를 전부 조회합니다.")
 	@ApiResponse(responseCode = "200", description = "요청 성공")
 	@ApiResponse(responseCode = "400", description = "요청 실패")
-//	public ResponseEntity<List<FreeAccountDTO>> findFreeAccounts(@RequestHeader("Authorization") String jwt) {
-	public ResponseEntity<List<FreeAccountDTO>> findFreeAccounts() {
+	public ResponseEntity<List<FreeAccountResponse>> findFreeAccounts() {
 		log.info("컨트롤러 : 자유 계좌 조회");
-//		List<FreeAccountDTO> response = accountService.findFreeAccounts(jwt);	
-		List<FreeAccountDTO> response = accountService.findFreeAccounts();	
+		List<FreeAccountResponse> response = accountService.findFreeAccounts();	
 		return ResponseEntity.ok(response);
 	}
 	
@@ -47,11 +46,9 @@ public class AccountController {
 	@Operation(summary = "2. 적금 계좌 전체 조회", description = "JWT를 이용해 적금 계좌를 전부 조회합니다.")
 	@ApiResponse(responseCode = "200", description = "요청 성공")
 	@ApiResponse(responseCode = "400", description = "요청 실패")
-//	public ResponseEntity<List<SavingsAccountDTO>> findSavingsAccounts(@RequestHeader("Authorization") String jwt) {
-	public ResponseEntity<List<SavingsAccountDTO>> findSavingsAccounts() {
+	public ResponseEntity<List<SavingsAccountResponse>> findSavingsAccounts() {
 		log.info("컨트롤러 : 적금 계좌 조회");
-//		List<SavingsAccountDTO> response = accountService.findSavingsAccounts(jwt);	
-		List<SavingsAccountDTO> response = accountService.findSavingsAccounts();	
+		List<SavingsAccountResponse> response = accountService.findSavingsAccounts();	
 		return ResponseEntity.ok(response);
 	}
 	
@@ -60,11 +57,9 @@ public class AccountController {
 	@Operation(summary = "3. 총 자산 조회", description = "JWT를 이용해 총 자산을 조회합니다.")
 	@ApiResponse(responseCode = "200", description = "요청 성공")
 	@ApiResponse(responseCode = "400", description = "요청 실패")
-//	public ResponseEntity<BalanceDTO> getTotalBalance(@RequestHeader("Authorization") String jwt) {
-	public ResponseEntity<BalanceDTO> getTotalBalance() {
+	public ResponseEntity<BalanceResponse> getTotalBalance() {
 		log.info("컨트롤러 : 총 자산 조회");
-//		BalanceDTO response = accountService.getTotalBalance(jwt);
-		BalanceDTO response = accountService.getTotalBalance();
+		BalanceResponse response = accountService.getTotalBalance();
 		return ResponseEntity.ok(response);
 	}
 	
@@ -75,11 +70,9 @@ public class AccountController {
 	@Operation(summary = "6. 자유 계좌 단일 조회", description = "accountId를 이용해 자유 입출금 계좌를 조회합니다.")
 	@ApiResponse(responseCode = "200", description = "요청 성공")
 	@ApiResponse(responseCode = "400", description = "요청 실패")
-//	public ResponseEntity<FreeAccountDTO> getFreeAccountDetail(@PathVariable Long accountId, @RequestHeader("Authorization") String jwt) {
-	public ResponseEntity<FreeAccountDTO> getFreeAccountDetail(@PathVariable Long accountId) {
+	public ResponseEntity<FreeAccountDetailResponse> getFreeAccountDetail(@PathVariable Long accountId) {
 		log.info("컨트롤러 : 자유 계좌 단일 조회");
-//		FreeAccountDTO response = accountService.findFreeAccountDetail(accountId,jwt);	
-		FreeAccountDTO response = accountService.findFreeAccountDetail(accountId);	
+		FreeAccountDetailResponse response = accountService.findFreeAccountDetail(accountId);	
 		return ResponseEntity.ok(response);
 	}
 	
@@ -89,10 +82,9 @@ public class AccountController {
 	@Operation(summary = "7. 적금 계좌 단일 조회", description = "accountId를 이용해 적금 계좌를 조회합니다.")
 	@ApiResponse(responseCode = "200", description = "요청 성공")
 	@ApiResponse(responseCode = "400", description = "요청 실패")
-//	public ResponseEntity<SavingsAccountDTO> getSavingAccountDetail(@PathVariable Long accountId, @RequestHeader("Authorization") String jwt) {
-	public ResponseEntity<SavingsAccountDTO> getSavingAccountDetail(@PathVariable Long accountId) {
+	public ResponseEntity<SavingsAccountResponse> getSavingAccountDetail(@PathVariable Long accountId) {
 		System.out.println("적금 계좌 단일 조회");
-		SavingsAccountDTO response = accountService.getSavingAccountDetail(accountId);	
+		SavingsAccountResponse response = accountService.getSavingAccountDetail(accountId);	
 		return ResponseEntity.ok(response);
 	}
 }

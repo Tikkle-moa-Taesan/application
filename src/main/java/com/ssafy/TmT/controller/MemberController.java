@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.TmT.dto.BalanceDTO;
 import com.ssafy.TmT.dto.BudgetRateDTO;
 import com.ssafy.TmT.dto.ExpenseResponse;
+import com.ssafy.TmT.dto.account.BalanceResponse;
 import com.ssafy.TmT.service.MemberService;
 
 import io.swagger.v3.oas.annotations.Operation;

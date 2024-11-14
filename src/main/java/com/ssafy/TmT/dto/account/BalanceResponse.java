@@ -1,4 +1,4 @@
-package com.ssafy.TmT.dto;
+package com.ssafy.TmT.dto.account;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BalanceDTO {
+public class BalanceResponse {
 
 	// 총 자산(금액만 나오면 됨)
 	private Long total;
