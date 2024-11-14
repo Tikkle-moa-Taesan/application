@@ -29,7 +29,6 @@ public class TransactionController {
 	// searchTransactionsByCategory
 	private final TransactionService transactionService;
 	
-	//
 //	@GetMapping("/{transactionId}")
 //	@Operation(summary = "8. 상세 거래내역 조회", description = "JWT를 이용해 지출 통계를 조회합니다.")
 //	@ApiResponse(responseCode = "200", description = "요청 성공")

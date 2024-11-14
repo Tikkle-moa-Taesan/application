@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.TmT.dao.AccountDao;
@@ -24,41 +25,45 @@ public class AccountService {
 
 	private final AccountDao accountDao;
 
-	private final JwtUtil jwtUtil;
+//	private final JwtUtil jwtUtil;
 
-	public BalanceDTO getTotalBalance(String jwt) {
-		Long memberId = jwtUtil.getMemberIdFromJwt(jwt);
-
+	public BalanceDTO getTotalBalance() {
+		Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		// 총 자산 찾기 위해서는 내 아이디를 가진 모든 계좌를 찾고, 그 금액을 갱신해야 함.
 		BalanceDTO balance = accountDao.getTotalBalance(memberId);
-
+		
 		return balance;
 	}
 
-	public List<FreeAccountDTO> findFreeAccounts(String jwt) {
-		Long memberId = jwtUtil.getMemberIdFromJwt(jwt);
+	public List<FreeAccountDTO> findFreeAccounts() {
+		Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//		Long memberId = jwtUtil.getMemberIdFromJwt(jwt);
 		List<FreeAccountDTO> accounts = accountDao.findFreeAccounts(memberId);
 		return accounts;
 	}
 
-	public List<SavingsAccountDTO> findSavingsAccounts(String jwt) {
-		Long memberId = jwtUtil.getMemberIdFromJwt(jwt);
+	public List<SavingsAccountDTO> findSavingsAccounts() {
+		Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//		Long memberId = jwtUtil.getMemberIdFromJwt(jwt);
 		List<SavingsAccountDTO> accounts = accountDao.findSavingsAccounts(memberId);
 		return accounts;
 	}
 
-	public FreeAccountDTO findFreeAccountDetail(Long accountId, String jwt) {
+	public FreeAccountDTO findFreeAccountDetail(Long accountId) {
+//		Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		FreeAccountDTO account = accountDao.findFreeAccountByAccountId(accountId);
 		return account;
 	}
 	
-	public SavingsAccountDTO getSavingAccountDetail(Long accountId, String jwt) {
+	public SavingsAccountDTO getSavingAccountDetail(Long accountId) {
 		SavingsAccountDTO account = accountDao.findSavingsAccountByAccountId(accountId);
 		return account;
 	}
 
-	public List<AccountDTO> findAccountsBySearchCondition(SearchCondition searchCondition, String jwt) {
-		searchCondition.setMemberId(jwtUtil.getMemberIdFromJwt(jwt));
+	public List<AccountDTO> findAccountsBySearchCondition(SearchCondition searchCondition) {
+//		searchCondition.setMemberId(jwtUtil.getMemberIdFromJwt(jwt));
+		Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		searchCondition.setMemberId(memberId);
 		List<AccountDTO> accounts = accountDao.findAccountsBySearchCondition(searchCondition);
 		return accounts;
 	}

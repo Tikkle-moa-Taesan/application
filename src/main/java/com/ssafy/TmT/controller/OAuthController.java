@@ -25,8 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/oauth")
 public class OAuthController {
 	
-	//https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=494d31e54fba839b5ff76e4797f5a7d8&redirect_uri=https://localhost:8080/login/oauth2/code/kakao
-
 	private final OAuthService oAuthService;
 	
 	// 카카오 로그인

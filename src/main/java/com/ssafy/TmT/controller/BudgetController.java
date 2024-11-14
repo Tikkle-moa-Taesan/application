@@ -38,10 +38,10 @@ public class BudgetController {
 	@Operation(summary = "4. 지출 통계 조회", description = "JWT를 이용해 지출 통계를 조회합니다.")
 	@ApiResponse(responseCode = "200", description = "요청 성공")
 	@ApiResponse(responseCode = "400", description = "요청 실패")
-	public ResponseEntity<ExpenseResponse> calculateExpenseSummary(@RequestHeader("Authorization") String jwt) {
+	public ResponseEntity<ExpenseResponse> calculateExpenseSummary() {
 		log.info("컨트롤러 : 지출 통계 조회");
 		// 이 안에 내부적으로 예산통계를 집어넣는게 좋을것같음.
-		ExpenseResponse response = budgetService.calculateExpenseAndBudget(jwt);
+		ExpenseResponse response = budgetService.calculateExpenseAndBudget();
 		return ResponseEntity.ok(response);
 	}
 	
@@ -50,9 +50,9 @@ public class BudgetController {
 	@Operation(summary = "5. 예산 통계 조회", description = "예산과 예산대비 몇프로 썼는지 조회합니다.")
 	@ApiResponse(responseCode = "200", description = "요청 성공")
 	@ApiResponse(responseCode = "400", description = "요청 실패")
-	public ResponseEntity<BudgetRateDTO> totalBudget(@RequestHeader("Authorization") String jwt) {
+	public ResponseEntity<BudgetRateDTO> totalBudget() {
 		System.out.println("예산 통계 가져오기");
-		BudgetRateDTO response = budgetService.findBudgetRate(jwt);
+		BudgetRateDTO response = budgetService.findBudgetRate();
 		return ResponseEntity.ok(response);
 	}
 	
