@@ -23,6 +23,6 @@ public class FreeAccountResponse {
 	private Long balance;	// 1234567
 	
 	// 차이를 표시하자.
-	private Long difference;	// 전날 대비 금액. 로직 처리 필요
+	private Long balanceDifference;	// 전날 대비 금액. 로직 처리 필요
 
 }
