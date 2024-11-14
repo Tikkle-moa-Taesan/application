@@ -1,4 +1,4 @@
-package com.ssafy.TmT.dto;
+package com.ssafy.TmT.dto.oauth;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +18,7 @@ public class IdTokenPayload {
 
     // 선택 항목
 //    private String nonce;        // 인가 코드 요청 시 전달된 nonce 값, ID 토큰 유효성 검증 시 사용
-//    private String nickname;     // 닉네임 (동의 필요)
-//    private String picture;      // 프로필 미리보기 이미지 URL (동의 필요)
+    private String nickname;     // 닉네임 (동의 필요)
+    private String picture;      // 프로필 미리보기 이미지 URL (동의 필요)
 //    private String email;        // 카카오 계정 대표 이메일 (동의 필요)
 }

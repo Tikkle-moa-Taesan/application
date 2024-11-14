@@ -41,7 +41,7 @@
 		#{memberId}
 		AND
 		account_type = "savings"
-	</select>
+	</select>	
 	
 	    <!-- Account 잔액 합계 조회 -->
     <select id="getTotalBalance" parameterType="Long" resultType="BalanceResponse">

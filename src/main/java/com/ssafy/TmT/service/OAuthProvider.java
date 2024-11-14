@@ -10,8 +10,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.TmT.dto.IdTokenPayload;
-import com.ssafy.TmT.dto.KakaoOAuthResponse;
+import com.ssafy.TmT.dto.oauth.IdTokenPayload;
+import com.ssafy.TmT.dto.oauth.KakaoOAuthResponse;
 import com.ssafy.TmT.util.ApiUtil;
 
 import lombok.RequiredArgsConstructor;

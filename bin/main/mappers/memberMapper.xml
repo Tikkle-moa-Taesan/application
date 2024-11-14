@@ -9,93 +9,18 @@
 		SELECT
 		member_id,
 		member_name,
-		total_balance
+		picture
 		FROM Member
 		WHERE subject = #{subject}
 	</select>
 
-	<!-- 사용자 등록 쿼리 -->
 	<!-- 회원가입 쿼리 -->
-	<insert id="regist" parameterType="String">
-		INSERT INTO Member (subject,
-		member_name)
-		VALUES (#{subject}, "testName")
-	</insert>
+	<insert id="regist" parameterType="IdTokenPayload">
+    INSERT INTO Member (subject, member_name, picture)
+    VALUES (#{sub}, #{nickname}, #{picture})
+</insert>
+	
 
-
-    <!-- 지난달 지출 조회 (getLastMonthExpense) -->
-    <select id="getLastMonthExpense" parameterType="long" resultType="long">
-        SELECT COALESCE(SUM(amount), 0)
-        FROM BudgetTransaction
-        WHERE member_id = #{memberId}
-        AND transaction_type = 'expense' 
-        AND DATE_FORMAT(transaction_datetime, '%Y-%m') = DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y-%m');
-    </select>
-
-	<!-- 이번 달 지출 조회 (getThisMonthExpense) -->
-	<select id="getThisMonthExpense" parameterType="long"
-		resultType="long">
-		SELECT COALESCE(SUM(amount), 0)
-		FROM BudgetTransaction
-		WHERE member_id = #{memberId}
-		AND transaction_type = 'expense' 
-		AND
-		DATE_FORMAT(transaction_date, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m');
-	</select>
-
-	<!-- 지난 주 지출 조회 (getLastWeekExpense) -->
-	<select id="getLastWeekExpense" parameterType="long"
-		resultType="long">
-		SELECT COALESCE(SUM(amount), 0)
-		FROM Transaction t
-		LEFT JOIN
-		FreeAccount f ON t.free_account_id = f.account_id
-		LEFT JOIN
-		SavingsAccount s ON t.savings_account_id = s.account_id
-		WHERE
-		(f.member_id = #{memberId} OR s.member_id = #{memberId})
-		AND
-		WEEK(transaction_date, 1) = WEEK(DATE_SUB(NOW(), INTERVAL 1 WEEK),
-		1);
-	</select>
-
-
-	<!-- 이번 주 지출 조회 (getThisWeekExpense) -->
-	<select id="getThisWeekExpense" parameterType="long"
-		resultType="long">
-		SELECT COALESCE(SUM(amount), 0)
-		FROM Transaction t
-		LEFT JOIN
-		FreeAccount f ON t.free_account_id = f.account_id
-		LEFT JOIN
-		SavingsAccount s ON t.savings_account_id = s.account_id
-		WHERE
-		(f.member_id = #{memberId} OR s.member_id = #{memberId})
-		AND
-		WEEK(transaction_date, 1) = WEEK(NOW(), 1);
-	</select>
-
-	<select id="getExpenseWithCategory" parameterType="long"
-		resultType="Category">
-		SELECT
-		c.category_code,
-		c.category_name,
-		COALESCE(SUM(t.amount), 0) AS total_expense
-		FROM
-		Transaction t
-		JOIN
-		Category c ON t.category_code = c.category_code
-		LEFT JOIN
-		FreeAccount f ON t.free_account_id = f.account_id
-		LEFT JOIN
-		SavingsAccount s ON t.savings_account_id = s.account_id
-		WHERE
-		(f.member_id = #{memberId} OR s.member_id = #{memberId})
-		AND DATE_FORMAT(t.transaction_date, '%Y-%m') = DATE_FORMAT(NOW(),
-		'%Y-%m')
-		GROUP BY
-		c.category_code, c.category_name;
-	</select>
 
 
 </mapper>

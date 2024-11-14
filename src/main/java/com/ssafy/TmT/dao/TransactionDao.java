@@ -2,7 +2,7 @@ package com.ssafy.TmT.dao;
 
 import java.util.List;
 
-import com.ssafy.TmT.dto.TransactionDTO;
+import com.ssafy.TmT.dto.transaction.TransactionDTO;
 
 public interface TransactionDao {
 

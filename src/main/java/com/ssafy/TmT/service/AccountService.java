@@ -10,15 +10,15 @@ import org.springframework.stereotype.Service;
 
 import com.ssafy.TmT.dao.AccountDao;
 import com.ssafy.TmT.dao.TransactionDao;
-//import com.ssafy.TmT.dto.AccountDTO;
-import com.ssafy.TmT.dto.FreeAccountDetailResponse;
-import com.ssafy.TmT.dto.SearchCondition;
-import com.ssafy.TmT.dto.TransactionDTO;
 import com.ssafy.TmT.dto.account.BalanceResponse;
 import com.ssafy.TmT.dto.account.FreeAccountDetailDTO;
+import com.ssafy.TmT.dto.account.FreeAccountDetailResponse;
 import com.ssafy.TmT.dto.account.FreeAccountResponse;
 import com.ssafy.TmT.dto.account.SavingsAccountDetailDTO;
+import com.ssafy.TmT.dto.account.SavingsAccountDetailResponse;
 import com.ssafy.TmT.dto.account.SavingsAccountResponse;
+import com.ssafy.TmT.dto.notUsed.SearchCondition;
+import com.ssafy.TmT.dto.transaction.TransactionDTO;
 import com.ssafy.TmT.util.JwtUtil;
 
 import lombok.AllArgsConstructor;
@@ -57,10 +57,10 @@ public class AccountService {
 		return accounts;
 	}
 	
-	public SavingsAccountResponse getSavingAccountDetail(Long accountId) {
+	public SavingsAccountDetailResponse getSavingAccountDetail(Long accountId) {
 		SavingsAccountDetailDTO savingsAccountDto = accountDao.findSavingsAccountByAccountId(accountId);
 		List<TransactionDTO> transactions = transactionDao.findTransactionsByAccountId(accountId);
-		SavingsAccountResponse response = new SavingsAccountResponse(savingsAccountDto, transactions);
+		SavingsAccountDetailResponse response = new SavingsAccountDetailResponse(savingsAccountDto, transactions);
 		return response;
 	}
 

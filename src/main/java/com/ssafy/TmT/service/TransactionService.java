@@ -6,8 +6,8 @@ import java.util.List;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
-import com.ssafy.TmT.dto.ExpenseResponse;
-import com.ssafy.TmT.dto.TransactionDTO;
+import com.ssafy.TmT.dto.budget.ExpenseResponse;
+import com.ssafy.TmT.dto.transaction.TransactionDTO;
 
 @Service
 public class TransactionService {
