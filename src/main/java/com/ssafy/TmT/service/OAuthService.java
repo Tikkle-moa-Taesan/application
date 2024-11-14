@@ -4,10 +4,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ssafy.TmT.dto.IdTokenPayload;
-import com.ssafy.TmT.dto.KakaoOAuthResponse;
-import com.ssafy.TmT.dto.LoginResponse;
-import com.ssafy.TmT.dto.Profile;
+import com.ssafy.TmT.dto.oauth.IdTokenPayload;
+import com.ssafy.TmT.dto.oauth.KakaoOAuthResponse;
+import com.ssafy.TmT.dto.oauth.LoginResponse;
+import com.ssafy.TmT.dto.oauth.Profile;
 import com.ssafy.TmT.util.ApiUtil;
 import com.ssafy.TmT.util.JwtUtil;
 
@@ -24,22 +24,21 @@ public class OAuthService {
 	private final OAuthProvider oAuthProvider;
 	private final MemberService memberService;
 	
-//	@Transactional
     public LoginResponse getMemberInfo(String code, HttpHeaders headers) throws Exception {
     
     	// 인증코드로 카카오 엑세스 토큰 발급받기
     	KakaoOAuthResponse kakaoToken = oAuthProvider.getKakaoAccessToken(code);
-    	System.out.println("kakaoToken : " + kakaoToken);
+//    	System.out.println("kakaoToken : " + kakaoToken);
     	
     	// IdToken을 디코딩해보자
     	String idToken = kakaoToken.getId_token();
     	IdTokenPayload idTokenPayLoad = oAuthProvider.decodeIdToken(idToken);
     	System.out.println("idTokenPayload : " + idTokenPayLoad);
     	
-    	String subject = idTokenPayLoad.getSub();
+//    	String subject = idTokenPayLoad.getSub();
     	
     	// idTokenPayload 로 회원 가입 하기
-    	Profile profile = memberService.login(subject);
+    	Profile profile = memberService.login(idTokenPayLoad);
     	System.out.println("프로필 : " + profile);
     	
     	// member 값을 통해 커스텀 JWT를 생성
@@ -59,9 +58,6 @@ public class OAuthService {
     	return loginResponse;
     }
 
-	public void setCookie(HttpHeaders headers) {
-	
-	}
 
 }
 

@@ -6,7 +6,7 @@
 <mapper namespace="com.ssafy.TmT.dao.BudgetDao">
 
 
-<select id="getCategoryExpense" parameterType="long" resultType="Category">
+<select id="findCategoryExpense" parameterType="long" resultType="CategoryExpenseDTO">
     SELECT 
         food_expense,
         living_expense,
@@ -22,43 +22,45 @@
 </select>
 
 
-
-<select id="getExpenseStatistics" parameterType="long" resultType="StatisticsDTO">
-    SELECT 
-        (SELECT COALESCE(SUM(amount), 0)
-         FROM BudgetTransaction
-         WHERE member_id = #{memberId}
-           AND transaction_type = 'expense'
-           AND DATE_FORMAT(transaction_datetime, '%Y-%m') = DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y-%m')) AS lastMonthExpense,
-        
-        (SELECT COALESCE(SUM(amount), 0)
-         FROM BudgetTransaction
-         WHERE member_id = #{memberId}
-           AND transaction_type = 'expense'
-           AND DATE_FORMAT(transaction_datetime, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')) AS thisMonthExpense,
-        
-        (SELECT COALESCE(SUM(amount), 0)
-         FROM BudgetTransaction
-         WHERE member_id = #{memberId}
-           AND transaction_type = 'expense'
-           AND WEEK(transaction_datetime, 1) = WEEK(DATE_SUB(NOW(), INTERVAL 1 WEEK), 1)) AS lastWeekExpense,
-
-        (SELECT COALESCE(SUM(amount), 0)
-         FROM BudgetTransaction
-         WHERE member_id = #{memberId}
-           AND transaction_type = 'expense'
-           AND WEEK(transaction_datetime, 1) = WEEK(NOW(), 1)) AS thisWeekExpense
+<select id="calculateLastMonthExpense" parameterType="long" resultType="long">
+    SELECT COALESCE(SUM(amount), 0)
+    FROM BudgetTransaction
+    WHERE member_id = #{memberId}
+      AND transaction_type = 'expense'
+      AND DATE_FORMAT(transaction_datetime, '%Y-%m') = DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y-%m')
 </select>
 
-<select id="findBudgetRate" parameterType="long" resultType="BudgetRateDTO">
+
+
+<select id="calculateLastWeekExpense" parameterType="long" resultType="long">
+    SELECT COALESCE(SUM(amount), 0)
+    FROM BudgetTransaction
+    WHERE member_id = #{memberId}
+      AND transaction_type = 'expense'
+      AND WEEK(transaction_datetime, 1) = WEEK(DATE_SUB(NOW(), INTERVAL 1 WEEK), 1)
+</select>
+
+<select id="calculateThisWeekExpense" parameterType="long" resultType="long">
+    SELECT COALESCE(SUM(amount), 0)
+    FROM BudgetTransaction
+    WHERE member_id = #{memberId}
+      AND transaction_type = 'expense'
+      AND WEEK(transaction_datetime, 1) = WEEK(NOW(), 1)
+</select>
+
+<select id="calculateThisMonthExpense" parameterType="long" resultType="long">
+    SELECT COALESCE(SUM(amount), 0)
+    FROM BudgetTransaction
+    WHERE member_id = #{memberId}
+      AND transaction_type = 'expense'
+      AND DATE_FORMAT(transaction_datetime, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')
+</select>
+
+<select id="findBudget" parameterType="long" resultType="long">
     SELECT 
-        month_budget,
-        (food_expense + living_expense + housing_communication_expense + 
-         finance_expense + transportation_expense + childcare_expense + 
-         leisure_culture_expense + pet_expense + event_gift_expense) AS thisMonthExpense
+        month_budget
     FROM Budget
     WHERE member_id = #{memberId}
 </select>
-
 
 </mapper>

@@ -15,7 +15,7 @@ public class FreeAccountDetailDTO {
 	private Long accountId;	// 1	
 	
 	// 계좌 번호
-	private Long accountNumber;	//
+	private String accountNumber;	//
 	
 	// 통장 이름
 	private String accountName;	// 뱅크월렛 카카오 통장

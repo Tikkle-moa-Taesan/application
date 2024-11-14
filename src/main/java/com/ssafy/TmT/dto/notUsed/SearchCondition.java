@@ -1,4 +1,4 @@
-package com.ssafy.TmT.dto;
+package com.ssafy.TmT.dto.notUsed;
 
 import lombok.Getter;
 import lombok.Setter;

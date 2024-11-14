@@ -1,4 +1,4 @@
-package com.ssafy.TmT.dto;
+package com.ssafy.TmT.dto.oauth;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +9,12 @@ import lombok.ToString;
 @ToString
 public class Profile {
 	
+	// 멤버 아이디
 	private Long memberId;
+	
+	// 멤버 이름
 	private String memberName;
-	private Long totalBalance;
+	
+	// 멤버 프사
+	private String picture;
 }

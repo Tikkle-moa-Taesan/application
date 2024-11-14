@@ -1,20 +1,11 @@
 package com.ssafy.TmT.service;
 
-import org.springframework.http.HttpHeaders;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.ssafy.TmT.dao.BudgetDao;
 import com.ssafy.TmT.dao.MemberDao;
-import com.ssafy.TmT.dto.BudgetRateDTO;
-import com.ssafy.TmT.dto.Category;
-import com.ssafy.TmT.dto.ExpenseResponse;
-import com.ssafy.TmT.dto.IdTokenPayload;
-import com.ssafy.TmT.dto.Profile;
-import com.ssafy.TmT.dto.account.BalanceResponse;
-import com.ssafy.TmT.entity.Member;
-import com.ssafy.TmT.util.JwtUtil;
+import com.ssafy.TmT.dto.oauth.IdTokenPayload;
+import com.ssafy.TmT.dto.oauth.Profile;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,32 +13,22 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MemberService {
 	
-	private final JwtUtil jwtUtil;
 	private final MemberDao memberDao;
-	private final BudgetDao budgetDao;
 
-//
-//	public BalanceDTO getTotalBalance(String jwt) {
-//		Long memberId = jwtUtil.getMemberIdFromJwt(jwt);
-//		Long total = getTotalBalance(memberId);
-//		BalanceDTO response = new BalanceDTO(total);
-//		return response;
-//	}
-	
-
-	@Transactional
-	public void register(String subject) {
+//	@Transactional
+	public void register(IdTokenPayload idTokenPayload) {
 		System.out.println("회원가입 메서드 실행");
-		memberDao.regist(subject);
+		memberDao.regist(idTokenPayload);
 		System.out.println("회원가입 완료");
 	}
 
-	@Transactional
-	public Profile login(String subject) {
+//	@Transactional
+	public Profile login(IdTokenPayload idTokenPayload) {
+		String subject = idTokenPayload.getSub();
 		// 처음 로그인하는 경우 : 회원가입
 		if ((memberDao.login(subject) == null)) {
 			System.out.println("회원가입으로 연결");
-			register(subject);
+			register(idTokenPayload);
 		}
 		
 		Profile profile = memberDao.login(subject);

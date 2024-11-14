@@ -1,4 +1,4 @@
-package com.ssafy.TmT.dto;
+package com.ssafy.TmT.dto.transaction;
 
 import java.sql.Date;
 

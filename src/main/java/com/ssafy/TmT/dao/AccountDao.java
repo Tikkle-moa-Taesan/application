@@ -2,13 +2,14 @@ package com.ssafy.TmT.dao;
 
 import java.util.List;
 
-import com.ssafy.TmT.dto.FreeAccountDetailResponse;
-import com.ssafy.TmT.dto.SearchCondition;
 import com.ssafy.TmT.dto.account.BalanceResponse;
 import com.ssafy.TmT.dto.account.FreeAccountDetailDTO;
+import com.ssafy.TmT.dto.account.FreeAccountDetailResponse;
 import com.ssafy.TmT.dto.account.FreeAccountResponse;
 import com.ssafy.TmT.dto.account.SavingsAccountDetailDTO;
+import com.ssafy.TmT.dto.account.SavingsAccountDetailResponse;
 import com.ssafy.TmT.dto.account.SavingsAccountResponse;
+import com.ssafy.TmT.dto.notUsed.SearchCondition;
 
 public interface AccountDao {
 

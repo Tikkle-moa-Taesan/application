@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 
-import com.ssafy.TmT.dto.Profile;
+import com.ssafy.TmT.dto.oauth.Profile;
 import com.ssafy.TmT.exception.InvalidTokenException;
 import com.ssafy.TmT.exception.TokenExpiredException;
 

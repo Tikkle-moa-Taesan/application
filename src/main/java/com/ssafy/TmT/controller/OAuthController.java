@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.TmT.dto.LoginResponse;
+import com.ssafy.TmT.dto.oauth.LoginResponse;
 import com.ssafy.TmT.service.OAuthService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,7 +36,6 @@ public class OAuthController {
 		System.out.println("카카오로그인 호출");
 		HttpHeaders headers = new HttpHeaders();
 		LoginResponse loginResponse = oAuthService.getMemberInfo(code, headers);
-		oAuthService.setCookie(headers);
 		return ResponseEntity.ok().headers(headers).body(loginResponse);
 	}
 }
