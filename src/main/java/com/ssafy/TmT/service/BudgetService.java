@@ -1,5 +1,6 @@
 package com.ssafy.TmT.service;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.TmT.dao.BudgetDao;
@@ -17,10 +18,11 @@ import lombok.RequiredArgsConstructor;
 public class BudgetService {
 
 	private final BudgetDao budgetDao;
-	private final JwtUtil jwtUtil;
+//	private final JwtUtil jwtUtil;
 
-	public ExpenseResponse calculateExpenseAndBudget(String jwt) {
-		Long memberId = jwtUtil.getMemberIdFromJwt(jwt);
+	public ExpenseResponse calculateExpenseAndBudget() {
+		Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//		Long memberId = jwtUtil.getMemberIdFromJwt(jwt);
 		Category categoryExpense = budgetDao.getCategoryExpense(memberId);
 		StatisticsDTO expenseStatistics = budgetDao.getExpenseStatistics(memberId);
 		ExpenseDTO expenseDTO = new ExpenseDTO(categoryExpense,expenseStatistics);
@@ -36,8 +38,8 @@ public class BudgetService {
 	}
 	
 	// 여기서 알아내고 싶은 것 :  1. 이번달 예산. 2. 내가 이번달 쓴 돈
-	public BudgetRateDTO findBudgetRate(String jwt) {
-		Long memberId = jwtUtil.getMemberIdFromJwt(jwt);
+	public BudgetRateDTO findBudgetRate() {
+		Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		BudgetRateDTO response = budgetDao.findBudgetRate(memberId);
 		return response;
 	}
