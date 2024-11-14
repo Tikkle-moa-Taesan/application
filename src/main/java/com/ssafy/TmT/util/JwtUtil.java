@@ -140,6 +140,17 @@ public class JwtUtil {
 		return tokenMemberId == memberId;
 	}
 
+	// JWT 토큰의 유효성 검증 메서드
+	public boolean validateToken(String token) {
+		SecretKey secretKey = createSecretKey(); // SecretKey를 즉석에서 생성
+		try {
+			Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
 //	public Cookie createAccessTokenCookie(String customAccessToken) {
 //	    Cookie accessTokenCookie = new Cookie("accessCookie", customAccessToken);
 //        accessTokenCookie.setHttpOnly(true);
@@ -171,7 +182,7 @@ public class JwtUtil {
 
 	public void setRefreshToken(HttpHeaders headers, String jwtRefreshToken) {
 	  ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", jwtRefreshToken)
-	          .httpOnly(true)
+	          .httpOnly(false)
 	          .secure(true)  // HTTPS 환경에서는 true로 설정
 	          .path("/")
 	          .maxAge(REFRESH_TOKEN_EXPIRY) // 쿠키의 유효기간을 refreshToken과 동일하게 설정
@@ -180,5 +191,31 @@ public class JwtUtil {
 	          .build();
 	  headers.add("Set-Cookie", refreshTokenCookie.toString());
 	}
+	
+	  public HttpHeaders expireCookies() {
+		  HttpHeaders headers = new HttpHeaders();
+		
+		  // accessToken 쿠키를 만료시키기
+		  ResponseCookie accessTokenCookie = ResponseCookie.from("accessToken", "")
+		          .httpOnly(true)
+		          .secure(true)  // HTTPS 환경에서는 true로 설정
+		          .path("/")
+		          .maxAge(0)  // 쿠키의 만료 시간을 0으로 설정하여 즉시 만료
+		          .sameSite("None")  // 모든 요청에서 쿠키를 전송하도록 설정
+		          .build();
+		  headers.add(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());
+		
+		  // refreshToken 쿠키를 만료시키기
+		  ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", "")
+		          .httpOnly(true)
+		          .secure(true)  // HTTPS 환경에서는 true로 설정
+		          .path("/")
+		          .maxAge(0)  // 쿠키의 만료 시간을 0으로 설정하여 즉시 만료
+		          .sameSite("None")  // 모든 요청에서 쿠키를 전송하도록 설정
+		          .build();
+		  headers.add(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
+		
+		  return headers;
+		}
     
 }
