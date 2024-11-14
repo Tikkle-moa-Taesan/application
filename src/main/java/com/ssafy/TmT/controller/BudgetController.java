@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.TmT.dto.AccountResponse;
 import com.ssafy.TmT.dto.BudgetDTO;
 import com.ssafy.TmT.dto.BudgetRateDTO;
 import com.ssafy.TmT.dto.ExpenseDTO;

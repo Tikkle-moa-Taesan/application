@@ -182,7 +182,7 @@ public class JwtUtil {
 
 	public void setRefreshToken(HttpHeaders headers, String jwtRefreshToken) {
 	  ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", jwtRefreshToken)
-	          .httpOnly(false)
+	          .httpOnly(true)
 	          .secure(true)  // HTTPS 환경에서는 true로 설정
 	          .path("/")
 	          .maxAge(REFRESH_TOKEN_EXPIRY) // 쿠키의 유효기간을 refreshToken과 동일하게 설정
