@@ -6,19 +6,26 @@
 <mapper namespace="com.ssafy.TmT.dao.AccountDao">
 
 	<!-- 자유 계좌 조회 -->
-	<select id="findFreeAccounts" parameterType="Long"
-		resultType="FreeAccountResponse">
-		SELECT
-		account_id,
-		account_name,
-		balance
-		FROM
-		Account
-		WHERE
-		member_id = #{memberId}
-		AND
-		account_type = "free"
-	</select>
+<select id="findFreeAccounts" parameterType="Long" resultType="FreeAccountResponse">
+    SELECT
+        a.account_id AS accountId,
+        a.account_name AS accountName,
+        a.balance AS balance,
+        (a.balance - COALESCE(
+            (SELECT t.balance_after
+             FROM Transaction t
+             WHERE t.account_id = a.account_id
+               AND t.transaction_datetime &lt; CURDATE()  -- 어제 이전의 가장 최근 거래 내역
+             ORDER BY t.transaction_datetime DESC
+             LIMIT 1), 0)) AS balanceDifference  -- 어제와의 금액 차이
+    FROM
+        Account a
+    WHERE
+        a.member_id = #{memberId}
+        AND a.account_type = 'free'
+</select>
+
+
 	
 		<!-- 적금 계좌 조회 -->
 	<select id="findSavingsAccounts" parameterType="Long"

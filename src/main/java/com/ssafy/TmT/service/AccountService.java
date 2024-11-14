@@ -33,8 +33,13 @@ public class AccountService {
 	
 	private final TransactionDao transactionDao;
 
-//	private final JwtUtil jwtUtil;
-
+	public List<FreeAccountResponse> findFreeAccounts() {
+		Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		List<FreeAccountResponse> accounts = accountDao.findFreeAccounts(memberId);
+		
+		return accounts;
+	}
+	
 	public BalanceResponse getTotalBalance() {
 		Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		// 총 자산 찾기 위해서는 내 아이디를 가진 모든 계좌를 찾고, 그 금액을 갱신해야 함.
@@ -43,12 +48,7 @@ public class AccountService {
 		return balance;
 	}
 
-	public List<FreeAccountResponse> findFreeAccounts() {
-		Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		List<FreeAccountResponse> accounts = accountDao.findFreeAccounts(memberId);
-		
-		return accounts;
-	}
+
 
 	public List<SavingsAccountResponse> findSavingsAccounts() {
 		Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

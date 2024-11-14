@@ -20,6 +20,4 @@ public class TransactionService {
 	public List<TransactionDTO> findTransactionsByAccountId(Long accountId) {
 		return null;
 	}
-
-
 }
