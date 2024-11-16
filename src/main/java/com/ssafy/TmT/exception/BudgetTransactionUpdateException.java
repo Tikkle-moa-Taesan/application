@@ -5,6 +5,5 @@ public class BudgetTransactionUpdateException extends RuntimeException{
 	public BudgetTransactionUpdateException(String string, Exception e) {
 		super(string,e);
 	}
-	
 
 }

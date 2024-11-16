@@ -3,7 +3,7 @@ spring:
     name: TmT
 
   datasource:
-    url: jdbc:mysql://phoenixdb.cls4oq20gmca.ap-northeast-2.rds.amazonaws.com:3306/TeemoDB?serverTimezone=UTC
+    url: jdbc:mysql://phoenixdb.cls4oq20gmca.ap-northeast-2.rds.amazonaws.com:3306/TeemoDB?serverTimezone=Asia/Seoul
     username: admin
     password: admin1013
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -15,8 +15,8 @@ spring:
           kakao:
             client-id: 494d31e54fba839b5ff76e4797f5a7d8
             client-secret: RU5B76ilxdp8TDJU3lGTjDoIu0OJ1erg
-#            redirect-uri: "https://www.teemobudget.site/login/kakao/code"
-            redirect-uri: "http://localhost:5173/login/kakao/code"
+            redirect-uri: "https://www.teemobudget.site/login/kakao/code"
+#            redirect-uri: "http://localhost:5173/login/kakao/code"
             authorization-grant-type: authorization_code
             scope: 
             client-name: Kakao
