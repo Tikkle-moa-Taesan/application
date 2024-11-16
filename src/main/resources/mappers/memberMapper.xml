@@ -20,6 +20,14 @@
     VALUES (#{sub}, #{nickname}, #{picture})
 </insert>
 	
+	<select id="getProfile" parameterType="long" resultType="Profile">
+		SELECT
+		member_id,
+		member_name,
+		picture
+		FROM Member
+		WHERE member_id = #{memberId}
+	</select>
 
 
 

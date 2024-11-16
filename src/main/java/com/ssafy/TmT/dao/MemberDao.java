@@ -10,5 +10,6 @@ public interface MemberDao {
 
 	Profile login(String subject);
 
+	Profile getProfile(Long memberId);
 
 }
