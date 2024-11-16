@@ -16,6 +16,7 @@ import com.ssafy.TmT.dto.budget.ExpenseResponse;
 import com.ssafy.TmT.dto.budget.UpdateBudgetTransactionsDTO;
 import com.ssafy.TmT.dto.budget.WeekExpenseDTO;
 import com.ssafy.TmT.exception.BudgetCreationException;
+import com.ssafy.TmT.exception.BudgetNotFoundException;
 import com.ssafy.TmT.exception.BudgetTransactionUpdateException;
 
 import lombok.RequiredArgsConstructor;
@@ -26,31 +27,27 @@ public class BudgetService {
 
 	private final BudgetDao budgetDao;
 
-	
 	// 메서드 분리 끝. 가계부 생성은 성공적으로 되나, updateBudgetTransaction 이 안됨.
 	// 역할 : 가계부 생성
 	// 역할: 가계부 생성
 	public CreateBudgetResponse createBudget(CreateBudgetRequest request) {
-	    Long memberId = getAuthenticatedMemberId();
+		Long memberId = getAuthenticatedMemberId();
 
-	    try {
-	        // CreateBudgetDTO 생성 및 DAO 호출
-	        CreateBudgetDTO createBudgetDTO = new CreateBudgetDTO(memberId, request.getMonthBudget());
-	        budgetDao.createBudget(createBudgetDTO);
+		try {
+			// CreateBudgetDTO 생성 및 DAO 호출
+			CreateBudgetDTO createBudgetDTO = new CreateBudgetDTO(memberId, request.getMonthBudget());
+			budgetDao.createBudget(createBudgetDTO);
 
-	        // 생성된 가계부 ID 조회
-	        Long budgetId = budgetDao.getCurrentBudgetId(memberId);
+			// 생성된 가계부 ID 조회
+			Long budgetId = budgetDao.getCurrentBudgetId(memberId);
 
-	        // 응답 생성 및 반환
-	        return new CreateBudgetResponse(budgetId);
-	    } catch (Exception e) {
-	        throw new BudgetCreationException("Budget creation failed for memberId: " + memberId, e);
-	    }
+			// 응답 생성 및 반환
+			return new CreateBudgetResponse(budgetId);
+		} catch (Exception e) {
+			throw new BudgetCreationException("Budget creation failed for memberId: " + memberId, e);
+		}
 	}
 
-	
-	
-	
 	// 지출 통계 조회
 	public ExpenseResponse calculateExpenseAndBudget() {
 		Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -96,68 +93,63 @@ public class BudgetService {
 	public BudgetRateResponse findBudgetRate() {
 		Long currentBudgetId = getCurrentBudgetId(getAuthenticatedMemberId());
 		Long thisMonthExpense = calculateThisMonthExpense(currentBudgetId);
-		
+
 		Long thisMonthBudget = budgetDao.findBudget(currentBudgetId);
 		Float rate = ((float) 100 * Math.abs(thisMonthExpense) / thisMonthBudget);
 
 		BudgetRateResponse response = new BudgetRateResponse(thisMonthExpense, thisMonthBudget, rate);
 		return response;
 	}
-	
-	
-
 
 	private Long calculateThisWeekExpense(Long currentBudgetId) {
-	    return budgetDao.calculateWeekExpense(new WeekExpenseDTO(currentBudgetId, 0)); // 이번 주 데이터
+		return budgetDao.calculateWeekExpense(new WeekExpenseDTO(currentBudgetId, 0)); // 이번 주 데이터
 	}
-
 
 	private Long calculateThisMonthExpense(Long currentBudgetId) {
-	    return budgetDao.calculateMonthExpense(currentBudgetId);
+		return budgetDao.calculateMonthExpense(currentBudgetId);
 	}
-
 
 	// 지난달 지출 조회 ( 값이 없으면 0 )
 	private Long calculateLastMonthExpense(Long lastBudgetId) {
-	    if (lastBudgetId == null) {
-	        return 0L; // 지난 Budget이 없으면 0 반환
-	    }
-	    return budgetDao.calculateMonthExpense(lastBudgetId);
+		if (lastBudgetId == null) {
+			return 0L; // 지난 Budget이 없으면 0 반환
+		}
+		return budgetDao.calculateMonthExpense(lastBudgetId);
 	}
-
 
 	private Long calculateLastWeekExpense(Long currentBudgetId) {
-	    return budgetDao.calculateWeekExpense(new WeekExpenseDTO(currentBudgetId, -1)); // 지난 주 데이터
+		return budgetDao.calculateWeekExpense(new WeekExpenseDTO(currentBudgetId, -1)); // 지난 주 데이터
 	}
 
-
-
 	private Long getAuthenticatedMemberId() {
-	    return (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
 
 	// 컨트롤러 요청 처리
 	public void updateBudgetTransactions() {
 		Long memberId = getAuthenticatedMemberId();
-		Long budgetId = budgetDao.getCurrentBudgetId(memberId);
-		updateBudgetTransactions(memberId, budgetId);
+		try {
+			Long budgetId = budgetDao.getCurrentBudgetId(memberId); // 음... 이 부분을 예외 처리 해달라고 함.
+			updateBudgetTransactions(memberId, budgetId);
+		} catch (Exception e) {
+			throw new BudgetNotFoundException("이번 달 가계부가 없습니다.");
+		}
 	}
-	
+
 	// 이번 달 예산 업데이트
 	private void updateBudgetTransactions(Long memberId, Long budgetId) {
 		System.out.println("이번 달 예산 업데이트하기");
-		
-	    UpdateBudgetTransactionsDTO updateBudgetTransactionsDTO = new UpdateBudgetTransactionsDTO(memberId,budgetId);
+
+		UpdateBudgetTransactionsDTO updateBudgetTransactionsDTO = new UpdateBudgetTransactionsDTO(memberId, budgetId);
 		try {
 			System.out.println("업데이트 실행");
 			System.out.println("memberId : " + updateBudgetTransactionsDTO.getMemberId());
 			System.out.println("budgetId : " + updateBudgetTransactionsDTO.getBudgetId());
-	        budgetDao.updateBudgetTransaction(updateBudgetTransactionsDTO);
-	        System.out.println("업데이트 성공");
-	    } catch (Exception e) {
-	        throw new BudgetTransactionUpdateException("Failed to update transactions for budgetId: " + budgetId, e);
-	    }
+			budgetDao.updateBudgetTransaction(updateBudgetTransactionsDTO);
+			System.out.println("업데이트 성공");
+		} catch (Exception e) {
+			throw new BudgetTransactionUpdateException("Failed to update transactions for budgetId: " + budgetId, e);
+		}
 	}
-
 
 }
