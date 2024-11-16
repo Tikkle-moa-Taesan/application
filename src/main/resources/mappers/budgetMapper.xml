@@ -6,61 +6,149 @@
 <mapper namespace="com.ssafy.TmT.dao.BudgetDao">
 
 
+	<insert id="createBudget" parameterType="CreateBudgetDTO">
+		INSERT INTO Budget
+		(member_id, month_budget, created_at)
+		VALUES (#{memberId},
+		#{monthBudget}, NOW());
+	</insert>
+
+	<!-- 카테고리별 지출 불러오기 -->
 <select id="findCategoryExpense" parameterType="long" resultType="CategoryExpenseDTO">
-    SELECT 
-        food_expense,
-        living_expense,
-        housing_communication_expense,
-        finance_expense,
-        transportation_expense,
-        childcare_expense,
-        leisure_culture_expense,
-        pet_expense,
-        event_gift_expense
-    FROM Budget
-    WHERE member_id = #{memberId}
+    SELECT
+        COALESCE(SUM(CASE WHEN c.category_code = 1 THEN bt.amount END), 0) AS foodExpense,            
+        COALESCE(SUM(CASE WHEN c.category_code = 2 THEN bt.amount END), 0) AS livingExpense,          
+        COALESCE(SUM(CASE WHEN c.category_code = 3 THEN bt.amount END), 0) AS housingCommunicationExpense,
+        COALESCE(SUM(CASE WHEN c.category_code = 4 THEN bt.amount END), 0) AS financeExpense,          
+        COALESCE(SUM(CASE WHEN c.category_code = 5 THEN bt.amount END), 0) AS transportationExpense,  
+        COALESCE(SUM(CASE WHEN c.category_code = 6 THEN bt.amount END), 0) AS childcareExpense,        
+        COALESCE(SUM(CASE WHEN c.category_code = 7 THEN bt.amount END), 0) AS leisureCultureExpense,  
+        COALESCE(SUM(CASE WHEN c.category_code = 8 THEN bt.amount END), 0) AS petExpense,             
+        COALESCE(SUM(CASE WHEN c.category_code = 9 THEN bt.amount END), 0) AS eventGiftExpense       
+    FROM
+        BudgetTransaction bt
+    JOIN
+        Category c ON bt.category_code = c.category_code
+    WHERE
+        bt.budget_id = #{budgetId}
 </select>
 
+	
+	
+	<!-- BudgetTransaction 업데이트 -->
+	<insert id="updateBudgetTransaction"
+		parameterType="UpdateBudgetTransactionsDTO">
+		INSERT INTO BudgetTransaction (
+		budget_id,
+		transaction_id,
+		account_id,
+		category_code,
+		transaction_datetime,
+		amount,
+		merchant_name,
+		transaction_type
+		)
+		SELECT
+		#{budgetId} AS budget_id,
+		t.transaction_id,
+		t.account_id,
+		t.category_code,
+		t.transaction_datetime,
+		t.amount,
+		t.merchant_name,
+		t.transaction_type
+		FROM
+		Transaction t
+		WHERE
+		t.account_id IN (
+		SELECT account_id
+		FROM Account
+		WHERE member_id =
+		#{memberId}
+		)
+		AND DATE_FORMAT(t.transaction_datetime, '%Y-%m') =
+		DATE_FORMAT(NOW(),
+		'%Y-%m')
+		AND t.transaction_id NOT IN (
+		SELECT
+		transaction_id
+		FROM BudgetTransaction
+		WHERE budget_id = #{budgetId}
+		);
+	</insert>
+	
 
-<select id="calculateLastMonthExpense" parameterType="long" resultType="long">
-    SELECT COALESCE(SUM(amount), 0)
-    FROM BudgetTransaction
-    WHERE member_id = #{memberId}
-      AND transaction_type = 'expense'
-      AND DATE_FORMAT(transaction_datetime, '%Y-%m') = DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y-%m')
-</select>
+	<select id="getCurrentBudgetId" parameterType="long"
+		resultType="long">
+		SELECT budget_id
+		FROM Budget
+		WHERE member_id = #{memberId}
+		ORDER BY created_at DESC
+		LIMIT 1;
+	</select>
+
+
+	<!-- 최근 예산 ID 조회 -->
+	<select id="getPreviousBudgetId" parameterType="long"
+		resultType="long">
+		SELECT budget_id
+		FROM Budget
+		WHERE member_id = #{memberId}
+		AND DATE_FORMAT(created_at, '%Y-%m') = DATE_FORMAT(DATE_SUB(NOW(),
+		INTERVAL 1 MONTH), '%Y-%m')
+		ORDER BY created_at DESC
+		LIMIT 1;
+	</select>
+
+
+	<!-- 이번달 가계부 총 지출 합 모으기 -->
+	<select id="calculateMonthExpense" parameterType="long"
+		resultType="long">
+		SELECT COALESCE(SUM(amount), 0)
+		FROM BudgetTransaction
+		WHERE
+		budget_id = #{budgetId}
+		AND transaction_type = 'expense';
+	</select>
+
+	<!-- 일주일 지출 합, 이번주 저번주 선택 가능 -->
+	<select id="calculateWeekExpense" parameterType="WeekExpenseDTO"
+		resultType="long">
+		SELECT COALESCE(SUM(amount), 0)
+		FROM BudgetTransaction
+		WHERE
+		budget_id = #{budgetId}
+		AND transaction_type = 'expense'
+		AND
+		WEEK(transaction_datetime, 1) = WEEK(DATE_SUB(NOW(), INTERVAL
+		#{weekOffset} WEEK), 1);
+	</select>
 
 
 
-<select id="calculateLastWeekExpense" parameterType="long" resultType="long">
-    SELECT COALESCE(SUM(amount), 0)
-    FROM BudgetTransaction
-    WHERE member_id = #{memberId}
-      AND transaction_type = 'expense'
-      AND WEEK(transaction_datetime, 1) = WEEK(DATE_SUB(NOW(), INTERVAL 1 WEEK), 1)
-</select>
+	<!-- 카테고리별 예산 불러오기 -->
+	<select id="findCategoryBudget" parameterType="long"
+		resultType="CategoryExpenseDTO">
+		SELECT
+		food_expense,
+		living_expense,
+		housing_communication_expense,
+		finance_expense,
+		transportation_expense,
+		childcare_expense,
+		leisure_culture_expense,
+		pet_expense,
+		event_gift_expense
+		FROM Budget
+		WHERE budget_id = #{budgetId}
+	</select>
 
-<select id="calculateThisWeekExpense" parameterType="long" resultType="long">
-    SELECT COALESCE(SUM(amount), 0)
-    FROM BudgetTransaction
-    WHERE member_id = #{memberId}
-      AND transaction_type = 'expense'
-      AND WEEK(transaction_datetime, 1) = WEEK(NOW(), 1)
-</select>
 
-<select id="calculateThisMonthExpense" parameterType="long" resultType="long">
-    SELECT COALESCE(SUM(amount), 0)
-    FROM BudgetTransaction
-    WHERE member_id = #{memberId}
-      AND transaction_type = 'expense'
-      AND DATE_FORMAT(transaction_datetime, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')
-</select>
-
-<select id="findBudget" parameterType="long" resultType="long">
-    SELECT 
-        month_budget
-    FROM Budget
-    WHERE member_id = #{memberId}
-</select>
+	<select id="findBudget" parameterType="long" resultType="long">
+		SELECT
+		month_budget
+		FROM Budget
+		WHERE budget_id = #{budgetId}
+	</select>
 
 </mapper>

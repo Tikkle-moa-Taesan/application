@@ -31,7 +31,7 @@ public class AccountController {
 	
 	private final AccountService accountService;
 	
-	// 1번 api. 자유 계좌 조회 완성 : 24.11.14
+	// 1번 api. 자유 계좌 조회 완성 : 24.11.14	11.16 점검 완료
 	@GetMapping("/free")
 	@Operation(summary = "1. 자유 계좌 전체 조회", description = "JWT를 이용해 자유 입출금 계좌를 전부 조회합니다.")
 	@ApiResponse(responseCode = "200", description = "요청 성공")
@@ -42,7 +42,7 @@ public class AccountController {
 		return ResponseEntity.ok(response);
 	}
 	
-	// 2번 api. 적금 계좌 조회 완성 : 24.11.14
+	// 2번 api. 적금 계좌 조회 완성 : 24.11.14 11.16 점검 완료
 	@GetMapping("/savings")
 	@Operation(summary = "2. 적금 계좌 전체 조회", description = "JWT를 이용해 적금 계좌를 전부 조회합니다.")
 	@ApiResponse(responseCode = "200", description = "요청 성공")
@@ -53,7 +53,7 @@ public class AccountController {
 		return ResponseEntity.ok(response);
 	}
 	
-	// 3번 api. 총 자산 조회 완성 : 24.11.14
+	// 3번 api. 총 자산 조회 완성 : 24.11.14	11.16 점검 완료
 	@GetMapping("/balance")
 	@Operation(summary = "3. 총 자산 조회", description = "JWT를 이용해 총 자산을 조회합니다.")
 	@ApiResponse(responseCode = "200", description = "요청 성공")
@@ -66,7 +66,7 @@ public class AccountController {
 	
 	
 	// 6번 api
-	// 자산 페이지 - 자유 입출금 계좌 클릭 시 : 완성 24.11.14
+	// 자산 페이지 - 자유 입출금 계좌 클릭 시 : 완성 24.11.14. 16 점검 완료
 	@GetMapping("/free/{accountId}")
 	@Operation(summary = "6. 자유 계좌 단일 조회", description = "accountId를 이용해 자유 입출금 계좌를 조회합니다.")
 	@ApiResponse(responseCode = "200", description = "요청 성공")
@@ -78,7 +78,7 @@ public class AccountController {
 	}
 	
 	// 7번 api
-	// 자산 페이지 - 적금 계좌 클릭 시 : 완성 24.11.14
+	// 자산 페이지 - 적금 계좌 클릭 시 : 완성 24.11.14 16 점검 완료
 	@GetMapping("/savings/{accountId}")
 	@Operation(summary = "7. 적금 계좌 단일 조회", description = "accountId를 이용해 적금 계좌를 조회합니다.")
 	@ApiResponse(responseCode = "200", description = "요청 성공")
