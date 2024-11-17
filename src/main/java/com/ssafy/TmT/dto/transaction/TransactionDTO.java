@@ -1,6 +1,7 @@
 package com.ssafy.TmT.dto.transaction;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +17,7 @@ public class TransactionDTO {
 	private String categoryName;
 	
 	// 거래 시간 : 시,분,초 까지.
-	private Date transactionDatetime;
+	private Timestamp transactionDatetime;
 	
 	// 결제 금액 : 얼마를 결제했는지
 	private Long amount;

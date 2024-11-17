@@ -1,6 +1,7 @@
 package com.ssafy.TmT.service;
 
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.TmT.dao.MemberDao;
@@ -35,8 +36,17 @@ public class MemberService {
 		System.out.println("로그인 완료 : " + profile);
 		return profile;
 	}
+
+	public Profile getProfile() {
+		Long memberId = getAuthenticatedMemberId();
+		Profile profile = memberDao.getProfile(memberId);
+		return profile;
+	}
 	
-	
+
+	private Long getAuthenticatedMemberId() {
+	    return (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	}
 	
 }
 

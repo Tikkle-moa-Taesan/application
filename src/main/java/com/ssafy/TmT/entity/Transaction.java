@@ -6,10 +6,13 @@ import java.time.LocalDate;
 public class Transaction {
 
 	// 거래 ID
-	private Long transactionId;
+	private Long transactionId;	
 	
 	// 계좌 ID
-	private Long accountId;
+	private Long accountId;	
+	
+	//
+	private Long categoryCode;
 	
 	// 거래 날짜와 시간
 	private LocalDate transactionDate;
@@ -22,5 +25,8 @@ public class Transaction {
 	
 	// 상호명
 	private String merchantName;
+	
+	// 거래 타입
+	private Long transaction_type;
 	
 }
