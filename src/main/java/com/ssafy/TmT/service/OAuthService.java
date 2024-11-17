@@ -19,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OAuthService {
 
-	private final ApiUtil apiUtil;
 	private final JwtUtil jwtUtil;
 	private final OAuthProvider oAuthProvider;
 	private final MemberService memberService;
