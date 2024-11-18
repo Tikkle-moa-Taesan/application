@@ -1,9 +1,14 @@
 package com.ssafy.TmT.dao;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.ssafy.TmT.dto.budget.CategoryExpenseDTO;
 import com.ssafy.TmT.dto.budget.CreateBudgetDTO;
 import com.ssafy.TmT.dto.budget.UpdateBudgetTransactionsDTO;
 import com.ssafy.TmT.dto.budget.WeekExpenseDTO;
+import com.ssafy.TmT.dto.transaction.BudgetTransactionDTO;
 
 public interface BudgetDao {
 	// 예산 : 지출 비율
@@ -30,5 +35,11 @@ public interface BudgetDao {
 	CategoryExpenseDTO findCategoryBudget(Long budgetId);
 
 	Long findBudget(Long budgetId);
+
+	List<BudgetTransactionDTO> findBudgetTransactions(@Param("budgetId") Long budgetId, @Param("offset") int offset);
+
+	Long findBudgetByDate(@Param("year") String year, @Param("month") String month);
+
+	Long calculateMonthIncome(Long budgetId);
 
 }

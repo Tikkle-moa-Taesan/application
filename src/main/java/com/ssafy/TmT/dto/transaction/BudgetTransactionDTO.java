@@ -1,17 +1,18 @@
 package com.ssafy.TmT.dto.transaction;
 
-import java.sql.Date;
-import java.sql.Timestamp;
+import java.security.Timestamp;
+import java.util.List;
+
+import com.ssafy.TmT.entity.Tag;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class TransactionDTO {
-
-	// 그냥 필요할까봐 가져옴
-	private Long transactionId;
+public class BudgetTransactionDTO {
+	
+	private Long budgetTransactionId;
 	
 	// 어떤 거래 내역인지 알아야 함.
 	private String categoryName;
@@ -31,4 +32,7 @@ public class TransactionDTO {
 	// 거래 타입 : expense? save?
 	private String transactionType;
 	
+	// 연결되어있는 태그
+//	private List<Tag> tags;
+
 }

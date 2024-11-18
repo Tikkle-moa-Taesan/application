@@ -1,11 +1,16 @@
 package com.ssafy.TmT.service;
 
-import org.springframework.security.core.context.SecurityContextHolder;
+import java.util.List;
 
+
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.TmT.dao.BudgetDao;
+import com.ssafy.TmT.dto.account.FreeAccountDetailResponse;
+import com.ssafy.TmT.dto.budget.BudgetDetailResponse;
+import com.ssafy.TmT.dto.budget.BudgetProfileResponse;
 import com.ssafy.TmT.dto.budget.BudgetRateDTO;
 import com.ssafy.TmT.dto.budget.BudgetRateResponse;
 import com.ssafy.TmT.dto.budget.CategoryExpenseDTO;
@@ -15,6 +20,8 @@ import com.ssafy.TmT.dto.budget.CreateBudgetResponse;
 import com.ssafy.TmT.dto.budget.ExpenseResponse;
 import com.ssafy.TmT.dto.budget.UpdateBudgetTransactionsDTO;
 import com.ssafy.TmT.dto.budget.WeekExpenseDTO;
+import com.ssafy.TmT.dto.transaction.BudgetTransactionDTO;
+import com.ssafy.TmT.entity.Budget;
 import com.ssafy.TmT.exception.BudgetCreationException;
 import com.ssafy.TmT.exception.BudgetNotFoundException;
 import com.ssafy.TmT.exception.BudgetTransactionUpdateException;
@@ -58,11 +65,14 @@ public class BudgetService {
 		// 이 메서드를 쪼개자.
 
 		// 1. 지난 달에 얼마 썼는지 알아오기
-		Long lastMonthExpense = calculateLastMonthExpense(lastBudgetId);
+		Long lastMonthExpense = budgetDao.calculateMonthExpense(lastBudgetId);
+				
 		System.out.println("지난달 통계 : " + lastMonthExpense);
 
 		// 2. 이번 달에 얼마 썼는지 알아오기
-		Long thisMonthExpense = calculateThisMonthExpense(currentBudgetId);
+		Long thisMonthExpense = budgetDao.calculateMonthExpense(currentBudgetId);
+				
+//				calculateThisMonthExpense(currentBudgetId);
 		System.out.println("이번 달 합 : " + thisMonthExpense);
 
 		// 3. 이번 달 카테고리별 예산 조회하기
@@ -92,7 +102,8 @@ public class BudgetService {
 	// 여기서 알아내고 싶은 것 : 1. 이번달 예산. 2. 내가 이번달 쓴 돈
 	public BudgetRateResponse findBudgetRate() {
 		Long currentBudgetId = getCurrentBudgetId(getAuthenticatedMemberId());
-		Long thisMonthExpense = calculateThisMonthExpense(currentBudgetId);
+		Long thisMonthExpense = budgetDao.calculateMonthExpense(currentBudgetId);
+//				calculateThisMonthExpense(currentBudgetId);
 
 		Long thisMonthBudget = budgetDao.findBudget(currentBudgetId);
 		Float rate = ((float) 100 * Math.abs(thisMonthExpense) / thisMonthBudget);
@@ -105,17 +116,17 @@ public class BudgetService {
 		return budgetDao.calculateWeekExpense(new WeekExpenseDTO(currentBudgetId, 0)); // 이번 주 데이터
 	}
 
-	private Long calculateThisMonthExpense(Long currentBudgetId) {
-		return budgetDao.calculateMonthExpense(currentBudgetId);
-	}
+//	private Long calculateThisMonthExpense(Long currentBudgetId) {
+//		return budgetDao.calculateMonthExpense(currentBudgetId);
+//	}
 
 	// 지난달 지출 조회 ( 값이 없으면 0 )
-	private Long calculateLastMonthExpense(Long lastBudgetId) {
-		if (lastBudgetId == null) {
-			return 0L; // 지난 Budget이 없으면 0 반환
-		}
-		return budgetDao.calculateMonthExpense(lastBudgetId);
-	}
+//	private Long calculateLastMonthExpense(Long lastBudgetId) {
+//		if (lastBudgetId == null) {
+//			return 0L; // 지난 Budget이 없으면 0 반환
+//		}
+//		return budgetDao.calculateMonthExpense(lastBudgetId);
+//	}
 
 	private Long calculateLastWeekExpense(Long currentBudgetId) {
 		return budgetDao.calculateWeekExpense(new WeekExpenseDTO(currentBudgetId, -1)); // 지난 주 데이터
@@ -150,6 +161,27 @@ public class BudgetService {
 		} catch (Exception e) {
 			throw new BudgetTransactionUpdateException("Failed to update transactions for budgetId: " + budgetId, e);
 		}
+	}
+
+	public BudgetDetailResponse findBudgetTransactions(Long budgetId, int page) {
+		int offset = page * 20;
+		List<BudgetTransactionDTO> transactions = budgetDao.findBudgetTransactions(budgetId, offset);
+		BudgetDetailResponse response = new BudgetDetailResponse(transactions);
+		return response;
+	}
+
+	public BudgetProfileResponse findBudgetByDate(Integer date) {
+		String year = String.valueOf(date).substring(0,4);
+		String month = String.valueOf(date).substring(4,6);
+
+		Long budgetId = budgetDao.findBudgetByDate(year,month);
+		Long monthExpense = budgetDao.calculateMonthExpense(budgetId);
+		Long monthIncome = budgetDao.calculateMonthIncome(budgetId);
+		
+		BudgetProfileResponse response = new BudgetProfileResponse(budgetId, monthExpense, monthIncome);
+		
+		
+		return response;
 	}
 
 }
