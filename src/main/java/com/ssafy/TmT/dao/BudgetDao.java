@@ -1,6 +1,7 @@
 package com.ssafy.TmT.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -16,17 +17,17 @@ public interface BudgetDao {
 
 
 	// 작동함
-	void createBudget(CreateBudgetDTO createBudgetDTO);
+	int createBudget(CreateBudgetDTO createBudgetDTO);
 
 	// 작동모름
 	CategoryExpenseDTO findCategoryExpense(Long budgetId);
 	
 	// 작동함
-	void updateBudgetTransaction(UpdateBudgetTransactionsDTO updateBudgetTransactionsDTO);
+	int updateBudgetTransaction(UpdateBudgetTransactionsDTO updateBudgetTransactionsDTO);
 
-	Long getCurrentBudgetId(Long memberId);	// 이번달 버젯 찾기
+	Optional<Long> getCurrentBudgetId(Long memberId);	// 이번달 버젯 찾기
 	
-	Long getPreviousBudgetId(Long memberId);	// 지난달 버젯 찾기
+	Optional<Long> getPreviousBudgetId(Long memberId);	// 지난달 버젯 찾기
 
 	Long calculateMonthExpense(Long currentBudgetId);	// 이번 달 가계부 지출
 
@@ -34,11 +35,11 @@ public interface BudgetDao {
 	
 	CategoryExpenseDTO findCategoryBudget(Long budgetId);
 
-	Long findBudget(Long budgetId);
+	Optional<Long> findBudget(Long budgetId);
 
 	List<BudgetTransactionDTO> findBudgetTransactions(@Param("budgetId") Long budgetId, @Param("offset") int offset);
 
-	Long findBudgetByDate(@Param("year") String year, @Param("month") String month);
+	Optional<Long> findBudgetByDate(@Param("year") String year, @Param("month") String month);
 
 	Long calculateMonthIncome(Long budgetId);
 

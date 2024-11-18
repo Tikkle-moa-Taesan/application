@@ -2,11 +2,11 @@ package com.ssafy.TmT.service;
 
 import java.util.List;
 
-
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ssafy.TmT.controller.AccountController;
 import com.ssafy.TmT.dao.BudgetDao;
 import com.ssafy.TmT.dto.account.FreeAccountDetailResponse;
 import com.ssafy.TmT.dto.budget.BudgetDetailResponse;
@@ -22,13 +22,14 @@ import com.ssafy.TmT.dto.budget.UpdateBudgetTransactionsDTO;
 import com.ssafy.TmT.dto.budget.WeekExpenseDTO;
 import com.ssafy.TmT.dto.transaction.BudgetTransactionDTO;
 import com.ssafy.TmT.entity.Budget;
-import com.ssafy.TmT.exception.BudgetCreationException;
-import com.ssafy.TmT.exception.BudgetNotFoundException;
-import com.ssafy.TmT.exception.BudgetTransactionUpdateException;
+import com.ssafy.TmT.exception.CustomException;
+import com.ssafy.TmT.exception.ErrorCode;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class BudgetService {
 
@@ -40,38 +41,38 @@ public class BudgetService {
 	public CreateBudgetResponse createBudget(CreateBudgetRequest request) {
 		Long memberId = getAuthenticatedMemberId();
 
-		try {
-			// CreateBudgetDTO 생성 및 DAO 호출
-			CreateBudgetDTO createBudgetDTO = new CreateBudgetDTO(memberId, request.getMonthBudget());
-			budgetDao.createBudget(createBudgetDTO);
+		// CreateBudgetDTO 생성 및 DAO 호출
+		CreateBudgetDTO createBudgetDTO = new CreateBudgetDTO(memberId, request.getMonthBudget());
+		budgetDao.createBudget(createBudgetDTO);
 
-			// 생성된 가계부 ID 조회
-			Long budgetId = budgetDao.getCurrentBudgetId(memberId);
+		// 생성된 가계부 ID 조회
+		Long budgetId = budgetDao.getCurrentBudgetId(memberId)
+				.orElseThrow(() -> new CustomException(ErrorCode.BUDGET_NOT_FOUND));
 
-			// 응답 생성 및 반환
-			return new CreateBudgetResponse(budgetId);
-		} catch (Exception e) {
-			throw new BudgetCreationException("Budget creation failed for memberId: " + memberId, e);
-		}
+		// 응답 생성 및 반환
+		return new CreateBudgetResponse(budgetId);
 	}
 
 	// 지출 통계 조회
 	public ExpenseResponse calculateExpenseAndBudget() {
 		Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		Long currentBudgetId = getCurrentBudgetId(memberId);
-		Long lastBudgetId = getPreviousBudgetId(memberId);
+		Long currentBudgetId = budgetDao.getCurrentBudgetId(memberId)
+				.orElseThrow(() -> new CustomException(ErrorCode.BUDGET_NOT_FOUND));
+//				getCurrentBudgetId(memberId);
+		Long lastBudgetId = budgetDao.getPreviousBudgetId(memberId)
+				.orElseThrow(() -> new CustomException(ErrorCode.BUDGET_NOT_FOUND));
 		System.out.println("currentBudgetId : " + currentBudgetId);
 		System.out.println("lastBudgetId: " + lastBudgetId);
 		// 이 메서드를 쪼개자.
 
 		// 1. 지난 달에 얼마 썼는지 알아오기
 		Long lastMonthExpense = budgetDao.calculateMonthExpense(lastBudgetId);
-				
+
 		System.out.println("지난달 통계 : " + lastMonthExpense);
 
 		// 2. 이번 달에 얼마 썼는지 알아오기
 		Long thisMonthExpense = budgetDao.calculateMonthExpense(currentBudgetId);
-				
+
 //				calculateThisMonthExpense(currentBudgetId);
 		System.out.println("이번 달 합 : " + thisMonthExpense);
 
@@ -91,12 +92,9 @@ public class BudgetService {
 		return response;
 	}
 
-	private Long getPreviousBudgetId(Long memberId) {
-		return budgetDao.getPreviousBudgetId(memberId);
-	}
-
 	private Long getCurrentBudgetId(Long memberId) {
-		return budgetDao.getCurrentBudgetId(memberId);
+		return budgetDao.getCurrentBudgetId(memberId)
+				.orElseThrow(() -> new CustomException(ErrorCode.BUDGET_NOT_FOUND));
 	}
 
 	// 여기서 알아내고 싶은 것 : 1. 이번달 예산. 2. 내가 이번달 쓴 돈
@@ -105,7 +103,8 @@ public class BudgetService {
 		Long thisMonthExpense = budgetDao.calculateMonthExpense(currentBudgetId);
 //				calculateThisMonthExpense(currentBudgetId);
 
-		Long thisMonthBudget = budgetDao.findBudget(currentBudgetId);
+		Long thisMonthBudget = budgetDao.findBudget(currentBudgetId)
+				.orElseThrow(() -> new CustomException(ErrorCode.BUDGET_NOT_FOUND));
 		Float rate = ((float) 100 * Math.abs(thisMonthExpense) / thisMonthBudget);
 
 		BudgetRateResponse response = new BudgetRateResponse(thisMonthExpense, thisMonthBudget, rate);
@@ -139,28 +138,21 @@ public class BudgetService {
 	// 컨트롤러 요청 처리
 	public void updateBudgetTransactions() {
 		Long memberId = getAuthenticatedMemberId();
-		try {
-			Long budgetId = budgetDao.getCurrentBudgetId(memberId); // 음... 이 부분을 예외 처리 해달라고 함.
-			updateBudgetTransactions(memberId, budgetId);
-		} catch (Exception e) {
-			throw new BudgetNotFoundException("이번 달 가계부가 없습니다.");
-		}
+		Long budgetId = budgetDao.getCurrentBudgetId(memberId)
+				.orElseThrow(() -> new CustomException(ErrorCode.BUDGET_NOT_FOUND)); // 음... 이 부분을 예외 처리 해달라고 함.
+		updateBudgetTransactions(memberId, budgetId);
 	}
 
 	// 이번 달 예산 업데이트
 	private void updateBudgetTransactions(Long memberId, Long budgetId) {
-		System.out.println("이번 달 예산 업데이트하기");
-
+		log.info("서비스 : updateBudgetTransactions() memberId : " + memberId + " , budgetId : " + budgetId);
 		UpdateBudgetTransactionsDTO updateBudgetTransactionsDTO = new UpdateBudgetTransactionsDTO(memberId, budgetId);
-		try {
-			System.out.println("업데이트 실행");
-			System.out.println("memberId : " + updateBudgetTransactionsDTO.getMemberId());
-			System.out.println("budgetId : " + updateBudgetTransactionsDTO.getBudgetId());
-			budgetDao.updateBudgetTransaction(updateBudgetTransactionsDTO);
-			System.out.println("업데이트 성공");
-		} catch (Exception e) {
-			throw new BudgetTransactionUpdateException("Failed to update transactions for budgetId: " + budgetId, e);
-		}
+		System.out.println("업데이트 실행");
+		System.out.println("memberId : " + updateBudgetTransactionsDTO.getMemberId());
+		System.out.println("budgetId : " + updateBudgetTransactionsDTO.getBudgetId());
+		int result = budgetDao.updateBudgetTransaction(updateBudgetTransactionsDTO);
+		if (result == 0) throw new CustomException(ErrorCode.BUDGET_TRANSACTION_UPDATE_FAILED);
+		System.out.println("업데이트 성공");
 	}
 
 	public BudgetDetailResponse findBudgetTransactions(Long budgetId, int page) {
@@ -171,16 +163,15 @@ public class BudgetService {
 	}
 
 	public BudgetProfileResponse findBudgetByDate(Integer date) {
-		String year = String.valueOf(date).substring(0,4);
-		String month = String.valueOf(date).substring(4,6);
+		String year = String.valueOf(date).substring(0, 4);
+		String month = String.valueOf(date).substring(4, 6);
 
-		Long budgetId = budgetDao.findBudgetByDate(year,month);
+		Long budgetId = budgetDao.findBudgetByDate(year, month).orElseThrow(() -> new CustomException(ErrorCode.BUDGET_NOT_FOUND));
 		Long monthExpense = budgetDao.calculateMonthExpense(budgetId);
 		Long monthIncome = budgetDao.calculateMonthIncome(budgetId);
-		
+
 		BudgetProfileResponse response = new BudgetProfileResponse(budgetId, monthExpense, monthIncome);
-		
-		
+
 		return response;
 	}
 
