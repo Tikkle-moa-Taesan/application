@@ -2,6 +2,7 @@ package com.ssafy.TmT.controller;
 
 import java.util.List;
 
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.TmT.dto.account.BalanceResponse;
@@ -19,6 +21,7 @@ import com.ssafy.TmT.dto.account.SavingsAccountResponse;
 import com.ssafy.TmT.service.AccountService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -71,9 +74,9 @@ public class AccountController {
 	@Operation(summary = "6. 자유 계좌 단일 조회", description = "accountId를 이용해 자유 입출금 계좌를 조회합니다.")
 	@ApiResponse(responseCode = "200", description = "요청 성공")
 	@ApiResponse(responseCode = "400", description = "요청 실패")
-	public ResponseEntity<FreeAccountDetailResponse> getFreeAccountDetail(@PathVariable Long accountId) {
+	public ResponseEntity<FreeAccountDetailResponse> getFreeAccountDetail(@PathVariable Long accountId, @RequestParam(defaultValue = "0") int page) {
 		log.info("컨트롤러 : 자유 계좌 단일 조회");
-		FreeAccountDetailResponse response = accountService.findFreeAccountDetail(accountId);	
+		FreeAccountDetailResponse response = accountService.findFreeAccountDetail(accountId, page);	
 		return ResponseEntity.ok(response);
 	}
 	
@@ -83,9 +86,9 @@ public class AccountController {
 	@Operation(summary = "7. 적금 계좌 단일 조회", description = "accountId를 이용해 적금 계좌를 조회합니다.")
 	@ApiResponse(responseCode = "200", description = "요청 성공")
 	@ApiResponse(responseCode = "400", description = "요청 실패")
-	public ResponseEntity<SavingsAccountDetailResponse> getSavingAccountDetail(@PathVariable Long accountId) {
+	public ResponseEntity<SavingsAccountDetailResponse> getSavingAccountDetail(@PathVariable Long accountId,  @RequestParam(defaultValue = "0") int page) {
 		System.out.println("적금 계좌 단일 조회");
-		SavingsAccountDetailResponse response = accountService.getSavingAccountDetail(accountId);	
+		SavingsAccountDetailResponse response = accountService.getSavingAccountDetail(accountId, page);	
 		return ResponseEntity.ok(response);
 	}
 }

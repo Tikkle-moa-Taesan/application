@@ -57,17 +57,19 @@ public class AccountService {
 		return accounts;
 	}
 	
-	public SavingsAccountDetailResponse getSavingAccountDetail(Long accountId) {
+	public SavingsAccountDetailResponse getSavingAccountDetail(Long accountId, int page) {
+		int offset = page * 20;
 		SavingsAccountDetailDTO savingsAccountDto = accountDao.findSavingsAccountByAccountId(accountId);
-		List<TransactionDTO> transactions = transactionDao.findTransactionsByAccountId(accountId);
+		List<TransactionDTO> transactions = transactionDao.findTransactionsByAccountId(accountId, offset);
 		SavingsAccountDetailResponse response = new SavingsAccountDetailResponse(savingsAccountDto, transactions);
 		return response;
 	}
 
 	// 작성 끝. 테스트 시작.
-	public FreeAccountDetailResponse findFreeAccountDetail(Long accountId) {
+	public FreeAccountDetailResponse findFreeAccountDetail(Long accountId, int page) {
+		int offset = page * 20;	// 사이즈를 5로 설정
 		FreeAccountDetailDTO freeAccountDto = accountDao.findFreeAccountByAccountId(accountId);
-		List<TransactionDTO> transactions = transactionDao.findTransactionsByAccountId(accountId);
+		List<TransactionDTO> transactions = transactionDao.findTransactionsByAccountId(accountId, offset);
 		FreeAccountDetailResponse response = new FreeAccountDetailResponse(freeAccountDto, transactions);
 		return response;
 	}
