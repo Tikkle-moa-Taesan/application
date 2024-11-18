@@ -3,10 +3,8 @@ package com.ssafy.TmT.service;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.TmT.dao.BudgetDao;
-import com.ssafy.TmT.dto.budget.BudgetRateDTO;
 import com.ssafy.TmT.dto.budget.BudgetRateResponse;
 import com.ssafy.TmT.dto.budget.CategoryExpenseDTO;
 import com.ssafy.TmT.dto.budget.CreateBudgetDTO;
@@ -39,7 +37,7 @@ public class BudgetService {
 			budgetDao.createBudget(createBudgetDTO);
 
 			// 생성된 가계부 ID 조회
-			Long budgetId = budgetDao.getCurrentBudgetId(memberId);
+			Long budgetId = budgetDao.getCurrentBudgetId(memberId).orElseThrow(() -> new BudgetNotFoundException("이번 달 가계부가 없습니다."));
 
 			// 응답 생성 및 반환
 			return new CreateBudgetResponse(budgetId);
@@ -86,7 +84,7 @@ public class BudgetService {
 	}
 
 	private Long getCurrentBudgetId(Long memberId) {
-		return budgetDao.getCurrentBudgetId(memberId);
+		return budgetDao.getCurrentBudgetId(memberId).orElseThrow(() -> new BudgetNotFoundException("이번 달 가계부가 없습니다."));
 	}
 
 	// 여기서 알아내고 싶은 것 : 1. 이번달 예산. 2. 내가 이번달 쓴 돈
@@ -128,12 +126,8 @@ public class BudgetService {
 	// 컨트롤러 요청 처리
 	public void updateBudgetTransactions() {
 		Long memberId = getAuthenticatedMemberId();
-		try {
-			Long budgetId = budgetDao.getCurrentBudgetId(memberId); // 음... 이 부분을 예외 처리 해달라고 함.
-			updateBudgetTransactions(memberId, budgetId);
-		} catch (Exception e) {
-			throw new BudgetNotFoundException("이번 달 가계부가 없습니다.");
-		}
+		Long budgetId = budgetDao.getCurrentBudgetId(memberId).orElseThrow(() -> new BudgetNotFoundException("이번 달 가계부가 없습니다.")); // 음... 이 부분을 예외 처리 해달라고 함.
+		updateBudgetTransactions(memberId, budgetId);
 	}
 
 	// 이번 달 예산 업데이트

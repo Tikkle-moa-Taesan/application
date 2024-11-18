@@ -43,7 +43,7 @@ public class OAuthProvider {
 		// 요청 보내기
 		HttpHeaders headers = new HttpHeaders();
 //	    headers.setContentType(MediaType.valueOf("application/x-www-form-urlencoded;charset=utf-8"));
-		
+
 		MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
 		body.add("grant_type", "authorization_code");
 		body.add("client_id", kakaoClientId);
