@@ -51,14 +51,8 @@ public class BudgetController {
 	// 11. 16 다운로드 되는거 확인. 이번달것만 됨.
 	@PostMapping("/download")
 	public ResponseEntity<String> downloadTransactions() {
-	    System.out.println("최신 거래내역 다운로드하기");
-	    try {
-	        budgetService.updateBudgetTransactions();
-	        return ResponseEntity.ok("Transactions updated successfully");
-	    } catch (Exception e) {
-	        System.err.println("거래 내역 업데이트 중 에러 발생: " + e.getMessage());
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update transactions");
-	    }
+		budgetService.updateBudgetTransactions();
+        return ResponseEntity.ok("업데이트 완료");
 	}
 
 	

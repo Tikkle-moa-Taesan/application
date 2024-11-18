@@ -127,21 +127,22 @@ public class BudgetService {
 	public void updateBudgetTransactions() {
 		Long memberId = getAuthenticatedMemberId();
 		Long budgetId = budgetDao.getCurrentBudgetId(memberId)
-				.orElseThrow(() -> new CustomException(ErrorCode.BUDGET_NOT_FOUND)); // 음... 이 부분을 예외 처리 해달라고 함.
-		updateBudgetTransactions(memberId, budgetId);
+				.orElseThrow(() -> new CustomException(ErrorCode.BUDGET_NOT_FOUND));
+		
+		UpdateBudgetTransactionsDTO updateBudgetTransactionsDTO = new UpdateBudgetTransactionsDTO(memberId, budgetId);
+		budgetDao.updateBudgetTransaction(updateBudgetTransactionsDTO);
 	}
 
 	// 이번 달 예산 업데이트
-	private void updateBudgetTransactions(Long memberId, Long budgetId) {
-		log.info("서비스 : updateBudgetTransactions() memberId : " + memberId + " , budgetId : " + budgetId);
-		UpdateBudgetTransactionsDTO updateBudgetTransactionsDTO = new UpdateBudgetTransactionsDTO(memberId, budgetId);
-		System.out.println("업데이트 실행");
-		System.out.println("memberId : " + updateBudgetTransactionsDTO.getMemberId());
-		System.out.println("budgetId : " + updateBudgetTransactionsDTO.getBudgetId());
-		int result = budgetDao.updateBudgetTransaction(updateBudgetTransactionsDTO);
-		if (result == 0) throw new CustomException(ErrorCode.BUDGET_TRANSACTION_UPDATE_FAILED);
-		System.out.println("업데이트 성공");
-	}
+//	private int updateBudgetTransactions(Long memberId, Long budgetId) {
+//		log.info("서비스 : updateBudgetTransactions() memberId : " + memberId + " , budgetId : " + budgetId);
+//		
+//		System.out.println("업데이트 실행");
+//		System.out.println("memberId : " + updateBudgetTransactionsDTO.getMemberId());
+//		System.out.println("budgetId : " + updateBudgetTransactionsDTO.getBudgetId());
+//
+//		System.out.println("업데이트 성공");
+//	}
 
 	public BudgetDetailResponse findBudgetTransactions(Long budgetId, int page) {
 		int offset = page * 20;
