@@ -37,6 +37,7 @@ public class ApiUtil {
         URI uri = uriBuilder.build().toUri();
         HttpEntity<Void> entity = new HttpEntity<>(headers);
         
+        restTemplate.postForEntity(uri, entity, responseType)
         return restTemplate.exchange(uri, HttpMethod.GET, entity, responseType);
     }
 

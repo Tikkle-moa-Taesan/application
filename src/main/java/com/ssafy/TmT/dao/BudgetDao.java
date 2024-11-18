@@ -1,5 +1,7 @@
 package com.ssafy.TmT.dao;
 
+import java.util.Optional;
+
 import com.ssafy.TmT.dto.budget.CategoryExpenseDTO;
 import com.ssafy.TmT.dto.budget.CreateBudgetDTO;
 import com.ssafy.TmT.dto.budget.UpdateBudgetTransactionsDTO;
@@ -19,7 +21,7 @@ public interface BudgetDao {
 	// 작동함
 	void updateBudgetTransaction(UpdateBudgetTransactionsDTO updateBudgetTransactionsDTO);
 
-	Long getCurrentBudgetId(Long memberId);	// 이번달 버젯 찾기
+	Optional<Long> getCurrentBudgetId(Long memberId);	// 이번달 버젯 찾기
 	
 	Long getPreviousBudgetId(Long memberId);	// 지난달 버젯 찾기
 
