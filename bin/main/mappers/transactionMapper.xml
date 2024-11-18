@@ -5,14 +5,15 @@
   
   <mapper namespace="com.ssafy.TmT.dao.TransactionDao">
 	
-<select id="findTransactionsByAccountId" parameterType="Long" resultType="TransactionDTO">
+<select id="findTransactionsByAccountId" resultType="TransactionDTO">
     SELECT
         t.transaction_id,
         c.category_name,
         t.transaction_datetime,
         t.amount,
         t.balance_after,
-        t.merchant_name
+        t.merchant_name,
+        t.transaction_type
     FROM
         Transaction t
     LEFT JOIN
@@ -21,6 +22,7 @@
         t.account_id = #{accountId}
     ORDER BY
         t.transaction_datetime DESC
+    LIMIT #{offset}, 20
 </select>
 
  

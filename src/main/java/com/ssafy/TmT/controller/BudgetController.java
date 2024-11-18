@@ -3,11 +3,16 @@ package com.ssafy.TmT.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.TmT.dto.account.FreeAccountDetailResponse;
+import com.ssafy.TmT.dto.budget.BudgetDetailResponse;
+import com.ssafy.TmT.dto.budget.BudgetProfileResponse;
 import com.ssafy.TmT.dto.budget.BudgetRateResponse;
 import com.ssafy.TmT.dto.budget.CreateBudgetRequest;
 import com.ssafy.TmT.dto.budget.CreateBudgetResponse;
@@ -35,9 +40,9 @@ public class BudgetController {
 	@ApiResponse(responseCode = "200", description = "요청 성공")
 	@ApiResponse(responseCode = "400", description = "요청 실패")
 	public ResponseEntity<CreateBudgetResponse> createBudget(@RequestBody CreateBudgetRequest request) {
-		System.out.println("컨트롤러 : 가계부 생성하기");
+		log.info("컨트롤러 : 가계부 생성하기");
 		CreateBudgetResponse response = budgetService.createBudget(request);
-		System.out.println("성공 끝 : 가계부 아이디 : " + response.getBudgetId());
+		log.info("성공 끝 : 가계부 아이디 : " + response.getBudgetId());
 		return ResponseEntity.ok(response);
 	}
 	
@@ -61,7 +66,7 @@ public class BudgetController {
 	// 4번 api. 지출 통계 조회 완성. 24.11.14	11.16 정상화는 시켰음. 이번달 데이터 넣었을 때 작동하는지 확인필요.
 	// 11.15 : 이거 TransactionBudget 에서 가져와야 함.
 	// 11.16 정상화 해 줬자나~ (작동함)
-	@GetMapping("/expense")
+	@GetMapping("/expense")	// 얘가 지출과 수익을 동시에 받아오고있넹
 	@Operation(summary = "4. 지출 통계 조회", description = "JWT를 이용해 지출 통계를 조회합니다.")
 	@ApiResponse(responseCode = "200", description = "요청 성공")
 	@ApiResponse(responseCode = "400", description = "요청 실패")
@@ -82,6 +87,29 @@ public class BudgetController {
 	public ResponseEntity<BudgetRateResponse> totalBudget() {
 		System.out.println("예산 통계 가져오기");
 		BudgetRateResponse response = budgetService.findBudgetRate();
+		return ResponseEntity.ok(response);
+	}
+	
+	
+	// 지출버젼 가계부로.
+	@GetMapping("/{budgetId}")	// 가계부 조회를 할 때에는 이번달꺼를 조회하는게 아니라, 달을 입력받아야 함..!
+	@Operation(summary = "가계부 조회", description = "accountId를 이용해 자유 입출금 계좌를 조회합니다.")
+	@ApiResponse(responseCode = "200", description = "요청 성공")
+	@ApiResponse(responseCode = "400", description = "요청 실패")
+	public ResponseEntity<BudgetDetailResponse> findBudgetTransactions(@PathVariable Long budgetId, @RequestParam(defaultValue = "0") int page) {
+		log.info("컨트롤러 : 해당 가계부 정보 전부 불러오기");
+		BudgetDetailResponse response = budgetService.findBudgetTransactions(budgetId, page);	
+		return ResponseEntity.ok(response);
+	}
+
+	// 지출버젼 가계부로.
+	@GetMapping("/date/{date}")	// 가계부 조회를 할 때에는 이번달꺼를 조회하는게 아니라, 달을 입력받아야 함..!
+	@Operation(summary = "해당 달 가계부 조회", description = "해당 달에 해당하는 budgetId, 지출, 수입을 알려줍니다")
+	@ApiResponse(responseCode = "200", description = "요청 성공")
+	@ApiResponse(responseCode = "400", description = "요청 실패")
+	public ResponseEntity<BudgetProfileResponse> getBudgetProfile(@PathVariable Integer date) {
+		log.info("컨트롤러 : 해당 가계부 정보 전부 불러오기");
+		BudgetProfileResponse response = budgetService.findBudgetByDate(date);	
 		return ResponseEntity.ok(response);
 	}
 	
