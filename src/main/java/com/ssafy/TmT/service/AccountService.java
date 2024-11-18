@@ -74,29 +74,4 @@ public class AccountService {
 		return response;
 	}
 	
-
-	
-
-
-//	public List<AccountDTO> findAccountsBySearchCondition(SearchCondition searchCondition) {
-////		searchCondition.setMemberId(jwtUtil.getMemberIdFromJwt(jwt));
-//		Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//		searchCondition.setMemberId(memberId);
-//		List<AccountDTO> accounts = accountDao.findAccountsBySearchCondition(searchCondition);
-//		return accounts;
-//	}
-	
-//	<!-- 계좌 조회 (동적 쿼리로 계좌 유형별 조회) -->
-//<select id="findAccountsBySearchCondition" parameterType="SearchCondition"
-//	resultType="AccountDTO">
-//			SELECT
-//			account_id,
-//			account_number,
-//			account_name,
-//			bank_name,
-//			balance
-//			FROM Account
-//			WHERE member_id = #{memberId} 
-//</select>
-
 }

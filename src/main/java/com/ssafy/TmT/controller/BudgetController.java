@@ -40,9 +40,9 @@ public class BudgetController {
 	@ApiResponse(responseCode = "200", description = "요청 성공")
 	@ApiResponse(responseCode = "400", description = "요청 실패")
 	public ResponseEntity<CreateBudgetResponse> createBudget(@RequestBody CreateBudgetRequest request) {
-		System.out.println("컨트롤러 : 가계부 생성하기");
+		log.info("컨트롤러 : 가계부 생성하기");
 		CreateBudgetResponse response = budgetService.createBudget(request);
-		System.out.println("성공 끝 : 가계부 아이디 : " + response.getBudgetId());
+		log.info("성공 끝 : 가계부 아이디 : " + response.getBudgetId());
 		return ResponseEntity.ok(response);
 	}
 	
@@ -112,7 +112,5 @@ public class BudgetController {
 		BudgetProfileResponse response = budgetService.findBudgetByDate(date);	
 		return ResponseEntity.ok(response);
 	}
-	
-	
 	
 }
