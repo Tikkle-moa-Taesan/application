@@ -23,7 +23,7 @@ public interface BudgetDao {
 	CategoryExpenseDTO findCategoryExpense(Long budgetId);
 	
 	// 작동함
-	int updateBudgetTransaction(UpdateBudgetTransactionsDTO updateBudgetTransactionsDTO);
+	void updateBudgetTransaction(UpdateBudgetTransactionsDTO updateBudgetTransactionsDTO);
 
 	Optional<Long> getCurrentBudgetId(Long memberId);	// 이번달 버젯 찾기
 	
