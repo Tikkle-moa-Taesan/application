@@ -1,6 +1,7 @@
 package com.ssafy.TmT.util;
 
 import java.nio.charset.StandardCharsets;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,8 +15,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 
 import com.ssafy.TmT.dto.oauth.Profile;
-import com.ssafy.TmT.exception.InvalidTokenException;
-import com.ssafy.TmT.exception.TokenExpiredException;
+import com.ssafy.TmT.exception.CustomException;
+import com.ssafy.TmT.exception.ErrorCode;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -87,9 +88,7 @@ public class JwtUtil {
             Long memberId = claims.get("memberId", Long.class);
             return generateAccessToken(memberId);
         } catch (ExpiredJwtException e) {
-            throw new TokenExpiredException("Refresh Token has expired", e);
-        } catch (Exception e) {
-            throw new InvalidTokenException("Invalid Refresh Token", e);
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
     }
 	

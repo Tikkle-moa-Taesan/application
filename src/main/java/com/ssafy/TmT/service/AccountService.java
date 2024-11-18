@@ -57,44 +57,21 @@ public class AccountService {
 		return accounts;
 	}
 	
-	public SavingsAccountDetailResponse getSavingAccountDetail(Long accountId) {
+	public SavingsAccountDetailResponse getSavingAccountDetail(Long accountId, int page) {
+		int offset = page * 20;
 		SavingsAccountDetailDTO savingsAccountDto = accountDao.findSavingsAccountByAccountId(accountId);
-		List<TransactionDTO> transactions = transactionDao.findTransactionsByAccountId(accountId);
+		List<TransactionDTO> transactions = transactionDao.findTransactionsByAccountId(accountId, offset);
 		SavingsAccountDetailResponse response = new SavingsAccountDetailResponse(savingsAccountDto, transactions);
 		return response;
 	}
 
 	// 작성 끝. 테스트 시작.
-	public FreeAccountDetailResponse findFreeAccountDetail(Long accountId) {
+	public FreeAccountDetailResponse findFreeAccountDetail(Long accountId, int page) {
+		int offset = page * 20;	// 사이즈를 5로 설정
 		FreeAccountDetailDTO freeAccountDto = accountDao.findFreeAccountByAccountId(accountId);
-		List<TransactionDTO> transactions = transactionDao.findTransactionsByAccountId(accountId);
+		List<TransactionDTO> transactions = transactionDao.findTransactionsByAccountId(accountId, offset);
 		FreeAccountDetailResponse response = new FreeAccountDetailResponse(freeAccountDto, transactions);
 		return response;
 	}
 	
-
-	
-
-
-//	public List<AccountDTO> findAccountsBySearchCondition(SearchCondition searchCondition) {
-////		searchCondition.setMemberId(jwtUtil.getMemberIdFromJwt(jwt));
-//		Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//		searchCondition.setMemberId(memberId);
-//		List<AccountDTO> accounts = accountDao.findAccountsBySearchCondition(searchCondition);
-//		return accounts;
-//	}
-	
-//	<!-- 계좌 조회 (동적 쿼리로 계좌 유형별 조회) -->
-//<select id="findAccountsBySearchCondition" parameterType="SearchCondition"
-//	resultType="AccountDTO">
-//			SELECT
-//			account_id,
-//			account_number,
-//			account_name,
-//			bank_name,
-//			balance
-//			FROM Account
-//			WHERE member_id = #{memberId} 
-//</select>
-
 }

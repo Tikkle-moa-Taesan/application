@@ -150,5 +150,46 @@
 		FROM Budget
 		WHERE budget_id = #{budgetId}
 	</select>
+	
+	<select id="findBudgetTransactions" resultType="BudgetTransactionDTO">
+    SELECT
+        t.budget_transaction_id,
+        c.category_name,
+        t.transaction_datetime,
+        t.amount,
+        t.balance_after,
+        t.merchant_name,
+        t.transaction_type
+    FROM
+        BudgetTransaction t
+    LEFT JOIN
+        Category c ON t.category_code = c.category_code
+    WHERE
+        t.budget_id = #{budgetId}
+    ORDER BY
+        t.transaction_datetime DESC
+    LIMIT #{offset}, 20
+</select>
 
+<select id="findBudgetByDate" resultType="long">
+    SELECT 
+    budget_id
+    FROM Budget
+    WHERE DATE_FORMAT(created_at, '%Y') = #{year}
+      AND DATE_FORMAT(created_at, '%m') = #{month}
+    LIMIT 1;
+</select>
+
+	<!-- 이번달 가계부 총 수입 합 모으기 -->
+	<select id="calculateMonthIncome" parameterType="long"
+		resultType="long">
+		SELECT COALESCE(SUM(amount), 0)
+		FROM BudgetTransaction
+		WHERE
+		budget_id = #{budgetId}
+		AND transaction_type = 'income';
+	</select>
+
+
+	
 </mapper>
