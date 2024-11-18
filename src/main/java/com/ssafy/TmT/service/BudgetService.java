@@ -57,9 +57,9 @@ public class BudgetService {
 		Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		Long currentBudgetId = budgetDao.getCurrentBudgetId(memberId)
 				.orElseThrow(() -> new CustomException(ErrorCode.BUDGET_NOT_FOUND));
-//				getCurrentBudgetId(memberId);
 		Long lastBudgetId = budgetDao.getPreviousBudgetId(memberId)
-				.orElseThrow(() -> new CustomException(ErrorCode.BUDGET_NOT_FOUND));
+				.orElse(0L);
+
 		System.out.println("currentBudgetId : " + currentBudgetId);
 		System.out.println("lastBudgetId: " + lastBudgetId);
 		// 이 메서드를 쪼개자.
@@ -114,17 +114,6 @@ public class BudgetService {
 		return budgetDao.calculateWeekExpense(new WeekExpenseDTO(currentBudgetId, 0)); // 이번 주 데이터
 	}
 
-//	private Long calculateThisMonthExpense(Long currentBudgetId) {
-//		return budgetDao.calculateMonthExpense(currentBudgetId);
-//	}
-
-	// 지난달 지출 조회 ( 값이 없으면 0 )
-//	private Long calculateLastMonthExpense(Long lastBudgetId) {
-//		if (lastBudgetId == null) {
-//			return 0L; // 지난 Budget이 없으면 0 반환
-//		}
-//		return budgetDao.calculateMonthExpense(lastBudgetId);
-//	}
 
 	private Long calculateLastWeekExpense(Long currentBudgetId) {
 		return budgetDao.calculateWeekExpense(new WeekExpenseDTO(currentBudgetId, -1)); // 지난 주 데이터
