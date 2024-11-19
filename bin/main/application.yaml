@@ -38,5 +38,3 @@ mybatis:
 
 TnT:
   secret-key: "yourSuperSecureSecretKeyWith32CharactersOrMore!"
-
-openai.api.key : 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
