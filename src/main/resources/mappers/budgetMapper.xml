@@ -157,7 +157,6 @@
         c.category_name,
         t.transaction_datetime,
         t.amount,
-        t.balance_after,
         t.merchant_name,
         t.transaction_type
     FROM
