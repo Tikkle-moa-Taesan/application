@@ -16,6 +16,7 @@ public enum ErrorCode {
     BUDGET_TRANSACTION_UPDATE_FAILED(500, "B002", "가계부 거래 내역 업데이트 중 오류가 발생했습니다."),
     BUDGET_AMOUNT_NOT_FOUND(404, "B003", "가계부의 예산을 찾을 수 없습니다."),
 
+    BUDGET_UPDATE_FAILURE(404,"B005","카테고리 예산 업데이트에 실패했습니다."),
 
     // Account 관련 에러
     ACCOUNT_NOT_FOUND(404, "A001", "해당 계좌를 찾을 수 없습니다."),

@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.ssafy.TmT.dto.budget.BudgetCategoryRequest;
+import com.ssafy.TmT.dto.budget.BudgetCategoryResponse;
 import com.ssafy.TmT.dto.budget.CategoryExpenseDTO;
 import com.ssafy.TmT.dto.budget.CreateBudgetDTO;
 import com.ssafy.TmT.dto.budget.UpdateBudgetTransactionsDTO;
@@ -33,7 +35,7 @@ public interface BudgetDao {
 
 	Long calculateWeekExpense(WeekExpenseDTO weekExpenseDTO);
 	
-	CategoryExpenseDTO findCategoryBudget(Long budgetId);
+	BudgetCategoryResponse findCategoryBudget(Long budgetId);
 
 	Optional<Long> findBudget(Long budgetId);
 
@@ -42,5 +44,7 @@ public interface BudgetDao {
 	Optional<Long> findBudgetByDate(@Param("year") String year, @Param("month") String month);
 
 	Long calculateMonthIncome(Long budgetId);
+
+	int modifyCategoryBudget(@Param("memberId") Long memberId, BudgetCategoryRequest request);
 
 }

@@ -128,17 +128,17 @@
 
 	<!-- 카테고리별 예산 불러오기 -->
 	<select id="findCategoryBudget" parameterType="long"
-		resultType="CategoryExpenseDTO">
+		resultType="BudgetCategoryResponse">
 		SELECT
-		food_expense,
-		living_expense,
-		housing_communication_expense,
-		finance_expense,
-		transportation_expense,
-		childcare_expense,
-		leisure_culture_expense,
-		pet_expense,
-		event_gift_expense
+		food_budget,
+		living_budget,
+		housing_communication_budget,
+		finance_budget,
+		transportation_budget,
+		childcare_budget,
+		leisure_culture_budget,
+		pet_budget,
+		event_gift_budget
 		FROM Budget
 		WHERE budget_id = #{budgetId}
 	</select>
@@ -190,6 +190,21 @@
 		AND transaction_type = 'income';
 	</select>
 
+    <!-- 카테고리별 예산 수정 -->
+    <update id="modifyCategoryBudget" parameterType="map">
+        UPDATE Budget
+        SET
+            food_budget = #{request.foodBudget},
+            living_budget = #{request.livingBudget},
+            housing_communication_budget = #{request.housingCommunicationBudget},
+            finance_budget = #{request.financeBudget},
+            transportation_budget = #{request.transportationBudget},
+            childcare_budget = #{request.childcareBudget},
+            leisure_culture_budget = #{request.leisureCultureBudget},
+            pet_budget = #{request.petBudget},
+            event_gift_budget = #{request.eventGiftBudget}
+        WHERE member_id = #{memberId};
+    </update>
 
 	
 </mapper>

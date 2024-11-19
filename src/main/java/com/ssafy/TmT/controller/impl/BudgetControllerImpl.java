@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.TmT.controller.interf.BudgetController;
+import com.ssafy.TmT.dto.budget.BudgetCategoryRequest;
+import com.ssafy.TmT.dto.budget.BudgetCategoryResponse;
 import com.ssafy.TmT.dto.budget.BudgetDetailResponse;
 import com.ssafy.TmT.dto.budget.BudgetProfileResponse;
 import com.ssafy.TmT.dto.budget.BudgetRateResponse;
@@ -70,6 +72,14 @@ public class BudgetControllerImpl implements BudgetController{
 	public ResponseEntity<BudgetProfileResponse> getBudgetProfile(@PathVariable Integer date) {
 		log.info("컨트롤러 : 해당 가계부 중요 내용 불러오기");
 		BudgetProfileResponse response = budgetService.findBudgetByDate(date);	
+		return ResponseEntity.ok(response);
+	}
+
+
+	@Override
+	public ResponseEntity<BudgetCategoryResponse> modifyCategoryBudget(@RequestBody BudgetCategoryRequest request) {
+		log.info("컨트롤러 : 이번달 가계부 예산 카테고리별로 설정하기");
+		BudgetCategoryResponse response = budgetService.modifyCategoryBudget(request);
 		return ResponseEntity.ok(response);
 	}
 	

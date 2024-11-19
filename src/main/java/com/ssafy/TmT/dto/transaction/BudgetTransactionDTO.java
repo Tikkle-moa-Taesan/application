@@ -1,7 +1,6 @@
 package com.ssafy.TmT.dto.transaction;
 
-import java.security.Timestamp;
-import java.util.List;
+import java.sql.Timestamp;
 
 import com.ssafy.TmT.entity.Tag;
 

@@ -6,10 +6,13 @@ import java.util.Optional;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.TmT.controller.impl.AccountControllerImpl;
 import com.ssafy.TmT.dao.BudgetDao;
 import com.ssafy.TmT.dto.account.FreeAccountDetailResponse;
+import com.ssafy.TmT.dto.budget.BudgetCategoryRequest;
+import com.ssafy.TmT.dto.budget.BudgetCategoryResponse;
 import com.ssafy.TmT.dto.budget.BudgetDetailResponse;
 import com.ssafy.TmT.dto.budget.BudgetProfileResponse;
 import com.ssafy.TmT.dto.budget.BudgetRateDTO;
@@ -155,4 +158,20 @@ public class BudgetService {
 		return response;
 	}
 
+	@Transactional
+	public BudgetCategoryResponse modifyCategoryBudget(BudgetCategoryRequest request) {
+		Long memberId = SecurityUtil.getAuthenticatedMemberId();
+	    // 예산 수정
+	    int rowsUpdated = budgetDao.modifyCategoryBudget(memberId, request);
+	    if (rowsUpdated == 0) {
+	        throw new CustomException(ErrorCode.BUDGET_UPDATE_FAILURE);
+	    }
+
+	    // 수정된 budgetId 가져오기
+	    Long budgetId = budgetDao.getCurrentBudgetId(memberId).orElseThrow(() -> new CustomException(ErrorCode.BUDGET_NOT_FOUND));
+
+	    // 응답 생성
+	    return budgetDao.findCategoryBudget(budgetId);
+
+	}
 }
