@@ -1,12 +1,12 @@
 package com.ssafy.TmT.service;
 
 
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.TmT.dao.MemberDao;
 import com.ssafy.TmT.dto.oauth.IdTokenPayload;
 import com.ssafy.TmT.dto.oauth.Profile;
+import com.ssafy.TmT.util.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -45,33 +45,7 @@ public class MemberService {
 	
 
 	private Long getAuthenticatedMemberId() {
-	    return (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return SecurityUtil.getAuthenticatedMemberId();
 	}
 	
 }
-
-//public BudgetRateDTO getBudgetRate(String jwt) {
-//    Long memberId = jwtUtil.getMemberIdFromJwt(jwt);
-//    Long thisMonthBudget = memberDao.getThisMonthBudget(memberId);
-//    Long thisMonthExpense = memberDao.getThisMonthExpense(memberId);
-//    
-//    Float expensePercent;
-//    if (thisMonthBudget != null && thisMonthBudget > 0) {
-//        expensePercent = (float) thisMonthExpense / thisMonthBudget;
-//    } else {
-//        expensePercent = 0.0f; // 예산이 없거나 0인 경우 비율을 0으로 설정
-//    }
-//    
-//    BudgetRateDTO response = new BudgetRateDTO(thisMonthBudget, expensePercent);
-//    return response;
-//}
-//public ExpenseResponse getExpenseStatistics(String jwt) {
-//	Long memberId = jwtUtil.getMemberIdFromJwt(jwt);
-//	Long lastMonthExpense = memberDao.getLastMonthExpense(memberId);
-//	Long thisMonthExpense = memberDao.getThisMonthExpense(memberId);
-//	Long lastWeekExpense = memberDao.getLastWeekExpense(memberId);
-//	Long thisWeekExpense = memberDao.getThisWeekExpense(memberId);
-//	Category category = memberDao.getExpenseWithCategory(memberId);
-//	ExpenseResponse response = new ExpenseResponse(lastMonthExpense,thisMonthExpense,lastWeekExpense,thisWeekExpense,category);
-//	return response;		
-//}
