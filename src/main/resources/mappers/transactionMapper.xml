@@ -5,7 +5,7 @@
   
   <mapper namespace="com.ssafy.TmT.dao.TransactionDao">
 	
-<select id="findTransactionsByAccountId" resultType="TransactionDTO">
+<select id="findTransactionsByAccountId" parameterType="SearchCondition" resultType="TransactionDTO">
     SELECT
         t.transaction_id,
         c.category_name,
@@ -20,9 +20,13 @@
         Category c ON t.category_code = c.category_code
     WHERE
         t.account_id = #{accountId}
+        AND t.transaction_datetime >= #{startDate} 
+        <if test="transactionType != null">
+            AND t.transaction_type = #{transactionType} 
+        </if>
     ORDER BY
         t.transaction_datetime DESC
-    LIMIT #{offset}, 20
+    LIMIT #{offset}, #{size}
 </select>
 
  

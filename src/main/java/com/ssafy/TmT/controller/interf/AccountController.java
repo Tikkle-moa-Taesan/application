@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ssafy.TmT.dto.account.BalanceResponse;
@@ -13,6 +15,8 @@ import com.ssafy.TmT.dto.account.FreeAccountDetailResponse;
 import com.ssafy.TmT.dto.account.FreeAccountResponse;
 import com.ssafy.TmT.dto.account.SavingsAccountDetailResponse;
 import com.ssafy.TmT.dto.account.SavingsAccountResponse;
+import com.ssafy.TmT.dto.search.SearchCondition;
+import com.ssafy.TmT.dto.search.SearchRequest;
 import com.ssafy.TmT.exception.CustomExceptionResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -63,8 +67,8 @@ public interface AccountController {
     })
     ResponseEntity<BalanceResponse> getTotalBalance();
 
-    @GetMapping("/free/{accountId}")
-    @Operation(summary = "6. 자유 계좌 단일 조회", description = "accountId를 이용해 자유 입출금 계좌를 조회합니다.")
+    @PostMapping("/free/{accountId}")
+    @Operation(summary = "6. 자유 계좌 단일 조회", description = "accountId와 검색 조건(SearchCondition)을 이용해 자유 입출금 계좌를 조회합니다.")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "자유 계좌 단일 조회 성공",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = FreeAccountDetailResponse.class))),
@@ -75,9 +79,13 @@ public interface AccountController {
         @ApiResponse(responseCode = "500", description = "내부 서버 오류",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = CustomExceptionResponse.class)))
     })
-    ResponseEntity<FreeAccountDetailResponse> getFreeAccountDetail(@PathVariable Long accountId, @RequestParam(defaultValue = "0") int page);
-
-    @GetMapping("/savings/{accountId}")
+    ResponseEntity<FreeAccountDetailResponse> getFreeAccountDetail(
+        @PathVariable Long accountId,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestBody(required = false) SearchRequest request
+    );
+    
+    @PostMapping("/savings/{accountId}")
     @Operation(summary = "7. 적금 계좌 단일 조회", description = "accountId를 이용해 적금 계좌를 조회합니다.")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "적금 계좌 단일 조회 성공",
@@ -89,5 +97,6 @@ public interface AccountController {
         @ApiResponse(responseCode = "500", description = "내부 서버 오류",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = CustomExceptionResponse.class)))
     })
-    ResponseEntity<SavingsAccountDetailResponse> getSavingAccountDetail(@PathVariable Long accountId, @RequestParam(defaultValue = "0") int page);
+    ResponseEntity<SavingsAccountDetailResponse> getSavingAccountDetail(@PathVariable Long accountId, @RequestParam(defaultValue = "0") int page, @RequestBody(required = false) SearchRequest request);
+
 }

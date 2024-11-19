@@ -31,6 +31,9 @@ public class BudgetTransactionDTO {
 	// 거래 타입 : expense? save?
 	private String transactionType;
 	
+	// 통장 이름
+	private String accountName;
+	
 	// 연결되어있는 태그
 //	private List<Tag> tags;
 

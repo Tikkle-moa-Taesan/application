@@ -9,7 +9,7 @@ import com.ssafy.TmT.dto.account.FreeAccountResponse;
 import com.ssafy.TmT.dto.account.SavingsAccountDetailDTO;
 import com.ssafy.TmT.dto.account.SavingsAccountDetailResponse;
 import com.ssafy.TmT.dto.account.SavingsAccountResponse;
-import com.ssafy.TmT.dto.notUsed.SearchCondition;
+import com.ssafy.TmT.dto.search.SearchCondition;
 
 public interface AccountDao {
 

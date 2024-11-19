@@ -1,5 +1,6 @@
 package com.ssafy.TmT.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -17,7 +18,8 @@ import com.ssafy.TmT.dto.account.FreeAccountResponse;
 import com.ssafy.TmT.dto.account.SavingsAccountDetailDTO;
 import com.ssafy.TmT.dto.account.SavingsAccountDetailResponse;
 import com.ssafy.TmT.dto.account.SavingsAccountResponse;
-import com.ssafy.TmT.dto.notUsed.SearchCondition;
+import com.ssafy.TmT.dto.search.SearchCondition;
+import com.ssafy.TmT.dto.search.SearchRequest;
 import com.ssafy.TmT.dto.transaction.TransactionDTO;
 import com.ssafy.TmT.util.JwtUtil;
 import com.ssafy.TmT.util.SecurityUtil;
@@ -55,21 +57,75 @@ public class AccountService {
 		return accounts;
 	}
 	
-	public SavingsAccountDetailResponse getSavingAccountDetail(Long accountId, int page) {
-		int offset = page * 20;
-		SavingsAccountDetailDTO savingsAccountDto = accountDao.findSavingsAccountByAccountId(accountId);
-		List<TransactionDTO> transactions = transactionDao.findTransactionsByAccountId(accountId, offset);
-		SavingsAccountDetailResponse response = new SavingsAccountDetailResponse(savingsAccountDto, transactions);
-		return response;
+	public SavingsAccountDetailResponse getSavingAccountDetail(Long accountId, int page, SearchRequest request) {
+	    if (request == null) {
+	    	request = new SearchRequest(); // 기본값 설정
+	    }
+
+	    SearchCondition searchCondition = new SearchCondition();
+	    // SearchCondition에 기본 필드 설정
+	    searchCondition.setAccountId(accountId);
+	    searchCondition.setOffset(page * searchCondition.getSize());
+	    searchCondition.setTransactionType(request.getTransactionType());
+	    
+	    // 시작 날짜 계산
+	    LocalDateTime now = LocalDateTime.now();
+	    LocalDateTime startDate;
+
+	    if (request.getPeriod() == 3) {
+	        startDate = now.minusMonths(2).withDayOfMonth(1); // 최근 3개월
+	    } else if (searchCondition.getPeriod() == 6) {
+	        startDate = now.minusMonths(5).withDayOfMonth(1); // 최근 6개월
+	    } else {
+	        startDate = now.withDayOfMonth(1); // 이번 달
+	    }
+
+	    searchCondition.setStartDate(startDate);
+
+	    // 적금 계좌 정보 조회
+	    SavingsAccountDetailDTO savingsAccountDto = accountDao.findSavingsAccountByAccountId(accountId);
+
+	    // 조건에 맞는 거래내역 조회
+	    List<TransactionDTO> transactions = transactionDao.findTransactionsByAccountId(searchCondition);
+
+	    // 응답 생성 및 반환
+	    return new SavingsAccountDetailResponse(savingsAccountDto, transactions);
 	}
 
-	// 작성 끝. 테스트 시작.
-	public FreeAccountDetailResponse findFreeAccountDetail(Long accountId, int page) {
-		int offset = page * 20;	// 사이즈를 5로 설정
-		FreeAccountDetailDTO freeAccountDto = accountDao.findFreeAccountByAccountId(accountId);
-		List<TransactionDTO> transactions = transactionDao.findTransactionsByAccountId(accountId, offset);
-		FreeAccountDetailResponse response = new FreeAccountDetailResponse(freeAccountDto, transactions);
-		return response;
+	public FreeAccountDetailResponse findFreeAccountDetail(Long accountId, int page, SearchRequest request) {
+	    if (request == null) {
+	    	request = new SearchRequest(); // 기본값 설정
+	    }
+
+	    SearchCondition searchCondition = new SearchCondition();
+	    // SearchCondition에 기본 필드 설정
+	    searchCondition.setAccountId(accountId);
+	    searchCondition.setOffset(page * searchCondition.getSize());
+	    searchCondition.setTransactionType(request.getTransactionType());
+	    
+	    // 시작 날짜 계산
+	    LocalDateTime now = LocalDateTime.now();
+	    LocalDateTime startDate;
+
+	    if (request.getPeriod() == 3) {
+	        startDate = now.minusMonths(2).withDayOfMonth(1); // 최근 3개월
+	    } else if (searchCondition.getPeriod() == 6) {
+	        startDate = now.minusMonths(5).withDayOfMonth(1); // 최근 6개월
+	    } else {
+	        startDate = now.withDayOfMonth(1); // 이번 달
+	    }
+
+	    searchCondition.setStartDate(startDate);
+
+	    // 자유 입출금 계좌 정보 조회
+	    FreeAccountDetailDTO freeAccountDto = accountDao.findFreeAccountByAccountId(accountId);
+
+	    // 조건에 맞는 거래내역 조회
+	    List<TransactionDTO> transactions = transactionDao.findTransactionsByAccountId(searchCondition);
+
+	    System.out.println(searchCondition);
+	    // 응답 생성 및 반환
+	    return new FreeAccountDetailResponse(freeAccountDto, transactions);
 	}
 	
 	private Long getAuthenticatedMemberId() {
