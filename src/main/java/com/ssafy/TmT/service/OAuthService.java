@@ -56,23 +56,4 @@ public class OAuthService {
     	LoginResponse loginResponse = new LoginResponse(profile,accessTokenExpiry,refreshTokenExpiry);
     	return loginResponse;
     }
-
-
 }
-
-
-
-
-
-//	private Profile memberToProfile(Member member) {
-//		Profile profile = new Profile();
-//		profile.setMemberId(member.getMemberId());
-//		profile.setMemberName(member.getMemberName());
-//		profile.setTotalBalance(member.getTotalBalance());
-//		return profile;
-//	}
-
-
-//public String buildAuthUrl(String provider) {
-//return oAuthProvider.buildAuthUrl(provider);
-//}

@@ -40,7 +40,6 @@ public class OAuthProvider {
 
 	// 토큰 받기
 	public KakaoOAuthResponse getKakaoAccessToken(String code) {
-		// 요청 보내기
 		HttpHeaders headers = new HttpHeaders();
 //	    headers.setContentType(MediaType.valueOf("application/x-www-form-urlencoded;charset=utf-8"));
 

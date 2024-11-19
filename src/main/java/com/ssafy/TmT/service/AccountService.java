@@ -20,6 +20,7 @@ import com.ssafy.TmT.dto.account.SavingsAccountResponse;
 import com.ssafy.TmT.dto.notUsed.SearchCondition;
 import com.ssafy.TmT.dto.transaction.TransactionDTO;
 import com.ssafy.TmT.util.JwtUtil;
+import com.ssafy.TmT.util.SecurityUtil;
 
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -34,15 +35,13 @@ public class AccountService {
 	private final TransactionDao transactionDao;
 
 	public List<FreeAccountResponse> findFreeAccounts() {
-		Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Long memberId = getAuthenticatedMemberId();
 		List<FreeAccountResponse> accounts = accountDao.findFreeAccounts(memberId);
-		
 		return accounts;
 	}
 	
 	public BalanceResponse getTotalBalance() {
-		Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		// 총 자산 찾기 위해서는 내 아이디를 가진 모든 계좌를 찾고, 그 금액을 갱신해야 함.
+		Long memberId = getAuthenticatedMemberId();
 		BalanceResponse balance = accountDao.getTotalBalance(memberId);
 		
 		return balance;
@@ -51,8 +50,7 @@ public class AccountService {
 
 
 	public List<SavingsAccountResponse> findSavingsAccounts() {
-		Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//		Long memberId = jwtUtil.getMemberIdFromJwt(jwt);
+		Long memberId = getAuthenticatedMemberId();
 		List<SavingsAccountResponse> accounts = accountDao.findSavingsAccounts(memberId);
 		return accounts;
 	}
@@ -72,6 +70,10 @@ public class AccountService {
 		List<TransactionDTO> transactions = transactionDao.findTransactionsByAccountId(accountId, offset);
 		FreeAccountDetailResponse response = new FreeAccountDetailResponse(freeAccountDto, transactions);
 		return response;
+	}
+	
+	private Long getAuthenticatedMemberId() {
+		return SecurityUtil.getAuthenticatedMemberId();
 	}
 	
 }
