@@ -145,10 +145,11 @@ public class BudgetService {
 	}
 
 	public BudgetProfileResponse findBudgetByDate(Integer date) {
+		Long memberId = SecurityUtil.getAuthenticatedMemberId();
 		String year = String.valueOf(date).substring(0, 4);
 		String month = String.valueOf(date).substring(4, 6);
 
-		Long budgetId = budgetDao.findBudgetByDate(year, month)
+		Long budgetId = budgetDao.findBudgetByDate(memberId,year, month)
 				.orElseThrow(() -> new CustomException(ErrorCode.BUDGET_NOT_FOUND));
 		Long monthExpense = budgetDao.calculateMonthExpense(budgetId);
 		Long monthIncome = budgetDao.calculateMonthIncome(budgetId);

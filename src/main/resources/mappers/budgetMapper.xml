@@ -177,6 +177,7 @@
     FROM Budget
     WHERE DATE_FORMAT(created_at, '%Y') = #{year}
       AND DATE_FORMAT(created_at, '%m') = #{month}
+      AND member_id = #{memberId}
     LIMIT 1;
 </select>
 

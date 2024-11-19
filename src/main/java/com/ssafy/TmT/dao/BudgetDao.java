@@ -41,7 +41,7 @@ public interface BudgetDao {
 
 	List<BudgetTransactionDTO> findBudgetTransactions(@Param("budgetId") Long budgetId, @Param("offset") int offset);
 
-	Optional<Long> findBudgetByDate(@Param("year") String year, @Param("month") String month);
+	Optional<Long> findBudgetByDate(@Param("memberId") Long memberId, @Param("year") String year, @Param("month") String month);
 
 	Long calculateMonthIncome(Long budgetId);
 
