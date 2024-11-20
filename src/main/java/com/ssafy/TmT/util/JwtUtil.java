@@ -173,7 +173,7 @@ public class JwtUtil {
 	          .httpOnly(true)
 	          .secure(true)  // HTTPS 환경에서는 true로 설정
 	          .path("/")
-	          .maxAge(ACCESS_TOKEN_EXPIRY) // 1시간
+	          .maxAge(ACCESS_TOKEN_EXPIRY / 1000) // 1시간
 	          .sameSite("None") // CSRF protection
 	          .build();
 	  headers.add("Set-Cookie", accessTokenCookie.toString());
@@ -184,7 +184,7 @@ public class JwtUtil {
 	          .httpOnly(true)
 	          .secure(true)  // HTTPS 환경에서는 true로 설정
 	          .path("/")
-	          .maxAge(REFRESH_TOKEN_EXPIRY) // 쿠키의 유효기간을 refreshToken과 동일하게 설정
+	          .maxAge(REFRESH_TOKEN_EXPIRY / 1000) // 쿠키의 유효기간을 refreshToken과 동일하게 설정
 	          .sameSite("None")
 	//          .sameSite("Lax")
 	          .build();
