@@ -173,6 +173,27 @@
     LIMIT #{offset}, 20
 </select>
 
+	<select id="findAllBudgetTransactions" parameterType="long" resultType="BudgetTransactionDTO">
+    SELECT
+        t.budget_transaction_id,
+        c.category_name,
+        t.transaction_datetime,
+        t.amount,
+        t.merchant_name,
+        t.transaction_type,
+        a.account_name
+    FROM
+        BudgetTransaction t
+    LEFT JOIN
+        Category c ON t.category_code = c.category_code
+    LEFT JOIN
+        Account a ON t.account_id = a.account_id
+    WHERE
+        t.budget_id = #{budgetId}
+    ORDER BY
+        t.transaction_datetime DESC
+</select>
+
 <select id="findBudgetByDate" resultType="long">
     SELECT 
     budget_id

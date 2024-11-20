@@ -120,4 +120,21 @@ public interface BudgetController {
     })
     ResponseEntity<BudgetCategoryResponse> modifyCategoryBudget(@RequestBody BudgetCategoryRequest request);
     
+    
+    // 전체 거래 내역 받아오기
+    // 특정 가계부 조회 API
+    @GetMapping("/{budgetId}/all")
+    @Operation(summary = "가계부 조회", description = "budgetId를 이용해 해당 가계부의 거래 내역을 조회합니다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "가계부 조회 성공",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = BudgetDetailResponse.class))),
+        @ApiResponse(responseCode = "400", description = "잘못된 요청",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = CustomExceptionResponse.class))),
+        @ApiResponse(responseCode = "404", description = "가계부를 찾을 수 없음",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = CustomExceptionResponse.class))),
+        @ApiResponse(responseCode = "500", description = "가계부 조회 중 서버 오류",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = CustomExceptionResponse.class)))
+    })
+    ResponseEntity<BudgetDetailResponse> findAllBudgetTransactions(@PathVariable Long budgetId);
+    
 }

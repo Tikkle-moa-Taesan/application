@@ -41,10 +41,13 @@ public interface BudgetDao {
 
 	List<BudgetTransactionDTO> findBudgetTransactions(@Param("budgetId") Long budgetId, @Param("offset") int offset);
 
+	List<BudgetTransactionDTO> findAllBudgetTransactions(Long budgetId);
+
 	Optional<Long> findBudgetByDate(@Param("memberId") Long memberId, @Param("year") String year, @Param("month") String month);
 
 	Long calculateMonthIncome(Long budgetId);
 
 	int modifyCategoryBudget(@Param("memberId") Long memberId, BudgetCategoryRequest request);
+
 
 }

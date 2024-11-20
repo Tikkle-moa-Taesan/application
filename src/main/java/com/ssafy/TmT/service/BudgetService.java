@@ -144,6 +144,12 @@ public class BudgetService {
 		return response;
 	}
 
+	public BudgetDetailResponse findBudgetTransactions(Long budgetId) {
+		List<BudgetTransactionDTO> transactions = budgetDao.findAllBudgetTransactions(budgetId);
+		BudgetDetailResponse response = new BudgetDetailResponse(transactions);
+		return response;
+	}
+
 	public BudgetProfileResponse findBudgetByDate(Integer date) {
 		Long memberId = SecurityUtil.getAuthenticatedMemberId();
 		String year = String.valueOf(date).substring(0, 4);

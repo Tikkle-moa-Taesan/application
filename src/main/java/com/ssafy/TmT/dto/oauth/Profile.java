@@ -1,5 +1,7 @@
 package com.ssafy.TmT.dto.oauth;
 
+import java.sql.Timestamp;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -17,4 +19,6 @@ public class Profile {
 	
 	// 멤버 프사
 	private String picture;
+	
+	private Timestamp createdAt;
 }

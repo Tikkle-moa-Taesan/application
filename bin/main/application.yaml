@@ -38,3 +38,9 @@ mybatis:
 
 TnT:
   secret-key: "yourSuperSecureSecretKeyWith32CharactersOrMore!"
+
+springdoc:
+  api-docs:
+    path: /api/v3/api-docs  # API 문서 경로를 백엔드 경로로 변경
+  swagger-ui:
+    path: /api/swagger-ui   # Swagger UI 경로를 /api 하위로 이동

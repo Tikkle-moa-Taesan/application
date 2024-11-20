@@ -63,7 +63,7 @@ public class BudgetControllerImpl implements BudgetController{
 	
 
 	public ResponseEntity<BudgetDetailResponse> findBudgetTransactions(@PathVariable Long budgetId, @RequestParam(defaultValue = "0") int page) {
-		log.info("컨트롤러 : 해당 가계부 거래내역 전부 불러오기");
+		log.info("컨트롤러 : 해당 가계부 거래내역 페이징해서 불러오기");
 		BudgetDetailResponse response = budgetService.findBudgetTransactions(budgetId, page);	
 		return ResponseEntity.ok(response);
 	}
@@ -79,6 +79,14 @@ public class BudgetControllerImpl implements BudgetController{
 	public ResponseEntity<BudgetCategoryResponse> modifyCategoryBudget(@RequestBody BudgetCategoryRequest request) {
 		log.info("컨트롤러 : 이번달 가계부 예산 카테고리별로 설정하기");
 		BudgetCategoryResponse response = budgetService.modifyCategoryBudget(request);
+		return ResponseEntity.ok(response);
+	}
+
+
+	@Override
+	public ResponseEntity<BudgetDetailResponse> findAllBudgetTransactions(Long budgetId) {
+		log.info("컨트롤러 : 해당 가계부 거래내역 전부 불러오기");
+		BudgetDetailResponse response = budgetService.findBudgetTransactions(budgetId);	
 		return ResponseEntity.ok(response);
 	}
 	
