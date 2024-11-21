@@ -181,4 +181,10 @@ public class BudgetService {
 	    return budgetDao.findCategoryBudget(budgetId);
 
 	}
+	
+	public BudgetCategoryResponse findCategoryBudget() {
+		Long memberId = SecurityUtil.getAuthenticatedMemberId();
+		Long budgetId = getCurrentBudgetId(memberId);
+		return budgetDao.findCategoryBudget(budgetId);
+	}
 }

@@ -89,5 +89,14 @@ public class BudgetControllerImpl implements BudgetController{
 		BudgetDetailResponse response = budgetService.findBudgetTransactions(budgetId);	
 		return ResponseEntity.ok(response);
 	}
+
+
+	@Override
+	public ResponseEntity<BudgetCategoryResponse> findCategoryBudget() {
+		log.info("컨트롤러 : 카테고리별 예산 조회");
+		BudgetCategoryResponse response = budgetService.findCategoryBudget();
+		return ResponseEntity.ok(response);
+	}
+	
 	
 }
