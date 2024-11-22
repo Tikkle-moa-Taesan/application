@@ -10,4 +10,5 @@ public class SavingsAccountResponse {
 	private Long accountId;
 	private String accountName;
 	private Long balance;
+	private String bankName;
 }
