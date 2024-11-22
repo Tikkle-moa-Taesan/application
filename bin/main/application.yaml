@@ -44,3 +44,7 @@ springdoc:
     path: /api/v3/api-docs  # API 문서 경로를 백엔드 경로로 변경
   swagger-ui:
     path: /api/swagger-ui   # Swagger UI 경로를 /api 하위로 이동
+    
+openai:
+  api:
+    key: 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

@@ -1,6 +1,7 @@
 package com.ssafy.TmT.dto.transaction;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import com.ssafy.TmT.entity.Tag;
 
@@ -23,7 +24,7 @@ public class BudgetTransactionDTO {
 	private Long amount;
 	
 	// 잔액	: 얼마가 남았는지
-	private Long balanceAfter;
+//	private Long balanceAfter;
 	
 	// 거래명	: 거래 내역 이름
 	private String merchantName;
@@ -35,6 +36,6 @@ public class BudgetTransactionDTO {
 	private String accountName;
 	
 	// 연결되어있는 태그
-//	private List<Tag> tags;
+	private List<Tag> tags;
 
 }

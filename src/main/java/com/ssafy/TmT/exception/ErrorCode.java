@@ -10,6 +10,7 @@ public enum ErrorCode {
     
     // 공통 에러
     METHOD_NOT_ALLOWED(405, "C001", "잘못된 요청입니다."),
+    DATA_SERIALIZATION_FAILED(404, "C002", "데이터 직렬화 실패"),
 
     // Budget 관련 에러
     BUDGET_NOT_FOUND(404, "B001", "해당 가계부가 없습니다."),
@@ -26,7 +27,12 @@ public enum ErrorCode {
     TOKEN_EXPIRED(401, "T002", "토큰이 만료되었습니다."),
     INVALID_AUTHENTICATION(401, "A003", "인증되지 않은 사용자입니다."),
     
-    MEMBER_NOT_FOUND(404, "M001", "사용자를 확인할 수 없습니다.");
+    MEMBER_DATA_NOT_FOUND(404, "M002","사용자 데이터를 불러오는 데 실패했습니다"),
+    MEMBER_NOT_FOUND(404, "M001", "사용자를 확인할 수 없습니다."), 
+    
+    // openAI 에러
+    OPENAI_RESPONSE_INVALID(401, "O001", "OpenAI 데이터 구조가 예상과 다릅니다"), 
+    OPENAI_API_CALL_FAILED(404, "O002", "OpenAI 통신이 실패했습니다");
     
 	
 	private final int status;	// HTTP 상태 코드

@@ -49,5 +49,4 @@ public interface BudgetDao {
 
 	int modifyCategoryBudget(@Param("memberId") Long memberId, BudgetCategoryRequest request);
 
-
 }

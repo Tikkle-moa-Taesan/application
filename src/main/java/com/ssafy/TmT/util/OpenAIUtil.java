@@ -1,64 +1,90 @@
-//package com.ssafy.TmT.util;
-//
-//import org.springframework.beans.factory.annotation.Value;
-//import org.springframework.http.HttpEntity;
-//import org.springframework.http.HttpHeaders;
-//import org.springframework.http.MediaType;
-//import org.springframework.stereotype.Component;
-//import org.springframework.web.client.RestTemplate;
-//
-//import com.ssafy.TmT.dto.openAI.OpenAIRequest;
-//import com.ssafy.TmT.dto.openAI.OpenAIResponse;
-//
-//import lombok.RequiredArgsConstructor;
-//
-//@Component
-//@RequiredArgsConstructor
-//public class OpenAIUtil {
-//
-//    @Value("${openai.api.key}")
-//    private String apiKey;
-//    
-//    private final ApiUtil apiUtil;
-//
-//    private final RestTemplate restTemplate;
-//    private final String apiEndpoint = "https://api.openai.com/v1/completions";
-//
-//    public String generateInsights(String jsonData) {
-//        // 1. 자연어 지시사항 생성
-//        String prompt = String.format(
-//                "다음은 사용자의 예산 및 지출 데이터입니다. 이를 바탕으로 예산 관리 팁과 개선점을 작성해 주세요:\n%s",
-//                jsonData
-//        );
-//
-//        // 2. OpenAI 요청 생성
-//        OpenAIRequest request = OpenAIRequest.builder()
-//                .model("gpt-4") // OpenAI 모델
-//                .prompt(prompt)
-//                .maxTokens(500)
-//                .temperature(0.7)
-//                .build();
-//
-//        // 3. OpenAI API 호출
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_JSON);
-//        headers.setBearerAuth(apiKey);
-//
-//        HttpEntity<OpenAIRequest> entity = new HttpEntity<>(request, headers);
-//
-//        try {
-//            ResponseEntity<OpenAIResponse> responseEntity =
-//                    restTemplate.postForEntity(apiEndpoint, entity, OpenAIResponse.class);
-//
-//            OpenAIResponse response = responseEntity.getBody();
-//
-//            // 4. OpenAI 응답 처리
-//            return response != null && !response.getChoices().isEmpty()
-//                    ? response.getChoices().get(0).getText()
-//                    : "분석 결과를 생성할 수 없습니다.";
-//        } catch (Exception e) {
-//            // API 호출 실패 시 예외 처리
-//            throw new RuntimeException("OpenAI API 호출 중 문제가 발생했습니다.", e);
-//        }
-//    }
-//}
+package com.ssafy.TmT.util;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
+
+import com.ssafy.TmT.dto.openAI.OpenAIRequest;
+import com.ssafy.TmT.dto.openAI.OpenAIResponse;
+import com.ssafy.TmT.exception.CustomException;
+import com.ssafy.TmT.exception.ErrorCode;
+
+import lombok.RequiredArgsConstructor;
+
+@Component
+@RequiredArgsConstructor
+public class OpenAIUtil {
+
+    @Value("${openai.api.key}")
+    private String apiKey;
+
+    private final RestTemplate restTemplate;
+    private final String apiEndpoint = "https://api.openai.com/v1/chat/completions";
+
+    public OpenAIResponse generateInsights(String jsonData) {
+        OpenAIRequest request = OpenAIRequest.builder()
+                .model("gpt-3.5-turbo")  // 적절한 모델로 변경
+                .messages(List.of(
+                    OpenAIRequest.Message.builder()
+                        .role("system")
+                        .content("다음은 사용자의 예산 및 지출 데이터입니다. 이에 기반해 조언을 제공하세요.")
+                        .build(),
+                    OpenAIRequest.Message.builder()
+                        .role("user")
+                        .content(jsonData)
+                        .build()
+                ))
+                .maxTokens(500)
+                .temperature(0.7)
+                .build();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(apiKey);
+
+        HttpEntity<OpenAIRequest> entity = new HttpEntity<>(request, headers);
+
+        int retryCount = 0;
+        int maxRetries = 3;
+        long waitTime = 1000; // 초기 대기 시간 (1초)
+
+        while (retryCount < maxRetries) {
+            try {
+                ResponseEntity<OpenAIResponse> responseEntity =
+                    restTemplate.postForEntity(apiEndpoint, entity, OpenAIResponse.class);
+
+                OpenAIResponse response = responseEntity.getBody();
+
+                if (response == null || response.getChoices() == null || response.getChoices().isEmpty()) {
+                    throw new CustomException(ErrorCode.OPENAI_RESPONSE_INVALID);
+                }
+
+                return response; // 성공적으로 응답 받음
+            } catch (HttpClientErrorException.TooManyRequests e) {
+                retryCount++;
+                System.out.println("429 Too Many Requests: Retrying... (" + retryCount + ")");
+                if (retryCount >= maxRetries) {
+                    throw new CustomException(ErrorCode.OPENAI_API_CALL_FAILED);
+                }
+
+                try {
+                    Thread.sleep(waitTime); // 대기 시간 동안 잠시 중단
+                    waitTime *= 2; // 대기 시간 두 배 증가
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt(); // 현재 스레드의 인터럽트 상태를 복구
+                    throw new CustomException(ErrorCode.OPENAI_API_CALL_FAILED);
+                }
+            }
+        }
+
+        throw new CustomException(ErrorCode.OPENAI_API_CALL_FAILED);
+    }
+
+}

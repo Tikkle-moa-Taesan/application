@@ -42,12 +42,12 @@
 		member_id =
 		#{memberId}
 		AND
-		account_type = "savings"
+		account_type = 'savings'
 	</select>	
 	
 	    <!-- Account 잔액 합계 조회 -->
     <select id="getTotalBalance" parameterType="Long" resultType="BalanceResponse">
-        SELECT SUM(balance) AS total FROM Account WHERE member_id = #{memberId}
+        SELECT COALESCE(SUM(balance), 0) AS total FROM Account WHERE member_id = #{memberId}
     </select>
 	
 	
