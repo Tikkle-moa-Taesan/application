@@ -1,21 +1,21 @@
 spring:
+  config:
+    import: application-secrets.yaml # 민감한 정보는 별도 파일에서 로드
   application:
     name: TmT
 
   datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://phoenixdb.cls4oq20gmca.ap-northeast-2.rds.amazonaws.com:3306/TeemoDB?serverTimezone=Asia/Seoul
+    # username과 password는 외부 파일에서 관리
     username: admin
     password: admin1013
-    driver-class-name: com.mysql.cj.jdbc.Driver
 
   security:
     oauth2:
       client:
         registration:
           kakao:
-            client-id: 494d31e54fba839b5ff76e4797f5a7d8
-            client-secret: RU5B76ilxdp8TDJU3lGTjDoIu0OJ1erg
-#            redirect-uri: "https://www.teemobudget.site/login/kakao/code"
             redirect-uri: "http://localhost:5173/login/kakao/code"
             authorization-grant-type: authorization_code
             scope: 
@@ -30,21 +30,13 @@ spring:
             user-name-attribute: id           
 
 mybatis:
-  mapper-locations: classpath*:mappers/*.xml  # 매핑 파일 위치 설정
+  mapper-locations: classpath*:mappers/*.xml
   type-aliases-package: com.ssafy.TmT.dto
   configuration: 
     map-underscore-to-camel-case: true
-    
-
-TnT:
-  secret-key: "yourSuperSecureSecretKeyWith32CharactersOrMore!"
 
 springdoc:
   api-docs:
-    path: /api/v3/api-docs  # API 문서 경로를 백엔드 경로로 변경
+    path: /api/v3/api-docs
   swagger-ui:
-    path: /api/swagger-ui   # Swagger UI 경로를 /api 하위로 이동
-    
-openai:
-  api:
-    key: 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
+    path: /api/swagger-ui

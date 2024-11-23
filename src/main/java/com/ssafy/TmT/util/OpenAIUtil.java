@@ -1,6 +1,8 @@
 package com.ssafy.TmT.util;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -22,69 +24,35 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OpenAIUtil {
 
-    @Value("${openai.api.key}")
+    @Value("${spring.ai.openai.api-key}")
     private String apiKey;
 
-    private final RestTemplate restTemplate;
-    private final String apiEndpoint = "https://api.openai.com/v1/chat/completions";
+    private final ApiUtil apiUtil;
 
     public OpenAIResponse generateInsights(String jsonData) {
-        OpenAIRequest request = OpenAIRequest.builder()
-                .model("gpt-3.5-turbo")  // 적절한 모델로 변경
-                .messages(List.of(
-                    OpenAIRequest.Message.builder()
-                        .role("system")
-                        .content("다음은 사용자의 예산 및 지출 데이터입니다. 이에 기반해 조언을 제공하세요.")
-                        .build(),
-                    OpenAIRequest.Message.builder()
-                        .role("user")
-                        .content(jsonData)
-                        .build()
-                ))
-                .maxTokens(500)
-                .temperature(0.7)
-                .build();
+        String apiEndpoint = "https://api.openai.com/v1/chat/completions";
 
+        // Body 구성
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("model", "gpt-3.5-turbo");
+        requestBody.put("messages", List.of(
+            Map.of("role", "system", "content", "다음은 사용자의 예산 및 지출 데이터입니다. 이에 기반해 조언을 제공하세요."),
+            Map.of("role", "user", "content", jsonData)
+        ));
+        requestBody.put("max_completion_tokens", 500);
+        requestBody.put("temperature", 0.7);
+        requestBody.put("n", 1);
+
+        // 헤더 구성
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(apiKey);
+        headers.set("Content-Type", "application/json");
 
-        HttpEntity<OpenAIRequest> entity = new HttpEntity<>(request, headers);
+        
+        // 요청 전송
+        ResponseEntity<OpenAIResponse> responseEntity = apiUtil.sendPostRequest(apiEndpoint, requestBody, headers, OpenAIResponse.class);
 
-        int retryCount = 0;
-        int maxRetries = 3;
-        long waitTime = 1000; // 초기 대기 시간 (1초)
-
-        while (retryCount < maxRetries) {
-            try {
-                ResponseEntity<OpenAIResponse> responseEntity =
-                    restTemplate.postForEntity(apiEndpoint, entity, OpenAIResponse.class);
-
-                OpenAIResponse response = responseEntity.getBody();
-
-                if (response == null || response.getChoices() == null || response.getChoices().isEmpty()) {
-                    throw new CustomException(ErrorCode.OPENAI_RESPONSE_INVALID);
-                }
-
-                return response; // 성공적으로 응답 받음
-            } catch (HttpClientErrorException.TooManyRequests e) {
-                retryCount++;
-                System.out.println("429 Too Many Requests: Retrying... (" + retryCount + ")");
-                if (retryCount >= maxRetries) {
-                    throw new CustomException(ErrorCode.OPENAI_API_CALL_FAILED);
-                }
-
-                try {
-                    Thread.sleep(waitTime); // 대기 시간 동안 잠시 중단
-                    waitTime *= 2; // 대기 시간 두 배 증가
-                } catch (InterruptedException ie) {
-                    Thread.currentThread().interrupt(); // 현재 스레드의 인터럽트 상태를 복구
-                    throw new CustomException(ErrorCode.OPENAI_API_CALL_FAILED);
-                }
-            }
-        }
-
-        throw new CustomException(ErrorCode.OPENAI_API_CALL_FAILED);
+        // 응답 Body 반환
+        return responseEntity.getBody();
     }
-
 }
