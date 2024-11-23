@@ -1,13 +1,12 @@
 spring:
   config:
-    import: application-secrets.yaml # 민감한 정보는 별도 파일에서 로드
+    import: application-secrets.yaml
   application:
     name: TmT
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://phoenixdb.cls4oq20gmca.ap-northeast-2.rds.amazonaws.com:3306/TeemoDB?serverTimezone=Asia/Seoul
-    # username과 password는 외부 파일에서 관리
     username: admin
     password: admin1013
 
