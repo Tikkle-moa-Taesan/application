@@ -94,16 +94,14 @@
 	</select>
 
 
-	<!-- 최근 예산 ID 조회 -->
-	<select id="getPreviousBudgetId" parameterType="long"
-		resultType="long">
-		SELECT budget_id
-		FROM Budget
-		WHERE member_id = #{memberId}
-		AND DATE_FORMAT(created_at, '%Y-%m') = DATE_FORMAT(DATE_SUB(NOW(),
-		INTERVAL 1 MONTH), '%Y-%m')
-		ORDER BY created_at DESC
-		LIMIT 1;
+		<!-- 최근 예산 ID 조회 -->
+	<select id="getPreviousBudgetId" resultType="long">
+	    SELECT budget_id
+	    FROM Budget
+	    WHERE member_id = #{memberId}
+	      AND DATE_FORMAT(created_at, '%Y-%m') = DATE_FORMAT(DATE_SUB(NOW(), INTERVAL #{monthsAgo} MONTH), '%Y-%m')
+	    ORDER BY created_at DESC
+	    LIMIT 1;
 	</select>
 
 

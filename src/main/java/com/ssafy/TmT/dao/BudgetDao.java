@@ -29,7 +29,7 @@ public interface BudgetDao {
 
 	Optional<Long> getCurrentBudgetId(Long memberId);	// 이번달 버젯 찾기
 	
-	Optional<Long> getPreviousBudgetId(Long memberId);	// 지난달 버젯 찾기
+	Optional<Long> getPreviousBudgetId(@Param("memberId") Long memberId, @Param("monthsAgo") int monthsAgo);	// 지난달 버젯 찾기
 
 	Long calculateMonthExpense(Long currentBudgetId);	// 이번 달 가계부 지출
 

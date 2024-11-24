@@ -22,6 +22,7 @@ import com.ssafy.TmT.dto.budget.CreateBudgetDTO;
 import com.ssafy.TmT.dto.budget.CreateBudgetRequest;
 import com.ssafy.TmT.dto.budget.CreateBudgetResponse;
 import com.ssafy.TmT.dto.budget.ExpenseResponse;
+import com.ssafy.TmT.dto.budget.GraphResponse;
 import com.ssafy.TmT.dto.budget.UpdateBudgetTransactionsDTO;
 import com.ssafy.TmT.dto.budget.WeekExpenseDTO;
 import com.ssafy.TmT.dto.transaction.BudgetTransactionDTO;
@@ -63,7 +64,7 @@ public class BudgetService {
 		Long memberId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		Long currentBudgetId = budgetDao.getCurrentBudgetId(memberId)
 				.orElseThrow(() -> new CustomException(ErrorCode.BUDGET_NOT_FOUND));
-		Long lastBudgetId = budgetDao.getPreviousBudgetId(memberId).orElse(0L);
+		Long lastBudgetId = budgetDao.getPreviousBudgetId(memberId, 1).orElse(0L);
 
 		System.out.println("currentBudgetId : " + currentBudgetId);
 		System.out.println("lastBudgetId: " + lastBudgetId);
@@ -112,6 +113,15 @@ public class BudgetService {
 		Float rate = ((float) 100 * Math.abs(thisMonthExpense) / thisMonthBudget);
 
 		BudgetRateResponse response = new BudgetRateResponse(thisMonthExpense, thisMonthBudget, rate);
+		return response;
+	}
+
+	private BudgetRateResponse findBudgetRate(Long currentBudgetId) {
+		Long thisMonthExpense = budgetDao.calculateMonthExpense(currentBudgetId);
+		
+		Long thisMonthBudget = budgetDao.findBudget(currentBudgetId)
+				.orElse(0L);
+		BudgetRateResponse response = new BudgetRateResponse(thisMonthExpense, thisMonthBudget, 0f);
 		return response;
 	}
 
@@ -186,5 +196,28 @@ public class BudgetService {
 		Long memberId = SecurityUtil.getAuthenticatedMemberId();
 		Long budgetId = getCurrentBudgetId(memberId);
 		return budgetDao.findCategoryBudget(budgetId);
+	}
+
+	public GraphResponse findRecentStatistics() {
+		log.info("서비스 : 최근 6개월간 정보 조회");
+		Long memberId = SecurityUtil.getAuthenticatedMemberId();
+		// 지금 가계부
+		
+		Long budgetId = budgetDao.getPreviousBudgetId(memberId, 0).orElse(0L);
+		BudgetRateResponse thisMonthRate  = findBudgetRate(budgetId);
+		Long oneMonthBeforeBudgetId = budgetDao.getPreviousBudgetId(memberId, 1).orElse(0L);
+		BudgetRateResponse oneMonthBeforeRate  = findBudgetRate(oneMonthBeforeBudgetId);
+		Long twoMonthBeforeBudgetId = budgetDao.getPreviousBudgetId(memberId, 2).orElse(0L);
+		BudgetRateResponse twoMonthBeforeRate  = findBudgetRate(twoMonthBeforeBudgetId);
+		Long threeMonthBeforeBudgetId = budgetDao.getPreviousBudgetId(memberId, 3).orElse(0L);
+		BudgetRateResponse threeMonthBeforeRate  = findBudgetRate(threeMonthBeforeBudgetId);
+		Long fourMonthBeforeBudgetId = budgetDao.getPreviousBudgetId(memberId, 4).orElse(0L);
+		BudgetRateResponse fourMonthBeforeRate  = findBudgetRate(fourMonthBeforeBudgetId);
+		Long fiveMonthBeforeBudgetId = budgetDao.getPreviousBudgetId(memberId, 5).orElse(0L);
+		BudgetRateResponse fiveMonthBeforeRate  = findBudgetRate(fiveMonthBeforeBudgetId);
+		
+		GraphResponse response = new GraphResponse(thisMonthRate, oneMonthBeforeRate, twoMonthBeforeRate, threeMonthBeforeRate, fourMonthBeforeRate, fiveMonthBeforeRate);
+		
+		return response;
 	}
 }

@@ -153,4 +153,18 @@ public interface BudgetController {
     })
     ResponseEntity<BudgetCategoryResponse> findCategoryBudget();
     
+    @GetMapping("/graph")
+    @Operation(summary = "최근 6개월 지출/예산 조회하기", description = "최근 6개월의 지출과 예산을 조회합니다. 그래프를 그리기 위한 정보 제공.")
+    @ApiResponses({
+    	@ApiResponse(responseCode = "200", description = "카테고리별 예산 조회 성공",
+    			content = @Content(mediaType = "application/json", schema = @Schema(implementation = BudgetCategoryResponse.class))),
+    	@ApiResponse(responseCode = "400", description = "잘못된 요청",
+    	content = @Content(mediaType = "application/json", schema = @Schema(implementation = CustomExceptionResponse.class))),
+    	@ApiResponse(responseCode = "404", description = "예산을 찾을 수 없음.",
+    	content = @Content(mediaType = "application/json", schema = @Schema(implementation = CustomExceptionResponse.class))),
+    	@ApiResponse(responseCode = "500", description = "서버 오류",
+    	content = @Content(mediaType = "application/json", schema = @Schema(implementation = CustomExceptionResponse.class)))
+    })
+    ResponseEntity<GraphResponse> findGraphExpense();
+    
 }

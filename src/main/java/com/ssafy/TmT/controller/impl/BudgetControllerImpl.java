@@ -18,6 +18,7 @@ import com.ssafy.TmT.dto.budget.BudgetRateResponse;
 import com.ssafy.TmT.dto.budget.CreateBudgetRequest;
 import com.ssafy.TmT.dto.budget.CreateBudgetResponse;
 import com.ssafy.TmT.dto.budget.ExpenseResponse;
+import com.ssafy.TmT.dto.budget.GraphResponse;
 import com.ssafy.TmT.service.BudgetService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -95,6 +96,14 @@ public class BudgetControllerImpl implements BudgetController{
 	public ResponseEntity<BudgetCategoryResponse> findCategoryBudget() {
 		log.info("컨트롤러 : 카테고리별 예산 조회");
 		BudgetCategoryResponse response = budgetService.findCategoryBudget();
+		return ResponseEntity.ok(response);
+	}
+
+
+	@Override
+	public ResponseEntity<GraphResponse> findGraphExpense() {
+		log.info("컨트롤러 : 최근 6개월 정보 조회");
+		GraphResponse response = budgetService.findRecentStatistics();
 		return ResponseEntity.ok(response);
 	}
 	
