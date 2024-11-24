@@ -18,9 +18,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MemberTotalDataDTO {
-    private Long memberId;
-    private String memberName;
-    private String picture;
+//    private Long memberId;
+//    private String memberName;
+//    private String picture;
     private Timestamp memberCreatedAt;
     private List<AccountDTO> accounts;         // 계좌 정보 리스트
     private BudgetDTO budget;                 // 예산 정보

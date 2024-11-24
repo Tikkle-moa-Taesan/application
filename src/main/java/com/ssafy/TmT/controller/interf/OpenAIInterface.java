@@ -1,6 +1,6 @@
 package com.ssafy.TmT.controller.interf;
 
-import com.ssafy.TmT.dto.openAI.AIPreviewResponse;
+import com.ssafy.TmT.dto.openAI.AITextResponse;
 import com.ssafy.TmT.dto.openAI.OpenAIResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,7 +21,7 @@ public interface OpenAIInterface {
         @ApiResponse(responseCode = "200", description = "프로필 조회 성공"),
         @ApiResponse(responseCode = "404", description = "openAI 오류"),
         @ApiResponse(responseCode = "500", description = "서버 내부 오류")    })
-	ResponseEntity<OpenAIResponse> getAdvice();
+	ResponseEntity<AITextResponse> getAdvice();
 	
 	// 1. 내 전체 데이터를 기반으로, 훈수 듣기
 	@GetMapping("/preview")
@@ -31,7 +31,7 @@ public interface OpenAIInterface {
         @ApiResponse(responseCode = "404", description = "openAI 오류"),
         @ApiResponse(responseCode = "500", description = "서버 내부 오류")
     })
-	ResponseEntity<AIPreviewResponse> preview();
+	ResponseEntity<AITextResponse> preview();
 	
 //	
 //    // 월별 예산 대비 지출 비교

@@ -10,7 +10,7 @@ import com.ssafy.TmT.service.AccountService;
 import com.ssafy.TmT.service.OpenAIService;
 import com.ssafy.TmT.controller.interf.OpenAIInterface;
 import com.ssafy.TmT.dto.budget.*;
-import com.ssafy.TmT.dto.openAI.AIPreviewResponse;
+import com.ssafy.TmT.dto.openAI.AITextResponse;
 import com.ssafy.TmT.dto.openAI.OpenAIResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,14 +30,14 @@ public class OpenAIControllerImpl implements OpenAIInterface {
 
 	private final OpenAIService openAIService;
 
-	public ResponseEntity<OpenAIResponse> getAdvice() {
-		OpenAIResponse response = openAIService.getAdvice();
+	public ResponseEntity<AITextResponse> getAdvice() {
+		AITextResponse response = openAIService.getAdvice();
 		return ResponseEntity.ok(response);
 	}
 
 	@Override
-	public ResponseEntity<AIPreviewResponse> preview() {
-		AIPreviewResponse response = openAIService.showPreview();
+	public ResponseEntity<AITextResponse> preview() {
+		AITextResponse response = openAIService.showPreview();
 		return ResponseEntity.ok(response);
 	}
 

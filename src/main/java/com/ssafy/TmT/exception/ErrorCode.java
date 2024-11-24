@@ -31,9 +31,14 @@ public enum ErrorCode {
     MEMBER_NOT_FOUND(404, "M001", "사용자를 확인할 수 없습니다."), 
     
     // openAI 에러
-    OPENAI_RESPONSE_INVALID(404, "O001", "OpenAI 데이터 구조가 예상과 다릅니다"), 
-    OPENAI_API_CALL_FAILED(404, "O002", "OpenAI 통신이 실패했습니다");
-    
+    OPENAI_RESPONSE_INVALID(404, "O001", "OpenAI 데이터 구조가 예상과 다릅니다."),
+    OPENAI_API_CALL_FAILED(500, "O002", "OpenAI 통신이 실패했습니다."),
+    OPENAI_RESPONSE_NULL(500, "O003", "OpenAI 응답이 null입니다."),
+    OPENAI_CHOICES_NULL(500, "O004", "OpenAI 응답에서 choices가 null입니다."),
+    OPENAI_NO_CHOICES(500, "O005", "OpenAI 응답에서 choices가 비어 있습니다."),
+    OPENAI_MESSAGE_NULL(500, "O006", "OpenAI 응답에서 메시지가 null입니다.");
+	
+	
 	
 	private final int status;	// HTTP 상태 코드
 	private final String code;	// 커스텀 상태 코드
