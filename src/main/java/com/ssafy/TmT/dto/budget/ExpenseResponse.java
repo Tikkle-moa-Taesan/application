@@ -2,12 +2,12 @@ package com.ssafy.TmT.dto.budget;
 
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class ExpenseResponse {
 
 	// 지난 달 지출

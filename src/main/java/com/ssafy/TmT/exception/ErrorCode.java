@@ -31,7 +31,7 @@ public enum ErrorCode {
     MEMBER_NOT_FOUND(404, "M001", "사용자를 확인할 수 없습니다."), 
     
     // openAI 에러
-    OPENAI_RESPONSE_INVALID(401, "O001", "OpenAI 데이터 구조가 예상과 다릅니다"), 
+    OPENAI_RESPONSE_INVALID(404, "O001", "OpenAI 데이터 구조가 예상과 다릅니다"), 
     OPENAI_API_CALL_FAILED(404, "O002", "OpenAI 통신이 실패했습니다");
     
 	

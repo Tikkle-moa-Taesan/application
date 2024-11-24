@@ -1,6 +1,11 @@
 package com.ssafy.TmT.controller.interf;
 
+import com.ssafy.TmT.dto.openAI.AIPreviewResponse;
 import com.ssafy.TmT.dto.openAI.OpenAIResponse;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +16,22 @@ public interface OpenAIInterface {
 	
 	// 1. 내 전체 데이터를 기반으로, 훈수 듣기
 	@GetMapping("/data")
+	@Operation(summary = "모든 정보 다 넘기고 조언받기", description = "내가 가진 모든 데이터를 통해서, ai 조언을 받습니다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "프로필 조회 성공"),
+        @ApiResponse(responseCode = "404", description = "openAI 오류"),
+        @ApiResponse(responseCode = "500", description = "서버 내부 오류")    })
 	ResponseEntity<OpenAIResponse> getAdvice();
+	
+	// 1. 내 전체 데이터를 기반으로, 훈수 듣기
+	@GetMapping("/preview")
+	@Operation(summary = "간략한 정보 넘기고 조언받기", description = "최근 지출통계를 통해, ai 조언을 받습니다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "프로필 조회 성공"),
+        @ApiResponse(responseCode = "404", description = "openAI 오류"),
+        @ApiResponse(responseCode = "500", description = "서버 내부 오류")
+    })
+	ResponseEntity<AIPreviewResponse> preview();
 	
 //	
 //    // 월별 예산 대비 지출 비교

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.ssafy.TmT.dto.account.AccountDTO;
 import com.ssafy.TmT.dto.budget.BudgetDTO;
+import com.ssafy.TmT.dto.budget.CategoryExpenseDTO;
 import com.ssafy.TmT.dto.transaction.BudgetTransactionDTO;
 
 import lombok.AllArgsConstructor;
@@ -14,8 +15,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class MemberTotalDataDTO {
     private Long memberId;
     private String memberName;
