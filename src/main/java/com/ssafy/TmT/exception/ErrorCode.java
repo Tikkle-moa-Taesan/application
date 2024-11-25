@@ -32,7 +32,7 @@ public enum ErrorCode {
     INVALID_TOKEN(401, "T001", "유효하지 않은 토큰입니다."),
     TOKEN_EXPIRED(401, "T002", "토큰이 만료되었습니다."),
     INVALID_AUTHENTICATION(401, "A003", "인증되지 않은 사용자입니다."),
-    OAUTH_INVALID(401,"T004", "카카오 인증에 실패했습니다"),
+    OAUTH_INVALID(401,"T004", "OAuth 인증에 실패했습니다"),
     
     MEMBER_DATA_NOT_FOUND(404, "M002","사용자 데이터를 불러오는 데 실패했습니다"),
     MEMBER_NOT_FOUND(404, "M001", "사용자를 확인할 수 없습니다."), 
@@ -43,7 +43,12 @@ public enum ErrorCode {
     OPENAI_RESPONSE_NULL(500, "O003", "OpenAI 응답이 null입니다."),
     OPENAI_CHOICES_NULL(500, "O004", "OpenAI 응답에서 choices가 null입니다."),
     OPENAI_NO_CHOICES(500, "O005", "OpenAI 응답에서 choices가 비어 있습니다."),
-    OPENAI_MESSAGE_NULL(500, "O006", "OpenAI 응답에서 메시지가 null입니다.");
+    OPENAI_MESSAGE_NULL(500, "O006", "OpenAI 응답에서 메시지가 null입니다."), 
+    
+    INVALID_ID_TOKEN_FORMAT(404,"T005", "id토큰 형식이 올바르지 않습니다."), 
+    DECODING_FAILED(404,"T006", "디코딩에 실패했습니다"), 
+    INVALID_STATE_TOKEN(404,"T007","state 값이 이상합니다"), 
+    PARSING_FAILED(404,"T008","parsing 실패");
 	
 	
 	

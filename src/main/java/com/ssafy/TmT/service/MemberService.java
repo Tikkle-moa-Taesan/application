@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.TmT.dao.MemberDao;
 import com.ssafy.TmT.dto.member.ModifyBudgetTransactionRequest;
-import com.ssafy.TmT.dto.oauth.IdTokenPayload;
+import com.ssafy.TmT.dto.oauth.LoginDTO;
 import com.ssafy.TmT.dto.oauth.Profile;
 import com.ssafy.TmT.exception.CustomException;
 import com.ssafy.TmT.exception.ErrorCode;
@@ -20,23 +20,23 @@ public class MemberService {
 	
 	private final MemberDao memberDao;
 
-//	@Transactional
-	public void register(IdTokenPayload idTokenPayload) {
+	@Transactional
+	public void register(LoginDTO loginDTO) {
 		System.out.println("회원가입 메서드 실행");
-		memberDao.regist(idTokenPayload);
+		memberDao.regist(loginDTO);
 		System.out.println("회원가입 완료");
 	}
 
-//	@Transactional
-	public Profile login(IdTokenPayload idTokenPayload) {
-		String subject = idTokenPayload.getSub();
+	@Transactional
+	public Profile login(LoginDTO loginDTO) {
+		String name = loginDTO.getName();
 		// 처음 로그인하는 경우 : 회원가입
-		if ((memberDao.login(subject) == null)) {
+		if ((memberDao.login(name) == null)) {
 			System.out.println("회원가입으로 연결");
-			register(idTokenPayload);
+			register(loginDTO);
 		}
 		
-		Profile profile = memberDao.login(subject);
+		Profile profile = memberDao.login(name);
 		System.out.println("로그인 완료 : " + profile);
 		return profile;
 	}

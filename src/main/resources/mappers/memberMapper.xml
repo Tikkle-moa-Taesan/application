@@ -10,17 +10,18 @@
 		member_id,
 		member_name,
 		picture,
-		role
+		role,
+		created_at
 		FROM Member
-		WHERE subject =
-		#{subject}
+		WHERE member_name =
+		#{name}
 	</select>
 
 	<!-- 회원가입 쿼리 -->
-	<insert id="regist" parameterType="IdTokenPayload">
+	<insert id="regist" parameterType="LoginDTO">
 		INSERT INTO Member (subject,
 		member_name, picture)
-		VALUES (#{sub}, #{nickname}, #{picture})
+		VALUES (#{sub}, #{name}, #{picture})
 	</insert>
 
 	<select id="getProfile" parameterType="long"

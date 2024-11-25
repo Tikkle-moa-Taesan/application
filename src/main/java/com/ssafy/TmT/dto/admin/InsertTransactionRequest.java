@@ -15,8 +15,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class InsertTransactionRequest {
 	
-	private Long transactionId;	// 이게 필요한가
-	
 	private Long accountId;
 	
 	private int categoryCode;

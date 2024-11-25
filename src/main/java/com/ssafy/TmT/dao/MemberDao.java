@@ -6,14 +6,14 @@ import org.apache.ibatis.annotations.Param;
 import com.ssafy.TmT.dto.member.MemberPreviewDataDTO;
 import com.ssafy.TmT.dto.member.MemberTotalDataDTO;
 import com.ssafy.TmT.dto.member.ModifyBudgetTransactionRequest;
-import com.ssafy.TmT.dto.oauth.IdTokenPayload;
+import com.ssafy.TmT.dto.oauth.LoginDTO;
 import com.ssafy.TmT.dto.oauth.Profile;
 
 public interface MemberDao {
 
-	void regist(IdTokenPayload subject);
+	void regist(LoginDTO loginDto);
 
-	Profile login(String subject);
+	Profile login(String name);
 
 	Profile getProfile(Long memberId);
 
