@@ -34,20 +34,14 @@ public class OAuthService {
 	private final JwtUtil jwtUtil;
 	private final OAuthProvider oAuthProvider;
 	private final MemberService memberService;
-    private final Map<String, String> stateStore = new ConcurrentHashMap<>(); // 간단한 상태 저장소
+//    private final Map<String, String> stateStore = new ConcurrentHashMap<>(); // 간단한 상태 저장소
 
 
     // Kakao 로그인 처리
-    public LoginResponse processKakaoLogin(HttpHeaders headers) {
-        // 1. Kakao ID Token 가져오기
-    	String authorizationUrl = oAuthProvider.generateKakaoLoginUrl();
-    	// 가져와서 바로 적용시키자.
-    	String code = oAuthProvider.retrieveAuthorizationCode(authorizationUrl);
-    	
-    	
+    public LoginResponse processKakaoLogin(String code, HttpHeaders headers) {
     	
         String idToken = oAuthProvider.getKakaoIdToken(code);
-
+        
         // 2. ID Token 디코딩
         KakaoIdTokenPayload kakaoPayload = oAuthProvider.decodeKakaoIdToken(idToken);
 
@@ -56,12 +50,7 @@ public class OAuthService {
     }
     
     // **구글 로그인 처리**
-    public LoginResponse processGoogleLogin(HttpHeaders headers) {
-       
-        String authorizationUrl = oAuthProvider.generateGoogleLoginUrl();
-        String code = oAuthProvider.retrieveAuthorizationCode(authorizationUrl);
-
-    	
+    public LoginResponse processGoogleLogin(String code, HttpHeaders headers) {
     	// 1. Google Access Token 가져오기
         String idToken = oAuthProvider.getGoogleIdToken(code);
 
@@ -73,24 +62,24 @@ public class OAuthService {
     }
     
     // Google 로그인 URL 생성
-    public String generateGoogleLoginUrl() {
-        String state = generateStateToken();
-        return oAuthProvider.generateGoogleLoginUrl(state);
-    }
+//    public String generateGoogleLoginUrl() {
+//        String state = generateStateToken();
+//        return oAuthProvider.generateGoogleLoginUrl(state);
+//    }
     
     // 상태 토큰 검증
-    public void validateStateToken(String state) {
-        if (!stateStore.containsKey(state)) {
-            throw new CustomException(ErrorCode.INVALID_STATE_TOKEN);
-        }
-        stateStore.remove(state); // 검증 후 삭제
-    }
+//    public void validateStateToken(String state) {
+//        if (!stateStore.containsKey(state)) {
+//            throw new CustomException(ErrorCode.INVALID_STATE_TOKEN);
+//        }
+//        stateStore.remove(state); // 검증 후 삭제
+//    }
     // 상태 토큰 생성
-    public String generateStateToken() {
-        String state = UUID.randomUUID().toString();
-        stateStore.put(state, state);
-        return state;
-    }
+//    public String generateStateToken() {
+//        String state = UUID.randomUUID().toString();
+//        stateStore.put(state, state);
+//        return state;
+//    }
     
     // 공통 로그인 처리
     private LoginResponse processLogin(String sub, String name, String picture, HttpHeaders headers) {

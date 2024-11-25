@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.TmT.controller.interf.OAuthController;
+import com.ssafy.TmT.dto.oauth.LoginRequest;
 import com.ssafy.TmT.dto.oauth.LoginResponse;
 import com.ssafy.TmT.service.OAuthService;
 import com.ssafy.TmT.util.JwtUtil;
@@ -25,15 +26,6 @@ public class OAuthControllerImpl implements OAuthController {
 	private final OAuthService oAuthService;
 	private final JwtUtil jwtUtil;
 	
-//	@Override
-//    public ResponseEntity<LoginResponse> kakaoLogin(@PathVariable String code) {
-//        log.info("카카오 로그인 호출 with code: {}", code);
-//        HttpHeaders headers = new HttpHeaders();
-//        LoginResponse loginResponse = oAuthService.processKakaoLogin(code, headers);
-//
-//        return ResponseEntity.ok().headers(headers).body(loginResponse);
-//    }
-
 	@Override
 	public ResponseEntity<String> logout() {
 		HttpHeaders responseHeader = jwtUtil.expireCookies();
@@ -41,41 +33,19 @@ public class OAuthControllerImpl implements OAuthController {
 	}
 
     @Override
-    public ResponseEntity<LoginResponse> googleLogin() {
+    public ResponseEntity<LoginResponse> googleLogin(LoginRequest loginRequest) {
         log.info("구글 로그인 호출");
         HttpHeaders headers = new HttpHeaders();
-        LoginResponse loginResponse = oAuthService.processGoogleLogin(headers);
+        LoginResponse loginResponse = oAuthService.processGoogleLogin(loginRequest.getAuthorizationCode(), headers);
         return ResponseEntity.ok().headers(headers).body(loginResponse);
     }
-
-//    @Override
-//    public ResponseEntity<LoginResponse> handleGoogleCallback(@RequestParam String code, @RequestParam String state) {
-//        log.info("Google 로그인 콜백 수신 with code: {} and state: {}", code, state);
-//
-//        // State 검증
-//        oAuthService.validateStateToken(state);
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        // Google 인증 코드로 사용자 정보 처리
-//        LoginResponse loginResponse = oAuthService.processGoogleLogin(code, headers);
-//
-//        return ResponseEntity.ok().headers(headers).body(loginResponse);
-//    }
 
     @Override
-    public ResponseEntity<LoginResponse> kakaoLogin() {
+    public ResponseEntity<LoginResponse> kakaoLogin(LoginRequest loginRequest) {
         log.info("카카오 로그인 호출");
         HttpHeaders headers = new HttpHeaders();
-        LoginResponse loginResponse = oAuthService.processKakaoLogin(headers);
+        LoginResponse loginResponse = oAuthService.processKakaoLogin(loginRequest.getAuthorizationCode(), headers);
         return ResponseEntity.ok().headers(headers).body(loginResponse);
     }
-    
-    
-//    @Override
-//    public ResponseEntity<LoginResponse> handleKakaoCallback(String code) {
-//    	HttpHeaders headers = new HttpHeaders();
-//        LoginResponse loginResponse = oAuthService.processKakaoLogin(code, headers);
-//        return ResponseEntity.ok(loginResponse);
-//    }
 	
 }

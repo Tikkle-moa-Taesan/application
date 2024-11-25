@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -160,7 +161,12 @@ public class OAuthProvider {
     
     // 공통 메서드: 인가 코드 요청 후 수신
     public String retrieveAuthorizationCode(String authorizationUrl) {
-        // API 요청 로직 (예: RestTemplate으로 구현)
-        return apiUtil.sendGetRequest(authorizationUrl,null, String.class).getBody();
+    	HttpHeaders headers = new HttpHeaders();
+    	headers.set("Accept", "application/json");
+    	
+    	log.info("Authorization URL: {}", authorizationUrl); // 요청 URL 확인
+//    	 ResponseEntity<String> response = apiUtil.sendGetRequest(authorizationUrl, headers, String.class);
+    	
+        return apiUtil.sendGetRequest(authorizationUrl,headers, String.class).getBody();
     }
 }
