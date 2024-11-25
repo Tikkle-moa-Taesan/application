@@ -4,7 +4,8 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ssafy.TmT.dao.AdminDao">
 
-	<insert id="insertTransaction" parameterType="InsertTransactionDTO">
+	<insert id="insertTransaction"
+		parameterType="InsertTransactionDTO">
 
 		INSERT INTO Transaction(
 		account_id,
@@ -28,23 +29,31 @@
 
 
 	<insert id="insertAccount" parameterType="InsertAccountDTO">
-		INSERT INTO Account(
+		INSERT INTO Account (
 		account_type,
 		account_number,
 		account_name,
 		bank_name,
-		interest_rate,
-		member_id,
-		maturity_date
+		member_id
+		<if test="interestRate != null">
+			, interest_rate
+		</if>
+		<if test="maturityDate != null">
+			, maturity_date
+		</if>
 		)
 		VALUES (
 		#{accountType},
 		#{accountNumber},
 		#{accountName},
 		#{bankName},
-		#{interestRate},
-		#{memberId},
-		#{maturityDate}
+		#{memberId}
+		<if test="interestRate != null">
+			, #{interestRate}
+		</if>
+		<if test="maturityDate != null">
+			, #{maturityDate}
+		</if>
 		)
 	</insert>
 
