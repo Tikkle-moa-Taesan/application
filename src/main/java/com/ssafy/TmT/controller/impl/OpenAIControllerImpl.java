@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api/openAI")
 public class OpenAIControllerImpl implements OpenAIInterface {
 
 	private final OpenAIService openAIService;

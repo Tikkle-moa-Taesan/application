@@ -3,6 +3,7 @@ package com.ssafy.TmT.controller.interf;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.ssafy.TmT.dto.oauth.LoginResponse;
 
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
+@RequestMapping("/api/oauth")
 public interface OAuthController {
 
 	// 카카오 로그인

@@ -26,10 +26,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@RestController
 @Slf4j
+@RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/account")
 public class AccountControllerImpl implements AccountController {
 	
 	private final AccountService accountService;

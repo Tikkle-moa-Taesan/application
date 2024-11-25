@@ -3,13 +3,17 @@ package com.ssafy.TmT.controller.interf;
 import java.util.List;
 
 
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.TmT.controller.impl.AccountControllerImpl;
 import com.ssafy.TmT.dto.account.BalanceResponse;
 import com.ssafy.TmT.dto.account.FreeAccountDetailResponse;
 import com.ssafy.TmT.dto.account.FreeAccountResponse;
@@ -18,6 +22,7 @@ import com.ssafy.TmT.dto.account.SavingsAccountResponse;
 import com.ssafy.TmT.dto.search.SearchCondition;
 import com.ssafy.TmT.dto.search.SearchRequest;
 import com.ssafy.TmT.exception.CustomExceptionResponse;
+import com.ssafy.TmT.service.AccountService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -25,8 +30,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
+@RequestMapping("/api/account")
 public interface AccountController {
 
+	
     @GetMapping("/free")
     @Operation(summary = "1. 자유 계좌 전체 조회", description = "JWT를 이용해 자유 입출금 계좌를 전부 조회합니다.")
     @ApiResponses({

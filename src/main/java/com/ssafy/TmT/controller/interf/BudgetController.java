@@ -13,6 +13,7 @@ import org.apache.ibatis.annotations.Update;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@RequestMapping("/api/budget")
 public interface BudgetController {
 
     // 가계부 만드는 API

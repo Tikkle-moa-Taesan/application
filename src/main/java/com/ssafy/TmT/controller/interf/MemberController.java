@@ -2,6 +2,7 @@ package com.ssafy.TmT.controller.interf;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.ssafy.TmT.dto.oauth.Profile;
 
@@ -9,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
+@RequestMapping("/api/member")
 public interface MemberController {
 
 	// 9번 api. profile get. 11.16 개발/점검 완료

@@ -11,12 +11,14 @@ public enum ErrorCode {
     // 공통 에러
     METHOD_NOT_ALLOWED(405, "C001", "잘못된 요청입니다."),
     DATA_SERIALIZATION_FAILED(404, "C002", "데이터 직렬화 실패"),
+    
+    // transaction 관련 에러
+    TRANSACTION_CREATE_FAIL(404, "T001", "거래내역 생성 실패"),
 
     // Budget 관련 에러
     BUDGET_NOT_FOUND(404, "B001", "해당 가계부가 없습니다."),
     BUDGET_TRANSACTION_UPDATE_FAILED(500, "B002", "가계부 거래 내역 업데이트 중 오류가 발생했습니다."),
     BUDGET_AMOUNT_NOT_FOUND(404, "B003", "가계부의 예산을 찾을 수 없습니다."),
-
     BUDGET_UPDATE_FAILURE(404,"B005","카테고리 예산 업데이트에 실패했습니다."),
 
     // Account 관련 에러
