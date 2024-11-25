@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.TmT.controller.interf.OAuthController;
 import com.ssafy.TmT.dto.oauth.LoginResponse;
 import com.ssafy.TmT.service.OAuthService;
+import com.ssafy.TmT.util.JwtUtil;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 public class OAuthControllerImpl implements OAuthController {
 	
 	private final OAuthService oAuthService;
+	private final JwtUtil jwtUtil;
 	
 	public ResponseEntity<LoginResponse> kakaoLogin(@PathVariable String code) throws Exception {
 		System.out.println("카카오로그인 호출");
@@ -27,4 +30,12 @@ public class OAuthControllerImpl implements OAuthController {
 		LoginResponse loginResponse = oAuthService.getMemberInfo(code, headers);
 		return ResponseEntity.ok().headers(headers).body(loginResponse);
 	}
+
+	@Override
+	public ResponseEntity<String> logout() {
+		HttpHeaders responseHeader = jwtUtil.expireCookies();
+		return ResponseEntity.ok().headers(responseHeader).body("로그아웃 성공");
+	}
+	
+	
 }

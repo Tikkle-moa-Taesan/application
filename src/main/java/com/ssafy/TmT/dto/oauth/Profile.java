@@ -21,4 +21,6 @@ public class Profile {
 	private String picture;
 	
 	private Timestamp createdAt;
+	
+	private String role;
 }

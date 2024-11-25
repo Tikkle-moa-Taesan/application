@@ -23,4 +23,5 @@ public interface MemberController {
         @ApiResponse(responseCode = "500", description = "서버 내부 오류")
     })
 	public ResponseEntity<Profile> findFreeAccounts();
+	
 }

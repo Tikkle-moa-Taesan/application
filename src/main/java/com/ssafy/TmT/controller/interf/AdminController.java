@@ -1,6 +1,7 @@
 package com.ssafy.TmT.controller.interf;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,7 @@ public interface AdminController {
 	
 	// 거래내역 추가 기능
 	@PostMapping("/transaction")
+	@PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "거래 내역 추가", description = "관리자 권한으로 거래 내역을 추가합니다")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "거래 내역 추가 성공",

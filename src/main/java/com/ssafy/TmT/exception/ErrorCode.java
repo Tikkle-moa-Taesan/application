@@ -28,6 +28,7 @@ public enum ErrorCode {
     INVALID_TOKEN(401, "T001", "유효하지 않은 토큰입니다."),
     TOKEN_EXPIRED(401, "T002", "토큰이 만료되었습니다."),
     INVALID_AUTHENTICATION(401, "A003", "인증되지 않은 사용자입니다."),
+    OAUTH_INVALID(401,"T004", "카카오 인증에 실패했습니다"),
     
     MEMBER_DATA_NOT_FOUND(404, "M002","사용자 데이터를 불러오는 데 실패했습니다"),
     MEMBER_NOT_FOUND(404, "M001", "사용자를 확인할 수 없습니다."), 

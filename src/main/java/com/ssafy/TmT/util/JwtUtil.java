@@ -44,7 +44,7 @@ public class JwtUtil {
     }
 	
     // AccessToken 생성 메서드
-    public String generateAccessToken(Long memberId) {
+    public String generateAccessToken(Long memberId, String role) {
         SecretKey secretKey = createSecretKey(); // SecretKey를 즉석에서 생성
         long now = System.currentTimeMillis();
 //        Map<String, Object> claims = new HashMap<>();
@@ -54,7 +54,7 @@ public class JwtUtil {
         
         return Jwts.builder()
         		.claim("memberId", memberId)
-//        		.setClaims(claims)			// 사용자 정보 저장
+        		.claim("role", role)
                 .setIssuedAt(new Date(now)) // 토큰 발행 시간
                 .setExpiration(new Date(now + ACCESS_TOKEN_EXPIRY)) // 토큰 만료 시간
                 .signWith(secretKey,SignatureAlgorithm.HS256) // 시그니처 알고리즘과 SecretKey 지정
@@ -63,12 +63,13 @@ public class JwtUtil {
 	
 	
     // RefreshToken 생성 메서드
-    public String generateRefreshToken(Long memberId) {
+    public String generateRefreshToken(Long memberId, String role) {
         SecretKey secretKey = createSecretKey();
         long now = System.currentTimeMillis();
 
         return Jwts.builder()
                 .claim("memberId", memberId)
+                .claim("role", role)
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRY))
                 .signWith(secretKey,SignatureAlgorithm.HS256)
@@ -86,7 +87,8 @@ public class JwtUtil {
                     .getBody();
 
             Long memberId = claims.get("memberId", Long.class);
-            return generateAccessToken(memberId);
+            String role = claims.get("role", String.class);
+            return generateAccessToken(memberId, role);
         } catch (ExpiredJwtException e) {
             throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
@@ -106,6 +108,12 @@ public class JwtUtil {
     private Long getMemberIdFromToken(String token) {
         Claims claims = extractAllClaims(token);
         return claims.get("memberId", Long.class);
+    }
+    
+    // JWT에서 role 추출
+    public String getRoleFromJwt(String jwt) {
+        Claims claims = extractAllClaims(jwt);
+        return claims.get("role", String.class);
     }
     
     // JWT의 모든 클레임 추출
@@ -145,6 +153,8 @@ public class JwtUtil {
 		try {
 			Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
 			return true;
+		} catch (ExpiredJwtException e) {
+			throw new CustomException(ErrorCode.TOKEN_EXPIRED);
 		} catch (Exception e) {
 			return false;
 		}

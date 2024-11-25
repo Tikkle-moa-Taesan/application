@@ -8,6 +8,8 @@ import com.ssafy.TmT.dto.oauth.IdTokenPayload;
 import com.ssafy.TmT.dto.oauth.KakaoOAuthResponse;
 import com.ssafy.TmT.dto.oauth.LoginResponse;
 import com.ssafy.TmT.dto.oauth.Profile;
+import com.ssafy.TmT.exception.CustomException;
+import com.ssafy.TmT.exception.ErrorCode;
 import com.ssafy.TmT.util.ApiUtil;
 import com.ssafy.TmT.util.JwtUtil;
 
@@ -23,7 +25,7 @@ public class OAuthService {
 	private final OAuthProvider oAuthProvider;
 	private final MemberService memberService;
 	
-    public LoginResponse getMemberInfo(String code, HttpHeaders headers) throws Exception {
+    public LoginResponse getMemberInfo(String code, HttpHeaders headers)  {
     
     	// 인증코드로 카카오 엑세스 토큰 발급받기
     	KakaoOAuthResponse kakaoToken = oAuthProvider.getKakaoAccessToken(code);
@@ -31,7 +33,12 @@ public class OAuthService {
     	
     	// IdToken을 디코딩해보자
     	String idToken = kakaoToken.getId_token();
-    	IdTokenPayload idTokenPayLoad = oAuthProvider.decodeIdToken(idToken);
+    	IdTokenPayload idTokenPayLoad;
+		try {
+			idTokenPayLoad = oAuthProvider.decodeIdToken(idToken);
+		} catch (Exception e) {
+			throw new CustomException(ErrorCode.OAUTH_INVALID);
+		}
     	System.out.println("idTokenPayload : " + idTokenPayLoad);
     	
 //    	String subject = idTokenPayLoad.getSub();
@@ -41,8 +48,8 @@ public class OAuthService {
     	System.out.println("프로필 : " + profile);
     	
     	// member 값을 통해 커스텀 JWT를 생성
-    	String customAccessToken = jwtUtil.generateAccessToken(profile.getMemberId());
-    	String customRefreshToken = jwtUtil.generateRefreshToken(profile.getMemberId());
+    	String customAccessToken = jwtUtil.generateAccessToken(profile.getMemberId(), profile.getRole());
+    	String customRefreshToken = jwtUtil.generateRefreshToken(profile.getMemberId(), profile.getRole());
         // 응답에 만료 시간 정보 추가
         Long accessTokenExpiry = jwtUtil.getAccessTokenExpiry();
         Long refreshTokenExpiry = jwtUtil.getRefreshTokenExpiry();

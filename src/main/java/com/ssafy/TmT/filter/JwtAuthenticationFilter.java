@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -34,11 +35,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (accessToken != null && jwtUtil.validateToken(accessToken)) {
             Long memberId = jwtUtil.getMemberIdFromJwt(accessToken); 
+            
+            String role = jwtUtil.getRoleFromJwt(accessToken);
+            if (role == null) role = "ROLE_VISITOR";
+            
             UsernamePasswordAuthenticationToken authentication = 
-                    new UsernamePasswordAuthenticationToken(memberId, null, List.of());
+                    new UsernamePasswordAuthenticationToken(memberId, null, List.of(new SimpleGrantedAuthority(role)));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             log.info("유효한 accessToken으로 SecurityContext에 인증 설정 완료");
-            System.out.println("현재 accessToken 값 : " + accessToken);
+            log.info("권한 : " + role);
         } else {
             log.warn("유효하지 않은 JWT token");
         }
