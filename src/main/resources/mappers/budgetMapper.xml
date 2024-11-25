@@ -72,8 +72,9 @@
 		WHERE member_id =
 		#{memberId}
 		)
-		AND t.transaction_datetime BETWEEN DATE_FORMAT(NOW(), '%Y-%m-01') AND
-		LAST_DAY(NOW())
+        AND t.transaction_datetime BETWEEN 
+            DATE_FORMAT(DATE_SUB(CURRENT_DATE, INTERVAL 6 MONTH), '%Y-%m-01') 
+            AND CURRENT_DATE
 		AND t.transaction_id NOT IN (
 		SELECT
 		transaction_id
