@@ -38,8 +38,14 @@ public class OAuthService {
 
 
     // Kakao 로그인 처리
-    public LoginResponse processKakaoLogin(String code, HttpHeaders headers) {
+    public LoginResponse processKakaoLogin(HttpHeaders headers) {
         // 1. Kakao ID Token 가져오기
+    	String authorizationUrl = oAuthProvider.generateKakaoLoginUrl();
+    	// 가져와서 바로 적용시키자.
+    	String code = oAuthProvider.retrieveAuthorizationCode(authorizationUrl);
+    	
+    	
+    	
         String idToken = oAuthProvider.getKakaoIdToken(code);
 
         // 2. ID Token 디코딩
@@ -50,8 +56,13 @@ public class OAuthService {
     }
     
     // **구글 로그인 처리**
-    public LoginResponse processGoogleLogin(String code, HttpHeaders headers) {
-        // 1. Google Access Token 가져오기
+    public LoginResponse processGoogleLogin(HttpHeaders headers) {
+       
+        String authorizationUrl = oAuthProvider.generateGoogleLoginUrl();
+        String code = oAuthProvider.retrieveAuthorizationCode(authorizationUrl);
+
+    	
+    	// 1. Google Access Token 가져오기
         String idToken = oAuthProvider.getGoogleIdToken(code);
 
         // 2. ID Token 디코딩

@@ -41,41 +41,41 @@ public class OAuthControllerImpl implements OAuthController {
 	}
 
     @Override
-    public ResponseEntity<String> getGoogleLoginUrl() {
-        log.info("Google 로그인 URL 생성 요청");
-
-        // Google 로그인 URL 생성
-        String googleLoginUrl = oAuthService.generateGoogleLoginUrl();
-
-        return ResponseEntity.status(302).body(googleLoginUrl); // Redirect URL 반환
-    }
-
-    @Override
-    public ResponseEntity<LoginResponse> handleGoogleCallback(@RequestParam String code, @RequestParam String state) {
-        log.info("Google 로그인 콜백 수신 with code: {} and state: {}", code, state);
-
-        // State 검증
-        oAuthService.validateStateToken(state);
-
+    public ResponseEntity<LoginResponse> googleLogin() {
+        log.info("구글 로그인 호출");
         HttpHeaders headers = new HttpHeaders();
-        // Google 인증 코드로 사용자 정보 처리
-        LoginResponse loginResponse = oAuthService.processGoogleLogin(code, headers);
-
+        LoginResponse loginResponse = oAuthService.processGoogleLogin(headers);
         return ResponseEntity.ok().headers(headers).body(loginResponse);
     }
 
+//    @Override
+//    public ResponseEntity<LoginResponse> handleGoogleCallback(@RequestParam String code, @RequestParam String state) {
+//        log.info("Google 로그인 콜백 수신 with code: {} and state: {}", code, state);
+//
+//        // State 검증
+//        oAuthService.validateStateToken(state);
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        // Google 인증 코드로 사용자 정보 처리
+//        LoginResponse loginResponse = oAuthService.processGoogleLogin(code, headers);
+//
+//        return ResponseEntity.ok().headers(headers).body(loginResponse);
+//    }
+
     @Override
-    public ResponseEntity<String> getKakaoLoginUrl() {
-        String kakaoLoginUrl = oAuthService.generateKakaoLoginUrl();
-        return ResponseEntity.status(302).body(kakaoLoginUrl); // Redirect URL 반환
+    public ResponseEntity<LoginResponse> kakaoLogin() {
+        log.info("카카오 로그인 호출");
+        HttpHeaders headers = new HttpHeaders();
+        LoginResponse loginResponse = oAuthService.processKakaoLogin(headers);
+        return ResponseEntity.ok().headers(headers).body(loginResponse);
     }
     
     
-    @Override
-    public ResponseEntity<LoginResponse> handleKakaoCallback(String code) {
-    	HttpHeaders headers = new HttpHeaders();
-        LoginResponse loginResponse = oAuthService.processKakaoLogin(code, headers);
-        return ResponseEntity.ok(loginResponse);
-    }
+//    @Override
+//    public ResponseEntity<LoginResponse> handleKakaoCallback(String code) {
+//    	HttpHeaders headers = new HttpHeaders();
+//        LoginResponse loginResponse = oAuthService.processKakaoLogin(code, headers);
+//        return ResponseEntity.ok(loginResponse);
+//    }
 	
 }

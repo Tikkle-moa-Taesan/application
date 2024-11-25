@@ -43,18 +43,18 @@ public interface OAuthController {
     @ApiResponses({
         @ApiResponse(responseCode = "302", description = "Google 로그인 페이지로 리디렉션")
     })
-    @GetMapping("/google/login-url")
-    public ResponseEntity<String> getGoogleLoginUrl();
+    @PostMapping("/google/login")
+    public ResponseEntity<LoginResponse> googleLogin();
     
 
-    @Operation(summary = "Google 로그인 Redirect 처리", description = "Google에서 인증 후 반환된 정보를 처리합니다.")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "로그인 성공"),
-        @ApiResponse(responseCode = "400", description = "잘못된 요청"),
-        @ApiResponse(responseCode = "500", description = "서버 내부 오류")
-    })
-    @GetMapping("/google/callback")
-    public ResponseEntity<LoginResponse> handleGoogleCallback(@RequestParam String code, @RequestParam String state);
+//    @Operation(summary = "Google 로그인 Redirect 처리", description = "Google에서 인증 후 반환된 정보를 처리합니다.")
+//    @ApiResponses({
+//        @ApiResponse(responseCode = "200", description = "로그인 성공"),
+//        @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+//        @ApiResponse(responseCode = "500", description = "서버 내부 오류")
+//    })
+//    @GetMapping("/google/callback")
+//    public ResponseEntity<LoginResponse> handleGoogleCallback(@RequestParam String code, @RequestParam String state);
 
 
 
@@ -62,17 +62,17 @@ public interface OAuthController {
     @ApiResponses({
         @ApiResponse(responseCode = "302", description = "카카오 로그인 페이지로 리디렉션")
     })
-    @GetMapping("/kakao/login-url")
-    public ResponseEntity<String> getKakaoLoginUrl();
+    @PostMapping("/kakao/login")
+    public ResponseEntity<LoginResponse> kakaoLogin();
 
-    @Operation(summary = "카카오 로그인 Redirect 처리", description = "카카오에서 인증 후 반환된 정보를 처리합니다.")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "로그인 성공"),
-        @ApiResponse(responseCode = "400", description = "잘못된 요청"),
-        @ApiResponse(responseCode = "500", description = "서버 내부 오류")
-    })
-    @GetMapping("/kakao/callback")
-    public ResponseEntity<LoginResponse> handleKakaoCallback(String code);
-    
+//    @Operation(summary = "카카오 로그인 Redirect 처리", description = "카카오에서 인증 후 반환된 정보를 처리합니다.")
+//    @ApiResponses({
+//        @ApiResponse(responseCode = "200", description = "로그인 성공"),
+//        @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+//        @ApiResponse(responseCode = "500", description = "서버 내부 오류")
+//    })
+//    @GetMapping("/kakao/callback")
+//    public ResponseEntity<LoginResponse> handleKakaoCallback(String code);
+//    
 
 }

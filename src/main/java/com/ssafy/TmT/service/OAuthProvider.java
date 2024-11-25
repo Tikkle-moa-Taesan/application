@@ -63,6 +63,9 @@ public class OAuthProvider {
     @Value("${spring.security.oauth2.client.provider.google.user-info-uri}")
     private String googleUserInfoUri;
 
+    @Value("${spring.security.oauth2.client.provider.google.authorization-uri}")
+    private String googleAuthorizationUri;
+
     // 공통 메서드: OAuth Access Token 요청
     private Map<String, String> getAccessToken(String tokenUri, String clientId, String clientSecret, String redirectUri, String code) {
         HttpHeaders headers = new HttpHeaders();
@@ -135,11 +138,29 @@ public class OAuthProvider {
         }
     }
 
+    
+    // 카카오 인가 코드 요청
     public String generateKakaoLoginUrl() {
         return UriComponentsBuilder.fromHttpUrl(kakaoAuthorizationUri)
             .queryParam("client_id", kakaoClientId)
             .queryParam("redirect_uri", kakaoRedirectUri)
             .queryParam("response_type", "code")
             .toUriString();
+    }
+    
+    // 구글 인가 코드 요청
+    public String generateGoogleLoginUrl() {
+        return UriComponentsBuilder.fromHttpUrl(googleAuthorizationUri)
+            .queryParam("client_id", googleClientId)
+            .queryParam("redirect_uri", googleRedirectUri)
+            .queryParam("response_type", "code")
+            .queryParam("scope", "openid email profile")
+            .toUriString();
+    }
+    
+    // 공통 메서드: 인가 코드 요청 후 수신
+    public String retrieveAuthorizationCode(String authorizationUrl) {
+        // API 요청 로직 (예: RestTemplate으로 구현)
+        return apiUtil.sendGetRequest(authorizationUrl,null, String.class).getBody();
     }
 }
