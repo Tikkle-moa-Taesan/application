@@ -3,12 +3,17 @@ package com.ssafy.TmT.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mysql.cj.protocol.Security;
 import com.ssafy.TmT.dao.AccountDao;
 import com.ssafy.TmT.dao.AdminDao;
+import com.ssafy.TmT.dto.admin.InsertAccountDTO;
+import com.ssafy.TmT.dto.admin.InsertAccountRequest;
+import com.ssafy.TmT.dto.admin.InsertTransactionDTO;
 import com.ssafy.TmT.dto.admin.InsertTransactionRequest;
 import com.ssafy.TmT.dto.transaction.TransactionType;
 import com.ssafy.TmT.exception.CustomException;
 import com.ssafy.TmT.exception.ErrorCode;
+import com.ssafy.TmT.util.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,12 +34,22 @@ public class AdminService {
 		} else if (request.getTransactionType() == TransactionType.income) {
 			balance += amount;
 		}
-		request.setBalanceAfter(balance);
+		InsertTransactionDTO dto = new InsertTransactionDTO(request.getAccountId(), request.getCategoryCode(), request.getTransactionDatetime(), amount, balance, request.getMerchantName(), request.getTransactionType());
 		// transaction
-		int result = adminDao.insertTransaction(request);
+		int result = adminDao.insertTransaction(dto);
 		
 		if (result == 0) throw new CustomException(ErrorCode.TRANSACTION_CREATE_FAIL);
 
 		return;
+	}
+
+	public void insertAccount(InsertAccountRequest request) {
+		Long memberId = SecurityUtil.getAuthenticatedMemberId();
+		
+		InsertAccountDTO dto = new InsertAccountDTO(request.getAccountType(), request.getAccountNumber(), request.getAccountName(), request.getBankName(), request.getInterestRate(), memberId);
+
+		int result = adminDao.insertAccount(dto);
+		if (result == 0) throw new CustomException(ErrorCode.ACCOUNT_CREATION_FAILED);
+		
 	}
 }

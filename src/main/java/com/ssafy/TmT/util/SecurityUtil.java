@@ -11,12 +11,12 @@ public class SecurityUtil {
 	public static Long getAuthenticatedMemberId() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal() == null) {
-			throw new CustomException(ErrorCode.INVALID_AUTHENTICATION);
+			throw new CustomException(ErrorCode.AUTHENTICATION_NOT_FOUND);
 		}
 		try {
 			return (Long) authentication.getPrincipal();
 		} catch (ClassCastException e) {
-			throw new CustomException(ErrorCode.ACCOUNT_NOT_FOUND);
+			throw new CustomException(ErrorCode.INVALID_AUTHENTICATION_DATA);
 		}
 	}
 }

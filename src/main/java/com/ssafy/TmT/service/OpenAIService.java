@@ -41,7 +41,7 @@ public class OpenAIService {
 		MemberTotalDataDTO data = memberDao.getAllData(memberId);
 
 		if (data == null) {
-			throw new CustomException(ErrorCode.MEMBER_DATA_NOT_FOUND);
+			throw new CustomException(ErrorCode.MEMBER_DATA_FETCH_FAILED);
 		}
 
 //			String jsonData = objectMapper.writeValueAsString(data);
@@ -56,7 +56,7 @@ public class OpenAIService {
 		ExpenseResponse data = budgetService.calculateExpenseAndBudget();
 
 		if (data == null)
-			throw new CustomException(ErrorCode.MEMBER_DATA_NOT_FOUND);
+			throw new CustomException(ErrorCode.MEMBER_DATA_FETCH_FAILED);
 		String prompt = buildPreviewPrompt(data);
 		return generateResponse(prompt);
 	}
@@ -65,15 +65,14 @@ public class OpenAIService {
 	// openAI 에 요청하고 결과를 처리하는 공통 메서드.. 만들어보자
 	private AITextResponse generateResponse(String prompt) {
 		OpenAIResponse response = openAIUtil.generateInsights(prompt);
-		if (response == null)
-			throw new CustomException(ErrorCode.OPENAI_RESPONSE_NULL);
-		if (response.getChoices() == null)
-			throw new CustomException(ErrorCode.OPENAI_CHOICES_NULL);
-		if (response.getChoices().isEmpty())
-			throw new CustomException(ErrorCode.OPENAI_NO_CHOICES);
-		if (response.getChoices().get(0).getMessage() == null)
-			throw new CustomException(ErrorCode.OPENAI_MESSAGE_NULL);
-
+	    if (response == null)
+	        throw new CustomException(ErrorCode.OPENAI_NO_RESPONSE);
+	    if (response.getChoices() == null)
+	        throw new CustomException(ErrorCode.OPENAI_NO_CHOICES_FIELD);
+	    if (response.getChoices().isEmpty())
+	        throw new CustomException(ErrorCode.OPENAI_EMPTY_CHOICES);
+	    if (response.getChoices().get(0).getMessage() == null)
+	        throw new CustomException(ErrorCode.OPENAI_NO_MESSAGE_CONTENT);
 		return new AITextResponse(response.getChoices().get(0).getMessage().getContent());
 	}
 	

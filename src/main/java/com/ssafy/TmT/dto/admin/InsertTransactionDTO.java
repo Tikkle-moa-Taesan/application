@@ -6,15 +6,13 @@ import com.ssafy.TmT.dto.transaction.TransactionType;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class InsertTransactionRequest {
-	
+public class InsertTransactionDTO {
+
 	private Long accountId;
 	
 	private int categoryCode;
@@ -23,7 +21,7 @@ public class InsertTransactionRequest {
 	
 	private Long amount;
 	
-//	private Long balanceAfter;	// 이거는.. 계산해줘야할듯
+	private Long balanceAfter;	// 이거는.. 계산해줘야할듯
 	
 	private String merchantName;
 	

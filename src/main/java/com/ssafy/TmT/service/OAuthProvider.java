@@ -131,11 +131,11 @@ public class OAuthProvider {
         } catch (IllegalArgumentException e) {
             // Base64 디코딩 실패
             log.error("Base64 decoding failed for ID Token: {}", idToken, e);
-            throw new CustomException(ErrorCode.DECODING_FAILED);
+            throw new CustomException(ErrorCode.BASE64_DECODING_FAILED);
         } catch (Exception e) {
             // JSON 파싱 실패
             log.error("Failed to parse ID Token payload: {}", e.getMessage(), e);
-            throw new CustomException(ErrorCode.PARSING_FAILED);
+            throw new CustomException(ErrorCode.TOKEN_PARSING_FAILED);
         }
     }
 
