@@ -25,14 +25,14 @@ public class OAuthControllerImpl implements OAuthController {
 	private final OAuthService oAuthService;
 	private final JwtUtil jwtUtil;
 	
-	@Override
-    public ResponseEntity<LoginResponse> kakaoLogin(@PathVariable String code) {
-        log.info("카카오 로그인 호출 with code: {}", code);
-        HttpHeaders headers = new HttpHeaders();
-        LoginResponse loginResponse = oAuthService.processKakaoLogin(code, headers);
-
-        return ResponseEntity.ok().headers(headers).body(loginResponse);
-    }
+//	@Override
+//    public ResponseEntity<LoginResponse> kakaoLogin(@PathVariable String code) {
+//        log.info("카카오 로그인 호출 with code: {}", code);
+//        HttpHeaders headers = new HttpHeaders();
+//        LoginResponse loginResponse = oAuthService.processKakaoLogin(code, headers);
+//
+//        return ResponseEntity.ok().headers(headers).body(loginResponse);
+//    }
 
 	@Override
 	public ResponseEntity<String> logout() {
