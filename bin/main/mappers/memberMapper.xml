@@ -38,88 +38,64 @@
 	</select>
 
 	<!-- 한 회원의 모든 정보를 조회 -->
-	<select id="getAllData" parameterType="Long"
-		resultType="MemberTotalDataDTO">
-		SELECT
-		-- Member 정보
-		m.created_at AS memberCreatedAt,
+<select id="getAllData" parameterType="Long" resultType="MemberTotalDataDTO">
+    SELECT
+        m.created_at AS memberCreatedAt,
+        COALESCE(
+            JSON_ARRAYAGG(
+                JSON_OBJECT(
+                    'accountId', a.account_id,
+                    'accountName', a.account_name,
+                    'bankName', a.bank_name,
+                    'balance', a.balance,
+                    'accountType', a.account_type,
+                    'maturityDate', a.maturity_date,
+                    'interestRate', a.interest_rate
+                )
+            ), JSON_ARRAY()
+        ) AS accounts,
+        COALESCE(
+            JSON_OBJECT(
+                'budgetId', b.budget_id,
+                'monthBudget', b.month_budget,
+                'foodBudget', b.food_budget,
+                'livingBudget', b.living_budget,
+                'housingCommunicationBudget', b.housing_communication_budget,
+                'financeBudget', b.finance_budget,
+                'transportationBudget', b.transportation_budget,
+                'childcareBudget', b.childcare_budget,
+                'leisureCultureBudget', b.leisure_culture_budget,
+                'petBudget', b.pet_budget,
+                'eventGiftBudget', b.event_gift_budget,
+                'createdAt', b.created_at
+            ), JSON_OBJECT()
+        ) AS budget,
+        COALESCE(
+            JSON_ARRAYAGG(
+                JSON_OBJECT(
+                    'budgetTransactionId', bt.budget_transaction_id,
+                    'transactionDateTime', bt.transaction_datetime,
+                    'amount', bt.amount,
+                    'merchantName', bt.merchant_name,
+                    'transactionType', bt.transaction_type,
+                    'categoryName', c.category_name,
+                    'tags', (
+                        SELECT JSON_ARRAYAGG(t.tag_name)
+                        FROM Tag t
+                        WHERE t.transaction_id = bt.budget_transaction_id
+                    )
+                )
+            ), JSON_ARRAY()
+        ) AS transactions
+    FROM Member m
+    LEFT JOIN Account a ON m.member_id = a.member_id
+    LEFT JOIN Budget b ON m.member_id = b.member_id
+    LEFT JOIN BudgetTransaction bt ON b.budget_id = bt.budget_id
+    LEFT JOIN Category c ON bt.category_code = c.category_code
+    WHERE m.member_id = #{memberId}
+    GROUP BY m.member_id;
+</select>
 
-		--
-		Account 정보
-		JSON_ARRAYAGG(
-		JSON_OBJECT(
-		'accountId', a.account_id,
-		'accountName', a.account_name,
-		'bankName', a.bank_name,
-		'balance',
-		a.balance,
-		'accountType', a.account_type,
-		'maturityDate',
-		a.maturity_date,
-		'interestRate', a.interest_rate
-		)
-		) AS accounts,
-
-		--
-		Budget 정보
-		JSON_OBJECT(
-		'budgetId', b.budget_id,
-		'monthBudget',
-		b.month_budget,
-		'foodBudget', b.food_budget,
-		'livingBudget',
-		b.living_budget,
-		'housingCommunicationBudget',
-		b.housing_communication_budget,
-		'financeBudget', b.finance_budget,
-		'transportationBudget', b.transportation_budget,
-		'childcareBudget',
-		b.childcare_budget,
-		'leisureCultureBudget', b.leisure_culture_budget,
-		'petBudget', b.pet_budget,
-		'eventGiftBudget', b.event_gift_budget,
-		'createdAt', b.created_at
-		) AS budget,
-
-		-- BudgetTransaction 정보
-		JSON_ARRAYAGG(
-		JSON_OBJECT(
-		'budgetTransactionId',
-		bt.budget_transaction_id,
-		'transactionDateTime',
-		bt.transaction_datetime,
-		'amount', bt.amount,
-		'merchantName',
-		bt.merchant_name,
-		'transactionType', bt.transaction_type,
-		'categoryName', c.category_name,
-		'tags', (
-		SELECT
-		JSON_ARRAYAGG(t.tag_name)
-		FROM Tag t
-		WHERE t.transaction_id =
-		bt.budget_transaction_id
-		)
-		)
-		) AS transactions
-
-		FROM
-		Member m
-		LEFT JOIN
-		Account a ON m.member_id = a.member_id
-		LEFT JOIN Budget b ON
-		m.member_id = b.member_id
-		LEFT JOIN BudgetTransaction bt ON b.budget_id
-		= bt.budget_id
-		LEFT JOIN Category c ON bt.category_code =
-		c.category_code
-
-		WHERE
-		m.member_id = #{memberId}
-
-		GROUP BY
-		m.member_id;
-	</select>
 
 	<update id="modifyBudgetTransaction" parameterType="map">
 		UPDATE BudgetTransaction

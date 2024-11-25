@@ -84,5 +84,13 @@
         AND account_type = 'free'
 </select>
 
+<select id="findBalance" parameterType="Long" resultType="Long">
+    SELECT
+        balance
+    FROM
+        Account
+    WHERE
+        account_id = #{accountId}
+</select>
 
 </mapper>

@@ -29,13 +29,16 @@ public class OpenAIControllerImpl implements OpenAIInterface {
 
 	private final OpenAIService openAIService;
 
+	@Override
 	public ResponseEntity<AITextResponse> getAdvice() {
+		log.info("컨트롤러 : 전체 기간에 대한 자산 분석");
 		AITextResponse response = openAIService.getAdvice();
 		return ResponseEntity.ok(response);
 	}
 
 	@Override
 	public ResponseEntity<AITextResponse> preview() {
+		log.info("컨트롤러 : 6개월에 대한 자산 분석");
 		AITextResponse response = openAIService.showPreview();
 		return ResponseEntity.ok(response);
 	}

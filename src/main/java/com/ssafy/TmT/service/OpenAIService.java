@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.TmT.controller.impl.AccountControllerImpl;
 import com.ssafy.TmT.dao.AccountDao;
 import com.ssafy.TmT.dao.BudgetDao;
 import com.ssafy.TmT.dao.MemberDao;
@@ -26,8 +27,10 @@ import com.ssafy.TmT.util.OpenAIUtil;
 import com.ssafy.TmT.util.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class OpenAIService {
 
@@ -37,6 +40,7 @@ public class OpenAIService {
 //	private final ObjectMapper objectMapper;
 
 	public AITextResponse getAdvice() {
+		log.info("서비스 : 전체 조언 받기");
 		Long memberId = SecurityUtil.getAuthenticatedMemberId();
 		MemberTotalDataDTO data = memberDao.getAllData(memberId);
 
