@@ -1,5 +1,8 @@
 package com.ssafy.TmT.dao;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,5 +51,16 @@ public interface BudgetDao {
 	Long calculateMonthIncome(Long budgetId);
 
 	int modifyCategoryBudget(@Param("memberId") Long memberId, BudgetCategoryRequest request);
+
+	void createBudgetForMonth(CreateBudgetDTO createBudgetDTO);
+
+//	boolean existsBudgetForMonth(Long memberId, YearMonth yearMonth);
+
+//	Optional<Long> findBudgetIdByDate(Long memberId, LocalDateTime transactionDatetime);
+
+//	void insertBudgetTransaction(UpdateBudgetTransactionsDTO dto);
+
+//	List<BudgetTransactionDTO> findTransactionsWithinPeriod(Long memberId, LocalDateTime startDate,
+//			LocalDateTime endDate);
 
 }

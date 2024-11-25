@@ -56,7 +56,8 @@ public enum ErrorCode {
     OPENAI_NO_RESPONSE(500, "AI001", "OpenAI 응답이 없습니다."),
     OPENAI_NO_CHOICES_FIELD(500, "AI002", "OpenAI 응답에서 choices 필드가 없습니다."),
     OPENAI_EMPTY_CHOICES(500, "AI003", "OpenAI 응답에서 choices가 비어 있습니다."),
-    OPENAI_NO_MESSAGE_CONTENT(500, "AI004", "OpenAI 응답에서 message 내용이 없습니다.");
+    OPENAI_NO_MESSAGE_CONTENT(500, "AI004", "OpenAI 응답에서 message 내용이 없습니다."), 
+    BUDGET_CREATION_FAILED(500, "B007", "가계부 생성 실패");
 	
 	
 	private final int status;	// HTTP 상태 코드

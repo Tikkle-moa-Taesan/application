@@ -1,5 +1,8 @@
 package com.ssafy.TmT.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +29,6 @@ import com.ssafy.TmT.dto.budget.GraphResponse;
 import com.ssafy.TmT.dto.budget.UpdateBudgetTransactionsDTO;
 import com.ssafy.TmT.dto.budget.WeekExpenseDTO;
 import com.ssafy.TmT.dto.transaction.BudgetTransactionDTO;
-import com.ssafy.TmT.entity.Budget;
 import com.ssafy.TmT.exception.CustomException;
 import com.ssafy.TmT.exception.ErrorCode;
 import com.ssafy.TmT.util.SecurityUtil;
@@ -118,9 +120,8 @@ public class BudgetService {
 
 	private BudgetRateResponse findBudgetRate(Long currentBudgetId) {
 		Long thisMonthExpense = budgetDao.calculateMonthExpense(currentBudgetId);
-		
-		Long thisMonthBudget = budgetDao.findBudget(currentBudgetId)
-				.orElse(0L);
+
+		Long thisMonthBudget = budgetDao.findBudget(currentBudgetId).orElse(0L);
 		BudgetRateResponse response = new BudgetRateResponse(thisMonthExpense, thisMonthBudget, 0f);
 		return response;
 	}
@@ -138,13 +139,43 @@ public class BudgetService {
 	}
 
 	// 컨트롤러 요청 처리
-	public void updateBudgetTransactions() {
-		Long memberId = getAuthenticatedMemberId();
-		Long budgetId = budgetDao.getCurrentBudgetId(memberId)
-				.orElseThrow(() -> new CustomException(ErrorCode.BUDGET_NOT_FOUND));
+//	public void updateBudgetTransactions() {
+//		Long memberId = getAuthenticatedMemberId();
+//		Long budgetId = budgetDao.getCurrentBudgetId(memberId)
+//				.orElseThrow(() -> new CustomException(ErrorCode.BUDGET_NOT_FOUND));
+//
+//		UpdateBudgetTransactionsDTO updateBudgetTransactionsDTO = new UpdateBudgetTransactionsDTO(memberId, budgetId);
+//		budgetDao.updateBudgetTransaction(updateBudgetTransactionsDTO);
+//	}
 
-		UpdateBudgetTransactionsDTO updateBudgetTransactionsDTO = new UpdateBudgetTransactionsDTO(memberId, budgetId);
-		budgetDao.updateBudgetTransaction(updateBudgetTransactionsDTO);
+	@Transactional
+	public void updateBudgetTransactions() { // 여기서 최근 6개월간..
+		Long memberId = getAuthenticatedMemberId();
+
+		// 1. 최근 6개월의 Budget 데이터 생성
+		for (int i = 0; i < 6; i++) {
+			 final int monthOffset = i; // effectively final 변수로 할당
+			// 해당 월의 Budget ID 조회 또는 생성
+			Long budgetId = budgetDao.getPreviousBudgetId(memberId, monthOffset)
+					.orElseGet(() -> createBudgetForMonth(memberId, monthOffset));
+
+			// BudgetTransaction 업데이트
+			UpdateBudgetTransactionsDTO updateBudgetTransactionsDTO = new UpdateBudgetTransactionsDTO(memberId,
+					budgetId);
+			budgetDao.updateBudgetTransaction(updateBudgetTransactionsDTO);
+		}
+	}
+
+	private Long createBudgetForMonth(Long memberId, int monthsAgo) {
+		// 해당 월의 첫째 날 계산
+		LocalDate firstDayOfMonth = LocalDate.now().minusMonths(monthsAgo).withDayOfMonth(1);
+		CreateBudgetDTO createBudgetDTO = new CreateBudgetDTO(memberId, 0L); // 초기 예산은 0으로 설정
+		createBudgetDTO.setCreatedAt(firstDayOfMonth.atStartOfDay()); // 생성 날짜 설정
+		budgetDao.createBudgetForMonth(createBudgetDTO);
+
+		// 새로 생성된 Budget ID 반환
+		return budgetDao.getPreviousBudgetId(memberId, monthsAgo)
+				.orElseThrow(() -> new CustomException(ErrorCode.BUDGET_CREATION_FAILED));
 	}
 
 	public BudgetDetailResponse findBudgetTransactions(Long budgetId, int page) {
@@ -165,7 +196,7 @@ public class BudgetService {
 		String year = String.valueOf(date).substring(0, 4);
 		String month = String.valueOf(date).substring(4, 6);
 
-		Long budgetId = budgetDao.findBudgetByDate(memberId,year, month)
+		Long budgetId = budgetDao.findBudgetByDate(memberId, year, month)
 				.orElseThrow(() -> new CustomException(ErrorCode.BUDGET_NOT_FOUND));
 		Long monthExpense = budgetDao.calculateMonthExpense(budgetId);
 		Long monthIncome = budgetDao.calculateMonthIncome(budgetId);
@@ -178,20 +209,21 @@ public class BudgetService {
 	@Transactional
 	public BudgetCategoryResponse modifyCategoryBudget(BudgetCategoryRequest request) {
 		Long memberId = SecurityUtil.getAuthenticatedMemberId();
-	    // 예산 수정
-	    int rowsUpdated = budgetDao.modifyCategoryBudget(memberId, request);
-	    if (rowsUpdated == 0) {
-	        throw new CustomException(ErrorCode.BUDGET_UPDATE_FAILURE);
-	    }
+		// 예산 수정
+		int rowsUpdated = budgetDao.modifyCategoryBudget(memberId, request);
+		if (rowsUpdated == 0) {
+			throw new CustomException(ErrorCode.BUDGET_UPDATE_FAILURE);
+		}
 
-	    // 수정된 budgetId 가져오기
-	    Long budgetId = budgetDao.getCurrentBudgetId(memberId).orElseThrow(() -> new CustomException(ErrorCode.BUDGET_NOT_FOUND));
+		// 수정된 budgetId 가져오기
+		Long budgetId = budgetDao.getCurrentBudgetId(memberId)
+				.orElseThrow(() -> new CustomException(ErrorCode.BUDGET_NOT_FOUND));
 
-	    // 응답 생성
-	    return budgetDao.findCategoryBudget(budgetId);
+		// 응답 생성
+		return budgetDao.findCategoryBudget(budgetId);
 
 	}
-	
+
 	public BudgetCategoryResponse findCategoryBudget() {
 		Long memberId = SecurityUtil.getAuthenticatedMemberId();
 		Long budgetId = getCurrentBudgetId(memberId);
@@ -202,22 +234,23 @@ public class BudgetService {
 		log.info("서비스 : 최근 6개월간 정보 조회");
 		Long memberId = SecurityUtil.getAuthenticatedMemberId();
 		// 지금 가계부
-		
+
 		Long budgetId = budgetDao.getPreviousBudgetId(memberId, 0).orElse(0L);
-		BudgetRateResponse thisMonthRate  = findBudgetRate(budgetId);
+		BudgetRateResponse thisMonthRate = findBudgetRate(budgetId);
 		Long oneMonthBeforeBudgetId = budgetDao.getPreviousBudgetId(memberId, 1).orElse(0L);
-		BudgetRateResponse oneMonthBeforeRate  = findBudgetRate(oneMonthBeforeBudgetId);
+		BudgetRateResponse oneMonthBeforeRate = findBudgetRate(oneMonthBeforeBudgetId);
 		Long twoMonthBeforeBudgetId = budgetDao.getPreviousBudgetId(memberId, 2).orElse(0L);
-		BudgetRateResponse twoMonthBeforeRate  = findBudgetRate(twoMonthBeforeBudgetId);
+		BudgetRateResponse twoMonthBeforeRate = findBudgetRate(twoMonthBeforeBudgetId);
 		Long threeMonthBeforeBudgetId = budgetDao.getPreviousBudgetId(memberId, 3).orElse(0L);
-		BudgetRateResponse threeMonthBeforeRate  = findBudgetRate(threeMonthBeforeBudgetId);
+		BudgetRateResponse threeMonthBeforeRate = findBudgetRate(threeMonthBeforeBudgetId);
 		Long fourMonthBeforeBudgetId = budgetDao.getPreviousBudgetId(memberId, 4).orElse(0L);
-		BudgetRateResponse fourMonthBeforeRate  = findBudgetRate(fourMonthBeforeBudgetId);
+		BudgetRateResponse fourMonthBeforeRate = findBudgetRate(fourMonthBeforeBudgetId);
 		Long fiveMonthBeforeBudgetId = budgetDao.getPreviousBudgetId(memberId, 5).orElse(0L);
-		BudgetRateResponse fiveMonthBeforeRate  = findBudgetRate(fiveMonthBeforeBudgetId);
-		
-		GraphResponse response = new GraphResponse(thisMonthRate, oneMonthBeforeRate, twoMonthBeforeRate, threeMonthBeforeRate, fourMonthBeforeRate, fiveMonthBeforeRate);
-		
+		BudgetRateResponse fiveMonthBeforeRate = findBudgetRate(fiveMonthBeforeBudgetId);
+
+		GraphResponse response = new GraphResponse(thisMonthRate, oneMonthBeforeRate, twoMonthBeforeRate,
+				threeMonthBeforeRate, fourMonthBeforeRate, fiveMonthBeforeRate);
+
 		return response;
 	}
 }

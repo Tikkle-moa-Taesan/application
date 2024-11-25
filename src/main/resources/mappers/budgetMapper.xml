@@ -17,24 +17,32 @@
 	<select id="findCategoryExpense" parameterType="long"
 		resultType="CategoryExpenseDTO">
 		SELECT
-		COALESCE(SUM(CASE WHEN c.category_code = 1 THEN bt.amount END), 0) AS foodExpense,
-		COALESCE(SUM(CASE WHEN c.category_code = 2 THEN bt.amount END), 0) AS
+		COALESCE(SUM(CASE WHEN c.category_code = 1 THEN
+		bt.amount END), 0) AS foodExpense,
+		COALESCE(SUM(CASE WHEN
+		c.category_code = 2 THEN bt.amount END), 0) AS
 		livingExpense,
 		COALESCE(SUM(CASE WHEN c.category_code = 3 THEN bt.amount END), 0) AS
 		housingCommunicationExpense,
-		COALESCE(SUM(CASE WHEN c.category_code = 4 THEN bt.amount END), 0) AS financeExpense,
-		COALESCE(SUM(CASE WHEN c.category_code = 5 THEN bt.amount END), 0) AS
+		COALESCE(SUM(CASE WHEN c.category_code = 4
+		THEN bt.amount END), 0) AS financeExpense,
+		COALESCE(SUM(CASE WHEN
+		c.category_code = 5 THEN bt.amount END), 0) AS
 		transportationExpense,
-		COALESCE(SUM(CASE WHEN c.category_code = 6 THEN bt.amount END), 0) AS childcareExpense,
-		COALESCE(SUM(CASE WHEN c.category_code = 7 THEN bt.amount END), 0) AS
+		COALESCE(SUM(CASE WHEN c.category_code = 6 THEN bt.amount END), 0) AS
+		childcareExpense,
+		COALESCE(SUM(CASE WHEN c.category_code = 7 THEN
+		bt.amount END), 0) AS
 		leisureCultureExpense,
-		COALESCE(SUM(CASE WHEN c.category_code = 8 THEN bt.amount END), 0) AS petExpense,
+		COALESCE(SUM(CASE WHEN
+		c.category_code = 8 THEN bt.amount END), 0) AS petExpense,
 		COALESCE(SUM(CASE WHEN c.category_code = 9 THEN bt.amount END), 0) AS
 		eventGiftExpense
 		FROM
 		BudgetTransaction bt
 		JOIN
-		Category c ON bt.category_code = c.category_code
+		Category c ON
+		bt.category_code = c.category_code
 		WHERE
 		bt.budget_id = #{budgetId}
 	</select>
@@ -72,9 +80,9 @@
 		WHERE member_id =
 		#{memberId}
 		)
-        AND t.transaction_datetime BETWEEN 
-            DATE_FORMAT(DATE_SUB(CURRENT_DATE, INTERVAL 6 MONTH), '%Y-%m-01') 
-            AND CURRENT_DATE
+		AND t.transaction_datetime BETWEEN
+		DATE_FORMAT(DATE_SUB(CURRENT_DATE, INTERVAL 6 MONTH), '%Y-%m-01')
+		AND CURRENT_DATE
 		AND t.transaction_id NOT IN (
 		SELECT
 		transaction_id
@@ -91,18 +99,20 @@
 		FROM Budget
 		WHERE member_id = #{memberId}
 		AND YEAR(created_at) = YEAR(CURRENT_DATE())
-		AND MONTH(created_at) = MONTH(CURRENT_DATE());
+		AND MONTH(created_at) =
+		MONTH(CURRENT_DATE());
 	</select>
 
 
-		<!-- 최근 예산 ID 조회 -->
+	<!-- 최근 예산 ID 조회 -->
 	<select id="getPreviousBudgetId" resultType="long">
-	    SELECT budget_id
-	    FROM Budget
-	    WHERE member_id = #{memberId}
-	      AND DATE_FORMAT(created_at, '%Y-%m') = DATE_FORMAT(DATE_SUB(NOW(), INTERVAL #{monthsAgo} MONTH), '%Y-%m')
-	    ORDER BY created_at DESC
-	    LIMIT 1;
+		SELECT budget_id
+		FROM Budget
+		WHERE member_id = #{memberId}
+		AND DATE_FORMAT(created_at, '%Y-%m') = DATE_FORMAT(DATE_SUB(NOW(),
+		INTERVAL #{monthsAgo} MONTH), '%Y-%m')
+		ORDER BY created_at DESC
+		LIMIT 1;
 	</select>
 
 
@@ -169,9 +179,11 @@
 		FROM
 		BudgetTransaction t
 		LEFT JOIN
-		Category c ON t.category_code = c.category_code
+		Category c ON
+		t.category_code = c.category_code
 		LEFT JOIN
-		Account a ON t.account_id = a.account_id
+		Account a ON t.account_id =
+		a.account_id
 		WHERE
 		t.budget_id = #{budgetId}
 		ORDER BY
@@ -192,9 +204,11 @@
 		FROM
 		BudgetTransaction t
 		LEFT JOIN
-		Category c ON t.category_code = c.category_code
+		Category c ON
+		t.category_code = c.category_code
 		LEFT JOIN
-		Account a ON t.account_id = a.account_id
+		Account a ON t.account_id =
+		a.account_id
 		WHERE
 		t.budget_id = #{budgetId}
 		ORDER BY
@@ -204,9 +218,11 @@
 	<select id="findBudgetByDate" resultType="long">
 		SELECT
 		budget_id
-		FROM Budget
+		FROM
+		Budget
 		WHERE DATE_FORMAT(created_at, '%Y') = #{year}
-		AND DATE_FORMAT(created_at, '%m') = #{month}
+		AND
+		DATE_FORMAT(created_at, '%m') = #{month}
 		AND member_id = #{memberId}
 		LIMIT 1;
 	</select>
@@ -226,16 +242,32 @@
 		UPDATE Budget
 		SET
 		food_budget = #{request.foodBudget},
-		living_budget = #{request.livingBudget},
-		housing_communication_budget = #{request.housingCommunicationBudget},
-		finance_budget = #{request.financeBudget},
-		transportation_budget = #{request.transportationBudget},
-		childcare_budget = #{request.childcareBudget},
-		leisure_culture_budget = #{request.leisureCultureBudget},
+		living_budget =
+		#{request.livingBudget},
+		housing_communication_budget =
+		#{request.housingCommunicationBudget},
+		finance_budget =
+		#{request.financeBudget},
+		transportation_budget =
+		#{request.transportationBudget},
+		childcare_budget =
+		#{request.childcareBudget},
+		leisure_culture_budget =
+		#{request.leisureCultureBudget},
 		pet_budget = #{request.petBudget},
 		event_gift_budget = #{request.eventGiftBudget}
-		WHERE member_id = #{memberId};
+		WHERE member_id =
+		#{memberId};
 	</update>
+
+
+	<insert id="createBudgetForMonth"
+		parameterType="CreateBudgetDTO">
+		INSERT INTO Budget (member_id, month_budget, created_at)
+		VALUES (#{memberId}, #{monthBudget}, #{createdAt});
+	</insert>
+
+
 
 
 </mapper>

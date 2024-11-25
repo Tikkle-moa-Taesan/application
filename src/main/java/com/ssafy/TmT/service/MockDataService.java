@@ -127,7 +127,7 @@ public class MockDataService {
 	    boolean isExpense = !isSavingsAccount && random.nextBoolean(); // 자유 입출금 계좌일 경우 랜덤하게 출금(true) 또는 입금(false)
 
 	    long amount = random.nextInt(150_000) + 10_000; // 금액은 10,000 ~ 100,000 사이
-	    long finalAmount = isExpense ? -amount : amount;
+//	    long finalAmount = isExpense ? -amount : amount;
 
 	    // 자유입출금 계좌의 지출과 적금 계좌의 이름 리스트
 	    String[] expenseNames = {
@@ -149,8 +149,8 @@ public class MockDataService {
 	            .accountId(account.getAccountId())
 	            .categoryCode(random.nextInt(8) + 1)
 	            .transactionDatetime(transactionDate)
-	            .amount(finalAmount)
-	            .balanceAfter(account.getBalance() + finalAmount)
+	            .amount(amount)
+	            .balanceAfter(isExpense? account.getBalance() - amount : account.getBalance() + amount)
 	            .merchantName(merchantName)
 	            .transactionType(isExpense ? TransactionType.expense : TransactionType.income)
 	            .build();
