@@ -34,7 +34,8 @@
 		account_name,
 		bank_name,
 		interest_rate,
-		member_id
+		member_id,
+		maturity_date
 		)
 		VALUES (
 		#{accountType},
@@ -42,7 +43,8 @@
 		#{accountName},
 		#{bankName},
 		#{interestRate},
-		#{memberId}
+		#{memberId},
+		#{maturityDate}
 		)
 	</insert>
 

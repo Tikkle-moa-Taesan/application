@@ -1,5 +1,7 @@
 package com.ssafy.TmT.dto.admin;
 
+import java.sql.Timestamp;
+
 import com.ssafy.TmT.dto.account.AccountType;
 
 import lombok.Getter;
@@ -18,4 +20,6 @@ public class InsertAccountRequest {
 	private String bankName;
 	
 	private Float interestRate;
+	
+	private Timestamp maturityDate;
 }

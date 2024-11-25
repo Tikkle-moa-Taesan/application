@@ -1,5 +1,7 @@
 package com.ssafy.TmT.dto.admin;
 
+import java.sql.Timestamp;
+
 import com.ssafy.TmT.dto.account.AccountType;
 
 import lombok.AllArgsConstructor;
@@ -22,5 +24,7 @@ public class InsertAccountDTO{
 	private Float interestRate;
 	
 	private Long memberId;
+	
+	private Timestamp maturityDate;
 
 }

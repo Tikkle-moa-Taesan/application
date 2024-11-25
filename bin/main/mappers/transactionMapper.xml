@@ -29,6 +29,14 @@
     LIMIT #{offset}, #{size}
 </select>
 
+    <insert id="insertTransactions" parameterType="list">
+        INSERT INTO Transaction (account_id, category_code, transaction_datetime, amount, balance_after, merchant_name, transaction_type)
+        VALUES
+        <foreach collection="list" item="transaction" separator=",">
+            (#{transaction.accountId}, #{transaction.categoryCode}, #{transaction.transactionDatetime}, #{transaction.amount}, #{transaction.balanceAfter}, #{transaction.merchantName}, #{transaction.transactionType})
+        </foreach>
+    </insert>
+
  
 	
 </mapper>

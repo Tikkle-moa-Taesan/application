@@ -8,6 +8,7 @@ import com.ssafy.TmT.dto.account.FreeAccountDetailDTO;
 import com.ssafy.TmT.dto.account.FreeAccountResponse;
 import com.ssafy.TmT.dto.account.SavingsAccountDetailDTO;
 import com.ssafy.TmT.dto.account.SavingsAccountResponse;
+import com.ssafy.TmT.entity.Account;
 
 public interface AccountDao {
 
@@ -25,6 +26,10 @@ public interface AccountDao {
 	SavingsAccountDetailDTO findSavingsAccountByAccountId(Long accountId);
 
 	Optional<Long> findBalance(Long accountId);
+
+	int insertAccounts(List<Account> accounts);
+	
+	int updateBalance(Account account);
 	
 //	List<AccountDTO> findAccountsBySearchCondition(SearchCondition searchCondition);
 

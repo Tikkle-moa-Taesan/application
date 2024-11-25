@@ -93,4 +93,36 @@
         account_id = #{accountId}
 </select>
 
+    <!-- 계좌 목록 삽입 -->
+<insert id="insertAccounts" parameterType="list" useGeneratedKeys="true" keyProperty="accountId">
+    INSERT INTO Account (account_type, account_number, account_name, bank_name, member_id, balance, maturity_date, interest_rate)
+    VALUES
+    <foreach collection="list" item="account" separator=",">
+        (
+            #{account.accountType}, 
+            #{account.accountNumber}, 
+            #{account.accountName}, 
+            #{account.bankName}, 
+            #{account.memberId}, 
+            #{account.balance},
+            <choose>
+                <when test="account.maturityDate != null">#{account.maturityDate}</when>
+                <otherwise>NULL</otherwise>
+            </choose>,
+            <choose>
+                <when test="account.interestRate != null">#{account.interestRate}</when>
+                <otherwise>NULL</otherwise>
+            </choose>
+        )
+    </foreach>
+</insert>
+
+    <!-- 계좌 잔액 업데이트 -->
+    <update id="updateBalance">
+        UPDATE Account
+        SET balance = #{balance}
+        WHERE account_id = #{accountId}
+    </update>
+
+
 </mapper>

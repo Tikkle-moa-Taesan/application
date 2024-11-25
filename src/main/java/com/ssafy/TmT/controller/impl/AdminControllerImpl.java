@@ -30,7 +30,6 @@ public class AdminControllerImpl implements AdminController {
 		log.info("컨트롤러 : 계좌 추가");
 		adminService.insertAccount(request);
 		return ResponseEntity.ok("계좌가 생성되었습니다.");
-		
 	}
 
 }

@@ -33,6 +33,7 @@ public class BudgetControllerImpl implements BudgetController{
 	
 	private final BudgetService budgetService;
 	
+	@Override
 	public ResponseEntity<CreateBudgetResponse> createBudget(@RequestBody CreateBudgetRequest request) {
 		log.info("컨트롤러 : 가계부 생성하기");
 		CreateBudgetResponse response = budgetService.createBudget(request);
@@ -40,34 +41,34 @@ public class BudgetControllerImpl implements BudgetController{
 		return ResponseEntity.ok(response);
 	}
 	
-	
-	@PostMapping("/download")
+	@Override
 	public ResponseEntity<String> downloadTransactions() {
 		budgetService.updateBudgetTransactions();
         return ResponseEntity.ok("업데이트 완료");
 	}
 
-	
+	@Override
 	public ResponseEntity<ExpenseResponse> calculateExpenseSummary() {
 		log.info("컨트롤러 : 지출 통계 조회");
 		ExpenseResponse response = budgetService.calculateExpenseAndBudget();
 		return ResponseEntity.ok(response);
 	}
 	
-
+	@Override
 	public ResponseEntity<BudgetRateResponse> totalBudget() {
 		log.info("예산 통계 가져오기");
 		BudgetRateResponse response = budgetService.findBudgetRate();
 		return ResponseEntity.ok(response);
 	}
 	
-
+	@Override
 	public ResponseEntity<BudgetDetailResponse> findBudgetTransactions(@PathVariable Long budgetId, @RequestParam(defaultValue = "0") int page) {
 		log.info("컨트롤러 : 해당 가계부 거래내역 페이징해서 불러오기");
 		BudgetDetailResponse response = budgetService.findBudgetTransactions(budgetId, page);	
 		return ResponseEntity.ok(response);
 	}
-
+	
+	@Override
 	public ResponseEntity<BudgetProfileResponse> getBudgetProfile(@PathVariable Integer date) {
 		log.info("컨트롤러 : 해당 가계부 중요 내용 불러오기");
 		BudgetProfileResponse response = budgetService.findBudgetByDate(date);	
@@ -90,14 +91,12 @@ public class BudgetControllerImpl implements BudgetController{
 		return ResponseEntity.ok(response);
 	}
 
-
 	@Override
 	public ResponseEntity<BudgetCategoryResponse> findCategoryBudget() {
 		log.info("컨트롤러 : 카테고리별 예산 조회");
 		BudgetCategoryResponse response = budgetService.findCategoryBudget();
 		return ResponseEntity.ok(response);
 	}
-
 
 	@Override
 	public ResponseEntity<GraphResponse> findGraphExpense() {

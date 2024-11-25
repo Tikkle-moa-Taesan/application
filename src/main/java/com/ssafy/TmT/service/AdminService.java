@@ -46,7 +46,7 @@ public class AdminService {
 	public void insertAccount(InsertAccountRequest request) {
 		Long memberId = SecurityUtil.getAuthenticatedMemberId();
 		
-		InsertAccountDTO dto = new InsertAccountDTO(request.getAccountType(), request.getAccountNumber(), request.getAccountName(), request.getBankName(), request.getInterestRate(), memberId);
+		InsertAccountDTO dto = new InsertAccountDTO(request.getAccountType(), request.getAccountNumber(), request.getAccountName(), request.getBankName(), request.getInterestRate(), memberId, request.getMaturityDate());
 
 		int result = adminDao.insertAccount(dto);
 		if (result == 0) throw new CustomException(ErrorCode.ACCOUNT_CREATION_FAILED);
