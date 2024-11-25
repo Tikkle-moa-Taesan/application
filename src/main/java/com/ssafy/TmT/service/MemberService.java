@@ -2,10 +2,14 @@ package com.ssafy.TmT.service;
 
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.TmT.dao.MemberDao;
+import com.ssafy.TmT.dto.member.ModifyBudgetTransactionRequest;
 import com.ssafy.TmT.dto.oauth.IdTokenPayload;
 import com.ssafy.TmT.dto.oauth.Profile;
+import com.ssafy.TmT.exception.CustomException;
+import com.ssafy.TmT.exception.ErrorCode;
 import com.ssafy.TmT.util.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -46,6 +50,20 @@ public class MemberService {
 
 	private Long getAuthenticatedMemberId() {
 		return SecurityUtil.getAuthenticatedMemberId();
+	}
+
+	@Transactional
+	public void modifyBudgetTransaction(Long budgetTransactionId, ModifyBudgetTransactionRequest request) {
+		int result = memberDao.modifyBudgetTransaction(budgetTransactionId, request);
+		if (result == 0) throw new CustomException(ErrorCode.BUDGET_TRANSACTION_MODIFY_FAILED);
+		return;
+	}
+
+	@Transactional
+	public void removeBudgetTransaction(Long budgetTransactionId) {
+		int result = memberDao.removeBudgetTransaction(budgetTransactionId);
+		if (result == 0) throw new CustomException(ErrorCode.BudgetTransaction_DELETE_FAILED);
+		return;
 	}
 	
 }
