@@ -143,12 +143,21 @@ public class BudgetService {
 	    Long memberId = getAuthenticatedMemberId();
 
 	    // 최근 6개월 동안의 Budget 데이터 생성 및 BudgetTransaction 업데이트
-	    for (int i = 1; i < 6; i++) {
+	    for (int i = 0; i < 6; i++) {
 	        final int monthOffset = i;
 
-	        // 해당 월의 Budget ID 조회 또는 생성
-	        Long budgetId = budgetDao.getPreviousBudgetId(memberId, monthOffset)
-	                .orElseGet(() -> createBudgetForMonth(memberId, monthOffset));
+	        // 해당 월의 Budget ID 조회 (i가 0일 때는 생성하지 않음)
+	        Long budgetId = budgetDao.getPreviousBudgetId(memberId, monthOffset).orElse(null);
+
+	        // i가 0일 때 budgetId가 없으면 건너뛰고, 있으면 BudgetTransaction 업데이트
+	        if (monthOffset == 0 && budgetId == null) {
+	            continue;
+	        }
+
+	        // i가 0이 아니고 budgetId가 없으면 새로운 Budget 생성
+	        if (budgetId == null) {
+	            budgetId = createBudgetForMonth(memberId, monthOffset);
+	        }
 
 	        // 해당 월의 시작 날짜 계산
 	        LocalDate createdMonth = LocalDate.now().minusMonths(monthOffset).withDayOfMonth(1);
@@ -160,11 +169,34 @@ public class BudgetService {
 	        budgetDao.updateBudgetTransaction(updateBudgetTransactionsDTO);
 	    }
 	}
+	
+//	@Transactional
+//	public void updateBudgetTransactions() {
+//	    Long memberId = getAuthenticatedMemberId();
+//
+//	    // 최근 6개월 동안의 Budget 데이터 생성 및 BudgetTransaction 업데이트
+//	    for (int i = 0; i < 6; i++) {
+//	        final int monthOffset = i;
+//
+//	        // 해당 월의 Budget ID 조회 또는 생성
+//	        Long budgetId = budgetDao.getPreviousBudgetId(memberId, monthOffset)
+//	                .orElseGet(() -> createBudgetForMonth(memberId, monthOffset));
+//
+//	        // 해당 월의 시작 날짜 계산
+//	        LocalDate createdMonth = LocalDate.now().minusMonths(monthOffset).withDayOfMonth(1);
+//
+//	        // BudgetTransaction 업데이트
+//	        UpdateBudgetTransactionsDTO updateBudgetTransactionsDTO = new UpdateBudgetTransactionsDTO(
+//	            memberId, budgetId, createdMonth
+//	        );
+//	        budgetDao.updateBudgetTransaction(updateBudgetTransactionsDTO);
+//	    }
+//	}
 
 	private Long createBudgetForMonth(Long memberId, int monthsAgo) {
 		// 해당 월의 첫째 날 계산
 		LocalDate firstDayOfMonth = LocalDate.now().minusMonths(monthsAgo).withDayOfMonth(1);
-		CreateBudgetDTO createBudgetDTO = new CreateBudgetDTO(memberId, 1000000L); // 초기 예산은 0으로 설정
+		CreateBudgetDTO createBudgetDTO = new CreateBudgetDTO(memberId, 4000000L); // 초기 예산은 0으로 설정
 		createBudgetDTO.setCreatedAt(firstDayOfMonth.atStartOfDay()); // 생성 날짜 설정
 		budgetDao.createBudgetForMonth(createBudgetDTO);
 
