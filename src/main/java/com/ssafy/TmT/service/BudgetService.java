@@ -138,16 +138,6 @@ public class BudgetService {
 		return SecurityUtil.getAuthenticatedMemberId();
 	}
 
-	// 컨트롤러 요청 처리
-//	public void updateBudgetTransactions() {
-//		Long memberId = getAuthenticatedMemberId();
-//		Long budgetId = budgetDao.getCurrentBudgetId(memberId)
-//				.orElseThrow(() -> new CustomException(ErrorCode.BUDGET_NOT_FOUND));
-//
-//		UpdateBudgetTransactionsDTO updateBudgetTransactionsDTO = new UpdateBudgetTransactionsDTO(memberId, budgetId);
-//		budgetDao.updateBudgetTransaction(updateBudgetTransactionsDTO);
-//	}
-
 	@Transactional
 	public void updateBudgetTransactions() {
 	    Long memberId = getAuthenticatedMemberId();

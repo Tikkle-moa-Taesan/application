@@ -2,6 +2,7 @@ package com.ssafy.TmT.service;
 
 
 import java.time.*;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -85,26 +86,162 @@ public class MockDataService {
 		return account;
 	}
 
+//	private void createTransactions(List<Account> accounts) {
+//		List<Transaction> transactions = new ArrayList<>();
+//		Random random = new Random();
+//	    for (Account account : accounts) {
+//            long currentBalance = account.getBalance(); // 계좌별 초기 잔액
+//            List<Transaction> accountTransactions = new ArrayList<>();
+//            
+//            // 거래 데이터를 시간 순서대로 생성
+//            for (int i = 0; i < 30; i++) {
+//                LocalDateTime transactionDate = generateSequentialDate(i,6); // i번째 거래의 시간 생성
+//                Transaction transaction = createTransaction(account, transactionDate, currentBalance, random);
+//
+//                // 거래 내역의 balanceAfter 업데이트
+//                currentBalance = transaction.getBalanceAfter();
+//                accountTransactions.add(transaction);
+//            }
+//            // 계좌의 최종 거래 내역을 추가
+//            transactions.addAll(accountTransactions);
+//
+//            // 최종 계좌 잔액 업데이트
+//            account.setBalance(currentBalance);
+//            accountDao.updateBalance(account);
+//        }
+//
+//        // 모든 거래 데이터를 DB에 삽입
+//        int result = transactionDao.insertTransactions(transactions);
+//        if (result == 0)
+//            throw new CustomException(ErrorCode.TRANSACTION_CREATE_FAIL);
+//    }
+	
+//	private void createTransactions(List<Account> accounts) {
+//	    List<Transaction> transactions = new ArrayList<>();
+//	    Random random = new Random();
+//
+//	    for (Account account : accounts) {
+//	        long currentBalance = account.getBalance(); // 계좌별 초기 잔액
+//	        List<Transaction> accountTransactions = new ArrayList<>();
+//
+//	        // 최근 6개월 동안 계좌당 100개의 거래 생성
+//	        for (int i = 0; i < 50; i++) {
+//	            LocalDateTime transactionDate = generateSequentialDate(i, 6); // i번째 거래의 시간 생성
+//	            Transaction transaction = createTransaction(account, transactionDate, currentBalance, random);
+//
+//	            // 거래 내역의 balanceAfter 업데이트
+//	            currentBalance = transaction.getBalanceAfter();
+//	            accountTransactions.add(transaction);
+//	        }
+//	        // 계좌별 생성된 거래를 전체 목록에 추가
+//	        transactions.addAll(accountTransactions);
+//
+//	        // 최종 계좌 잔액 업데이트
+//	        account.setBalance(currentBalance);
+//	        accountDao.updateBalance(account);
+//	    }
+//
+//	    // 모든 거래 데이터를 DB에 삽입
+//	    int result = transactionDao.insertTransactions(transactions);
+//	    if (result == 0) throw new CustomException(ErrorCode.TRANSACTION_CREATE_FAIL);
+//	}
+	
 	private void createTransactions(List<Account> accounts) {
-		List<Transaction> transactions = new ArrayList<>();
-		Random random = new Random();
+	    List<Transaction> transactions = new ArrayList<>();
+	    Random random = new Random();
+
 	    for (Account account : accounts) {
-	        for (int i = 0; i < 30; i++) { // 계좌당 30개의 거래 생성
-	            // 최근 6개월 내에서 랜덤 날짜 생성
-	            LocalDateTime transactionDate = generateRandomDateWithinSixMonths(random);
+	        long currentBalance = account.getBalance(); // 계좌별 초기 잔액
+	        List<Transaction> accountTransactions = new ArrayList<>();
 
-	            Transaction transaction = createTransaction(account, transactionDate, random);
-	            transactions.add(transaction);
+	        // 거래 데이터를 무작위로 100개의 시간에 배치
+	        List<LocalDateTime> randomDates = generateRandomDatesWithinRange(100, random);
 
-	            // Account balance 업데이트
-	            account.setBalance(transaction.getBalanceAfter());
-	            accountDao.updateBalance(account);
+	        for (LocalDateTime transactionDate : randomDates) {
+	            Transaction transaction = createTransaction(account, transactionDate, currentBalance, random);
+
+	            // 거래 내역의 balanceAfter 업데이트
+	            currentBalance = transaction.getBalanceAfter();
+	            accountTransactions.add(transaction);
 	        }
+	        // 계좌별 생성된 거래를 전체 목록에 추가
+	        transactions.addAll(accountTransactions);
+
+	        // 최종 계좌 잔액 업데이트
+	        account.setBalance(currentBalance);
+	        accountDao.updateBalance(account);
 	    }
-		int result = transactionDao.insertTransactions(transactions);
-		if (result == 0)
-			throw new CustomException(ErrorCode.TRANSACTION_CREATE_FAIL);
+
+	    // 모든 거래 데이터를 DB에 삽입
+	    int result = transactionDao.insertTransactions(transactions);
+	    if (result == 0) throw new CustomException(ErrorCode.TRANSACTION_CREATE_FAIL);
 	}
+	
+	private List<LocalDateTime> generateRandomDatesWithinRange(int count, Random random) {
+	    // 시작일과 종료일 정의
+	    LocalDateTime startDate = LocalDate.of(LocalDate.now().getYear(), 6, 1).atStartOfDay();
+	    LocalDateTime endDate = LocalDateTime.now();
+
+	    // 전체 기간을 초 단위로 계산
+	    long totalSeconds = ChronoUnit.SECONDS.between(startDate, endDate);
+
+	    // 랜덤 가중치를 기반으로 시간 분포 생성
+	    List<Long> randomOffsets = new ArrayList<>();
+	    for (int i = 0; i < count; i++) {
+	        randomOffsets.add((long) (random.nextDouble() * totalSeconds)); // 0 ~ totalSeconds 범위의 랜덤 값
+	    }
+
+	    // 오름차순으로 정렬하여 시간순서 보장
+	    randomOffsets.sort(Long::compare);
+
+	    // 각 오프셋을 시작일에 더해 LocalDateTime 생성
+	    List<LocalDateTime> randomDates = new ArrayList<>();
+	    for (Long offset : randomOffsets) {
+	        randomDates.add(startDate.plusSeconds(offset));
+	    }
+
+	    return randomDates;
+	}
+
+	private LocalDateTime generateSequentialDate(int transactionIndex, int months) {
+	    // 날짜는 현재 월 기준으로 'months'개월 전부터 시작
+	    int totalDays = months * 30; // 최근 'months'개월 동안 30일 기준
+	    LocalDate startDate = LocalDate.now().minusMonths(months).withDayOfMonth(1);
+
+	    // transactionIndex를 기준으로 날짜 증가
+	    LocalDate transactionDate = startDate.plusDays(transactionIndex % totalDays);
+
+	    // 시간은 0~23시 사이로 랜덤
+	    Random random = new Random();
+	    int hour = random.nextInt(24);  // 0~23시
+	    int minute = random.nextInt(60); // 0~59분
+	    int second = random.nextInt(60); // 0~59초
+
+	    return transactionDate.atTime(hour, minute, second);
+	}
+
+    
+//	private void createTransactions(List<Account> accounts) {
+//		List<Transaction> transactions = new ArrayList<>();
+//		Random random = new Random();
+//		for (Account account : accounts) {
+//			
+//			for (int i = 0; i < 30; i++) { // 계좌당 30개의 거래 생성
+//				// 최근 6개월 내에서 랜덤 날짜 생성
+//				LocalDateTime transactionDate = generateRandomDateWithinSixMonths(random);
+//				
+//				Transaction transaction = createTransaction(account, transactionDate, random);
+//				transactions.add(transaction);
+//				
+//				// Account balance 업데이트
+//				account.setBalance(transaction.getBalanceAfter());
+//				accountDao.updateBalance(account);
+//			}
+//		}
+//		int result = transactionDao.insertTransactions(transactions);
+//		if (result == 0)
+//			throw new CustomException(ErrorCode.TRANSACTION_CREATE_FAIL);
+//	}
 	
 	private LocalDateTime generateRandomDateWithinSixMonths(Random random) {
 	    // 최근 6개월 내에서 랜덤 월 선택
@@ -122,12 +259,12 @@ public class MockDataService {
 	    return LocalDateTime.of(selectedMonth.getYear(), selectedMonth.getMonth(), day, hour, minute, second);
 	}
 
-	private Transaction createTransaction(Account account, LocalDateTime transactionDate, Random random) {
+	private Transaction createTransaction(Account account, LocalDateTime transactionDate, long currentBalance, Random random) {
 	    boolean isSavingsAccount = account.getAccountType() == AccountType.savings;
 	    boolean isExpense = !isSavingsAccount && random.nextBoolean(); // 자유 입출금 계좌일 경우 랜덤하게 출금(true) 또는 입금(false)
 
 	    long amount = random.nextInt(150_000) + 10_000; // 금액은 10,000 ~ 160,000 사이
-//	    long finalAmount = isExpense ? -amount : amount;
+	    long newBalance = isExpense ? currentBalance - amount : currentBalance + amount;
 
 	    // 자유입출금 계좌의 지출과 적금 계좌의 이름 리스트
 	    String[] expenseNames = {
@@ -150,7 +287,7 @@ public class MockDataService {
 	            .categoryCode(random.nextInt(8) + 1)
 	            .transactionDatetime(transactionDate)
 	            .amount(amount)
-	            .balanceAfter(isExpense? account.getBalance() - amount : account.getBalance() + amount)
+	            .balanceAfter(newBalance)
 	            .merchantName(merchantName)
 	            .transactionType(isExpense ? TransactionType.expense : TransactionType.income)
 	            .build();
