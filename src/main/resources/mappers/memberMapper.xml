@@ -101,6 +101,7 @@
 		LEFT JOIN BudgetTransaction bt ON b.budget_id = bt.budget_id
 		LEFT JOIN Category c ON bt.category_code = c.category_code
 		WHERE b.member_id = #{memberId}
+		AND is_active = TRUE
 		AND (bt.transaction_datetime >= DATE_SUB(CURRENT_DATE, INTERVAL 6 MONTH)
 		OR bt.transaction_datetime IS NULL)
 		GROUP BY b.member_id
@@ -132,11 +133,11 @@
 		budget_transaction_id = #{budgetTransactionId}
 	</update>
 
-	<delete id="removeBudgetTransaction" parameterType="long">
-		DELETE FROM
-		BudgetTransaction
-		WHERE budget_transaction_id = #{budgetTransactionId}
-	</delete>
+<update id="removeBudgetTransaction" parameterType="long">
+    UPDATE BudgetTransaction
+    SET is_active = FALSE
+    WHERE budget_transaction_id = #{budgetTransactionId}
+</update>
 
 
 

@@ -45,6 +45,7 @@
 		bt.category_code = c.category_code
 		WHERE
 		bt.budget_id = #{budgetId}
+		AND bt.is_active = TRUE
 	</select>
 
 
@@ -119,7 +120,8 @@
 		FROM BudgetTransaction
 		WHERE
 		budget_id = #{budgetId}
-		AND transaction_type = 'expense';
+		AND transaction_type = 'expense'
+		AND is_active = TRUE;
 	</select>
 
 	<!-- 일주일 지출 합, 이번주 저번주 선택 가능 -->
@@ -132,7 +134,8 @@
 		AND transaction_type = 'expense'
 		AND
 		WEEK(transaction_datetime, 1) = WEEK(DATE_SUB(NOW(), INTERVAL
-		#{weekOffset} WEEK), 1);
+		#{weekOffset} WEEK), 1)
+		AND is_active = TRUE;
 	</select>
 
 
@@ -182,6 +185,7 @@
 		a.account_id
 		WHERE
 		t.budget_id = #{budgetId}
+		AND t.is_active = TRUE
 		ORDER BY
 		t.transaction_datetime DESC
 		LIMIT #{offset}, 20
@@ -207,6 +211,7 @@
 		a.account_id
 		WHERE
 		t.budget_id = #{budgetId}
+		AND t.is_active = TRUE
 		ORDER BY
 		t.transaction_datetime DESC
 	</select>
@@ -230,7 +235,8 @@
 		FROM BudgetTransaction
 		WHERE
 		budget_id = #{budgetId}
-		AND transaction_type = 'income';
+		AND transaction_type = 'income'
+		AND is_active = TRUE;
 	</select>
 
 	<!-- 카테고리별 예산 수정 -->

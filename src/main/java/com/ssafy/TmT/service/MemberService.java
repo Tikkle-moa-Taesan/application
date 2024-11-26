@@ -61,9 +61,10 @@ public class MemberService {
 
 	@Transactional
 	public void removeBudgetTransaction(Long budgetTransactionId) {
-		int result = memberDao.removeBudgetTransaction(budgetTransactionId);
-		if (result == 0) throw new CustomException(ErrorCode.BUDGET_TRANSACTION_DELETE_FAILED);
-		return;
+	    int result = memberDao.removeBudgetTransaction(budgetTransactionId);
+	    if (result == 0) {
+	        throw new CustomException(ErrorCode.BUDGET_TRANSACTION_DELETE_FAILED);
+	    }
 	}
 	
 }
