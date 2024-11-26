@@ -203,22 +203,22 @@ public class MockDataService {
 	    return randomDates;
 	}
 
-	private LocalDateTime generateSequentialDate(int transactionIndex, int months) {
-	    // 날짜는 현재 월 기준으로 'months'개월 전부터 시작
-	    int totalDays = months * 30; // 최근 'months'개월 동안 30일 기준
-	    LocalDate startDate = LocalDate.now().minusMonths(months).withDayOfMonth(1);
-
-	    // transactionIndex를 기준으로 날짜 증가
-	    LocalDate transactionDate = startDate.plusDays(transactionIndex % totalDays);
-
-	    // 시간은 0~23시 사이로 랜덤
-	    Random random = new Random();
-	    int hour = random.nextInt(24);  // 0~23시
-	    int minute = random.nextInt(60); // 0~59분
-	    int second = random.nextInt(60); // 0~59초
-
-	    return transactionDate.atTime(hour, minute, second);
-	}
+//	private LocalDateTime generateSequentialDate(int transactionIndex, int months) {
+//	    // 날짜는 현재 월 기준으로 'months'개월 전부터 시작
+//	    int totalDays = months * 30; // 최근 'months'개월 동안 30일 기준
+//	    LocalDate startDate = LocalDate.now().minusMonths(months).withDayOfMonth(1);
+//
+//	    // transactionIndex를 기준으로 날짜 증가
+//	    LocalDate transactionDate = startDate.plusDays(transactionIndex % totalDays);
+//
+//	    // 시간은 0~23시 사이로 랜덤
+//	    Random random = new Random();
+//	    int hour = random.nextInt(24);  // 0~23시
+//	    int minute = random.nextInt(60); // 0~59분
+//	    int second = random.nextInt(60); // 0~59초
+//
+//	    return transactionDate.atTime(hour, minute, second);
+//	}
 
     
 //	private void createTransactions(List<Account> accounts) {
@@ -243,21 +243,21 @@ public class MockDataService {
 //			throw new CustomException(ErrorCode.TRANSACTION_CREATE_FAIL);
 //	}
 	
-	private LocalDateTime generateRandomDateWithinSixMonths(Random random) {
-	    // 최근 6개월 내에서 랜덤 월 선택
-	    int monthOffset = random.nextInt(6); // 0부터 5까지
-	    YearMonth selectedMonth = YearMonth.now().minusMonths(monthOffset);
-
-	    // 선택된 월의 최대 일수에서 랜덤 일 선택
-	    int day = random.nextInt(selectedMonth.lengthOfMonth()) + 1;
-
-	    // 시간, 분, 초 랜덤 설정
-	    int hour = random.nextInt(24);
-	    int minute = random.nextInt(60);
-	    int second = random.nextInt(60);
-
-	    return LocalDateTime.of(selectedMonth.getYear(), selectedMonth.getMonth(), day, hour, minute, second);
-	}
+//	private LocalDateTime generateRandomDateWithinSixMonths(Random random) {
+//	    // 최근 6개월 내에서 랜덤 월 선택
+//	    int monthOffset = random.nextInt(6); // 0부터 5까지
+//	    YearMonth selectedMonth = YearMonth.now().minusMonths(monthOffset);
+//
+//	    // 선택된 월의 최대 일수에서 랜덤 일 선택
+//	    int day = random.nextInt(selectedMonth.lengthOfMonth()) + 1;
+//
+//	    // 시간, 분, 초 랜덤 설정
+//	    int hour = random.nextInt(24);
+//	    int minute = random.nextInt(60);
+//	    int second = random.nextInt(60);
+//
+//	    return LocalDateTime.of(selectedMonth.getYear(), selectedMonth.getMonth(), day, hour, minute, second);
+//	}
 
 	private Transaction createTransaction(Account account, LocalDateTime transactionDate, long currentBalance, Random random) {
 	    boolean isSavingsAccount = account.getAccountType() == AccountType.savings;
