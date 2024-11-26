@@ -28,6 +28,7 @@ public class OpenAIUtil {
     private String apiKey;
 
     private final ApiUtil apiUtil;
+    
 
     public OpenAIResponse generateInsights(String jsonData) {
         String apiEndpoint = "https://api.openai.com/v1/chat/completions";
