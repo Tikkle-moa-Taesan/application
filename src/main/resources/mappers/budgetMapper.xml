@@ -278,7 +278,14 @@
 		VALUES (#{memberId}, #{monthBudget}, #{createdAt});
 	</insert>
 
-
+	<!-- 카테고리별 예산 수정 -->
+	<update id="modifyBudget" >
+		UPDATE Budget
+		SET
+		month_budget = #{budgetAmount}
+		WHERE budget_id =
+		#{budgetId};
+	</update>
 
 
 </mapper>

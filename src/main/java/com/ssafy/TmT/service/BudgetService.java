@@ -26,6 +26,7 @@ import com.ssafy.TmT.dto.budget.CreateBudgetRequest;
 import com.ssafy.TmT.dto.budget.CreateBudgetResponse;
 import com.ssafy.TmT.dto.budget.ExpenseResponse;
 import com.ssafy.TmT.dto.budget.GraphResponse;
+import com.ssafy.TmT.dto.budget.UpdateBudgetRequest;
 import com.ssafy.TmT.dto.budget.UpdateBudgetTransactionsDTO;
 import com.ssafy.TmT.dto.budget.WeekExpenseDTO;
 import com.ssafy.TmT.dto.transaction.BudgetTransactionDTO;
@@ -279,5 +280,16 @@ public class BudgetService {
 				threeMonthBeforeRate, fourMonthBeforeRate, fiveMonthBeforeRate);
 
 		return response;
+	}
+
+	@Transactional
+	public void modifyBudget(UpdateBudgetRequest request) {
+		Long memberId = SecurityUtil.getAuthenticatedMemberId();
+		Long budgetId = budgetDao.getCurrentBudgetId(memberId).orElseThrow(() -> new CustomException(ErrorCode.BUDGET_NOT_FOUND));
+		
+		int rowsUpdated = budgetDao.modifyBudget(budgetId, request.getBudgetAmount());
+		if (rowsUpdated == 0) {
+			throw new CustomException(ErrorCode.BUDGET_UPDATE_FAILURE);
+		}
 	}
 }

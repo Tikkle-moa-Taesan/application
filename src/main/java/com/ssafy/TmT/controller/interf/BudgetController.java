@@ -168,4 +168,20 @@ public interface BudgetController {
     })
     ResponseEntity<GraphResponse> findGraphExpense();
     
+    @PutMapping("")
+    @Operation(summary = "카테고리 예산 수정", description = "입력된 요청으로 카테고리 예산을 수정합니다.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "카테고리 예산 수정 성공",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = BudgetCategoryResponse.class))),
+        @ApiResponse(responseCode = "400", description = "잘못된 요청",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = CustomExceptionResponse.class))),
+        @ApiResponse(responseCode = "404", description = "카테고리를 찾을 수 없음",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = CustomExceptionResponse.class))),
+        @ApiResponse(responseCode = "500", description = "서버 오류",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = CustomExceptionResponse.class)))
+    })
+    ResponseEntity<BudgetCategoryResponse> modifyBudget(@RequestBody UpdateBudgetRequest request);
+    
+    
+    
 }

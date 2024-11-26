@@ -12,6 +12,7 @@ import com.ssafy.TmT.dto.budget.BudgetCategoryRequest;
 import com.ssafy.TmT.dto.budget.BudgetCategoryResponse;
 import com.ssafy.TmT.dto.budget.CategoryExpenseDTO;
 import com.ssafy.TmT.dto.budget.CreateBudgetDTO;
+import com.ssafy.TmT.dto.budget.UpdateBudgetRequest;
 import com.ssafy.TmT.dto.budget.UpdateBudgetTransactionsDTO;
 import com.ssafy.TmT.dto.budget.WeekExpenseDTO;
 import com.ssafy.TmT.dto.transaction.BudgetTransactionDTO;
@@ -53,6 +54,8 @@ public interface BudgetDao {
 	int modifyCategoryBudget(@Param("memberId") Long memberId, BudgetCategoryRequest request);
 
 	void createBudgetForMonth(CreateBudgetDTO createBudgetDTO);
+
+	int modifyBudget(@Param("budgetId") Long budgetId, @Param("budgetAmount") Long budgetAmount);
 
 //	boolean existsBudgetForMonth(Long memberId, YearMonth yearMonth);
 

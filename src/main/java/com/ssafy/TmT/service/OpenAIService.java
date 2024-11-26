@@ -43,7 +43,7 @@ public class OpenAIService {
 	private final MemberDao memberDao;
 	private final BudgetService budgetService;
 	private final OpenAIUtil openAIUtil;
-	private final int maxTokens = 10000; // OpenAI 모델 최대 토큰 수
+//	private final int maxTokens = 10000; // OpenAI 모델 최대 토큰 수
 
 	
 	public AITextResponse getAdvice() {
@@ -56,79 +56,67 @@ public class OpenAIService {
 	    }
 
 	    // 데이터를 분할하여 처리
-	    List<String> jsonChunks = splitJsonIntoChunks(jsonData);
-	    StringBuilder combinedResponse = new StringBuilder();
+//	    List<String> jsonChunks = splitJsonIntoChunks(jsonData);
+//	    StringBuilder combinedResponse = new StringBuilder();
 
-	    for (int i = 0; i < jsonChunks.size(); i++) {
-	        log.info("Sending chunk {}/{} to OpenAI", i + 1, jsonChunks.size());
-	        String prompt = buildAdvicePrompt(jsonChunks.get(i));
-	        AITextResponse partialResponse = generateResponse(prompt);
-
-	        combinedResponse.append(partialResponse.getText());
-	        combinedResponse.append("\n\n"); // 응답 구분을 위한 추가
-	    }
+	    String promt = buildAdvicePrompt(jsonData);
+//	    for (int i = 0; i < jsonChunks.size(); i++) {
+//	        log.info("Sending chunk {}/{} to OpenAI", i + 1, jsonChunks.size());
+//	        String prompt = buildAdvicePrompt(jsonChunks.get(i));
+//	        AITextResponse partialResponse = generateResponse(prompt);
+//
+//	        combinedResponse.append(partialResponse.getText());
+//	        combinedResponse.append("\n\n"); // 응답 구분을 위한 추가
+//	    }
 
 	    // 최종 응답 생성
-	    return new AITextResponse(combinedResponse.toString().trim());
+//	    return new AITextResponse(combinedResponse.toString().trim());
+	    return generateResponse(promt);
 	}
 	
-	private List<String> splitJsonIntoChunks(String jsonData) {
-	    int maxTokensPerChunk = maxTokens - 1000; // 안전 범위를 두고 설정
-	    Map<String, Object> dataMap = convertJsonToMap(jsonData);
-	    List<Map<String, Object>> transactions = (List<Map<String, Object>>) dataMap.get("transactions");
-
-	    if (transactions == null || transactions.isEmpty()) {
-	        return List.of(jsonData); // 분할할 필요가 없는 경우
-	    }
-
-	    List<String> chunks = new ArrayList<>();
-	    int startIndex = 0;
-
-	    while (startIndex < transactions.size()) {
-	        // 일정 개수의 트랜잭션을 포함한 JSON 조각 생성
-	        int endIndex = Math.min(startIndex + calculateChunkSize(transactions, maxTokensPerChunk), transactions.size());
-	        List<Map<String, Object>> subList = transactions.subList(startIndex, endIndex);
-
-	        // JSON 조각 생성
-	        dataMap.put("transactions", subList);
-	        String chunkJson = convertToJson(dataMap);
-	        chunks.add(chunkJson);
-
-	        startIndex = endIndex;
-	    }
-
-	    return chunks;
-	}
-	
-	private int calculateChunkSize(List<Map<String, Object>> transactions, int maxTokensPerChunk) {
-	    int estimatedTokensPerTransaction = 50; // 트랜잭션당 평균 토큰 수 추정
-	    return maxTokensPerChunk / estimatedTokensPerTransaction;
-	}
-	private String convertToJson(Object object) {
-	    ObjectMapper objectMapper = new ObjectMapper();
-	    try {
-	        return objectMapper.writeValueAsString(object);
-	    } catch (JsonProcessingException e) {
-	        log.error("Failed to convert object to JSON", e);
-	        throw new CustomException(ErrorCode.JSON_PARSING_FAILED);
-	    }
-	}
-	
-	
-//	public AITextResponse getAdvice() {
-//		log.info("서비스 : 전체 조언 받기");
-//		Long memberId = SecurityUtil.getAuthenticatedMemberId();
-//		String jsonData = memberDao.getAllData(memberId);
-//		
-//		if (jsonData == null) {
-//			throw new CustomException(ErrorCode.MEMBER_DATA_FETCH_FAILED);
-//		}
-//		
-//		String prompt = buildAdvicePrompt(jsonData);
-//		System.out.println("getAdvice 서비스 프롬프트 : " + prompt);
-//		return generateResponse(prompt);
+//	private List<String> splitJsonIntoChunks(String jsonData) {
+//	    int maxTokensPerChunk = maxTokens - 1000; // 안전 범위를 두고 설정
+//	    Map<String, Object> dataMap = convertJsonToMap(jsonData);
+//	    List<Map<String, Object>> transactions = (List<Map<String, Object>>) dataMap.get("transactions");
+//
+//	    if (transactions == null || transactions.isEmpty()) {
+//	        return List.of(jsonData); // 분할할 필요가 없는 경우
+//	    }
+//
+//	    List<String> chunks = new ArrayList<>();
+//	    int startIndex = 0;
+//
+//	    while (startIndex < transactions.size()) {
+//	        // 일정 개수의 트랜잭션을 포함한 JSON 조각 생성
+//	        int endIndex = Math.min(startIndex + calculateChunkSize(transactions, maxTokensPerChunk), transactions.size());
+//	        List<Map<String, Object>> subList = transactions.subList(startIndex, endIndex);
+//
+//	        // JSON 조각 생성
+//	        dataMap.put("transactions", subList);
+//	        String chunkJson = convertToJson(dataMap);
+//	        chunks.add(chunkJson);
+//
+//	        startIndex = endIndex;
+//	    }
+//
+//	    return chunks;
 //	}
-
+	
+//	private int calculateChunkSize(List<Map<String, Object>> transactions, int maxTokensPerChunk) {
+//	    int estimatedTokensPerTransaction = 50; // 트랜잭션당 평균 토큰 수 추정
+//	    return maxTokensPerChunk / estimatedTokensPerTransaction;
+//	}
+//	private String convertToJson(Object object) {
+//	    ObjectMapper objectMapper = new ObjectMapper();
+//	    try {
+//	        return objectMapper.writeValueAsString(object);
+//	    } catch (JsonProcessingException e) {
+//	        log.error("Failed to convert object to JSON", e);
+//	        throw new CustomException(ErrorCode.JSON_PARSING_FAILED);
+//	    }
+//	}
+	
+	
 	// preview
 	public AITextResponse showPreview() {
 		ExpenseResponse data = budgetService.calculateExpenseAndBudget();
@@ -170,9 +158,9 @@ public class OpenAIService {
 	    StringBuilder prompt = new StringBuilder();
 
 	    // OpenAI에게 JSON 데이터를 분석하도록 요청
-	    prompt.append("다음은 사용자의 최근 6개월 데이터를 JSON 형식으로 제공합니다.\n");
+	    prompt.append("다음은 사용자의 이번 달 데이터를 JSON 형식으로 제공합니다.\n");
 	    prompt.append("이 데이터를 분석하여 아래와 같은 형식으로 결과를 작성하세요.\n\n");
-	    prompt.append("1. 최근 6개월간 가장 지출이 큰 카테고리: [카테고리 이름]\n");
+	    prompt.append("1. 이번 달 가장 지출이 큰 카테고리: [카테고리 이름]\n");
 	    prompt.append("2. 가장 지출이 큰 거래내역: [거래 이름] - [금액] ([거래 일자 및 시간])\n");
 	    prompt.append("3. 가장 돈을 많이 쓴 달: [달 이름]\n");
 	    prompt.append("4. 거래 내역 분석 및 조언:\n");
@@ -186,73 +174,6 @@ public class OpenAIService {
 	    log.info("Generated Prompt for OpenAI: {}", prompt.toString());
 	    return prompt.toString();
 	}
-//	private String buildAdvicePrompt(Map<String, Object> dataMap) {
-//		StringBuilder prompt = new StringBuilder();
-//		
-//		// 데이터를 추출
-//		List<Map<String, Object>> transactions = (List<Map<String, Object>>) dataMap.get("transactions");
-//		
-//		// 회원 정보
-//		prompt.append("사용자의 최근 6개월 데이터를 분석한 결과입니다.\n\n");
-//		
-//		// 1. 최근 6개월간 가장 지출이 큰 카테고리
-//		Map<String, Integer> categoryExpenses = new HashMap<>();
-//		if (transactions != null) {
-//			for (Map<String, Object> transaction : transactions) {
-//				String categoryName = (String) transaction.get("categoryName");
-//				Integer amount = (Integer) transaction.get("amount");
-//				if (categoryName != null && amount != null) {
-//					categoryExpenses.merge(categoryName, amount, Integer::sum);
-//				}
-//			}
-//		}
-//		String mostSpentCategory = categoryExpenses.entrySet().stream()
-//				.max(Map.Entry.comparingByValue())
-//				.map(Map.Entry::getKey)
-//				.orElse("데이터 없음");
-//		prompt.append(String.format("1. 최근 6개월간 가장 지출이 큰 카테고리: %s\n", mostSpentCategory));
-//		
-//		// 2. 최근 6개월간 가장 지출이 큰 거래내역
-//		Map<String, Object> highestTransaction = transactions != null ? transactions.stream()
-//				.max(Comparator.comparing(t -> (Integer) t.get("amount")))
-//				.orElse(null) : null;
-//		if (highestTransaction != null) {
-//			prompt.append(String.format("2. 가장 지출이 큰 거래내역: %s - %d원 (%s)\n",
-//					highestTransaction.get("merchantName"),
-//					highestTransaction.get("amount"),
-//					highestTransaction.get("transactionDateTime")));
-//		} else {
-//			prompt.append("2. 가장 지출이 큰 거래내역: 데이터 없음\n");
-//		}
-//		
-//		// 3. 최근 6개월간 가장 돈을 많이 쓴 달
-//		Map<String, Long> monthlyExpenses = new HashMap<>();
-//		if (transactions != null) {
-//			for (Map<String, Object> transaction : transactions) {
-//				String transactionDateTime = (String) transaction.get("transactionDateTime");
-//				Integer amount = (Integer) transaction.get("amount");
-//				if (transactionDateTime != null && amount != null) {
-//					String month = transactionDateTime.substring(0, 7); // YYYY-MM 형태 추출
-//					monthlyExpenses.merge(month, amount.longValue(), Long::sum);
-//				}
-//			}
-//		}
-//		String mostSpentMonth = monthlyExpenses.entrySet().stream()
-//				.max(Map.Entry.comparingByValue())
-//				.map(Map.Entry::getKey)
-//				.orElse("데이터 없음");
-//		prompt.append(String.format("3. 가장 돈을 많이 쓴 달: %s\n", mostSpentMonth));
-//		
-//		// 4. 거래 내역 분석을 통한 조언
-//		prompt.append("4. 거래 내역 분석 및 조언:\n");
-//		prompt.append("   - 예산 설정 조정: 가장 지출이 큰 카테고리와 거래를 기반으로 월별 예산을 재조정하세요.\n");
-//		prompt.append("   - 지난달 대비 지출 변화율을 점검하고, 필요 시 지출 상한선을 설정하세요.\n");
-//		prompt.append("   - 가장 지출이 큰 달의 패턴을 확인하고, 불필요한 지출을 줄일 방법을 고민하세요.\n");
-//		
-//		// 로그로 출력
-//		log.info("Generated Prompt: {}", prompt.toString());
-//		return prompt.toString();
-//	}
 
 	private String buildPreviewPrompt(ExpenseResponse data) {
 		StringBuilder prompt = new StringBuilder();

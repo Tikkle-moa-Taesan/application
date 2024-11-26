@@ -86,65 +86,6 @@ public class MockDataService {
 		return account;
 	}
 
-//	private void createTransactions(List<Account> accounts) {
-//		List<Transaction> transactions = new ArrayList<>();
-//		Random random = new Random();
-//	    for (Account account : accounts) {
-//            long currentBalance = account.getBalance(); // 계좌별 초기 잔액
-//            List<Transaction> accountTransactions = new ArrayList<>();
-//            
-//            // 거래 데이터를 시간 순서대로 생성
-//            for (int i = 0; i < 30; i++) {
-//                LocalDateTime transactionDate = generateSequentialDate(i,6); // i번째 거래의 시간 생성
-//                Transaction transaction = createTransaction(account, transactionDate, currentBalance, random);
-//
-//                // 거래 내역의 balanceAfter 업데이트
-//                currentBalance = transaction.getBalanceAfter();
-//                accountTransactions.add(transaction);
-//            }
-//            // 계좌의 최종 거래 내역을 추가
-//            transactions.addAll(accountTransactions);
-//
-//            // 최종 계좌 잔액 업데이트
-//            account.setBalance(currentBalance);
-//            accountDao.updateBalance(account);
-//        }
-//
-//        // 모든 거래 데이터를 DB에 삽입
-//        int result = transactionDao.insertTransactions(transactions);
-//        if (result == 0)
-//            throw new CustomException(ErrorCode.TRANSACTION_CREATE_FAIL);
-//    }
-	
-//	private void createTransactions(List<Account> accounts) {
-//	    List<Transaction> transactions = new ArrayList<>();
-//	    Random random = new Random();
-//
-//	    for (Account account : accounts) {
-//	        long currentBalance = account.getBalance(); // 계좌별 초기 잔액
-//	        List<Transaction> accountTransactions = new ArrayList<>();
-//
-//	        // 최근 6개월 동안 계좌당 100개의 거래 생성
-//	        for (int i = 0; i < 50; i++) {
-//	            LocalDateTime transactionDate = generateSequentialDate(i, 6); // i번째 거래의 시간 생성
-//	            Transaction transaction = createTransaction(account, transactionDate, currentBalance, random);
-//
-//	            // 거래 내역의 balanceAfter 업데이트
-//	            currentBalance = transaction.getBalanceAfter();
-//	            accountTransactions.add(transaction);
-//	        }
-//	        // 계좌별 생성된 거래를 전체 목록에 추가
-//	        transactions.addAll(accountTransactions);
-//
-//	        // 최종 계좌 잔액 업데이트
-//	        account.setBalance(currentBalance);
-//	        accountDao.updateBalance(account);
-//	    }
-//
-//	    // 모든 거래 데이터를 DB에 삽입
-//	    int result = transactionDao.insertTransactions(transactions);
-//	    if (result == 0) throw new CustomException(ErrorCode.TRANSACTION_CREATE_FAIL);
-//	}
 	
 	private void createTransactions(List<Account> accounts) {
 	    List<Transaction> transactions = new ArrayList<>();
@@ -154,8 +95,8 @@ public class MockDataService {
 	        long currentBalance = account.getBalance(); // 계좌별 초기 잔액
 	        List<Transaction> accountTransactions = new ArrayList<>();
 
-	        // 거래 데이터를 무작위로 100개의 시간에 배치
-	        List<LocalDateTime> randomDates = generateRandomDatesWithinRange(100, random);
+	        // 거래 데이터를 무작위로 70개의 시간에 배치
+	        List<LocalDateTime> randomDates = generateRandomDatesWithinRange(70, random);
 
 	        for (LocalDateTime transactionDate : randomDates) {
 	            Transaction transaction = createTransaction(account, transactionDate, currentBalance, random);

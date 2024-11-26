@@ -102,7 +102,7 @@
 		LEFT JOIN Category c ON bt.category_code = c.category_code
 		WHERE b.member_id = #{memberId}
 		AND is_active = TRUE
-		AND (bt.transaction_datetime >= DATE_SUB(CURRENT_DATE, INTERVAL 6 MONTH)
+		AND (bt.transaction_datetime >= DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH)
 		OR bt.transaction_datetime IS NULL)
 		GROUP BY b.member_id
 		)
