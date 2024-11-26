@@ -21,6 +21,8 @@ import com.ssafy.TmT.dto.account.SavingsAccountResponse;
 import com.ssafy.TmT.dto.search.SearchCondition;
 import com.ssafy.TmT.dto.search.SearchRequest;
 import com.ssafy.TmT.dto.transaction.TransactionDTO;
+import com.ssafy.TmT.exception.CustomException;
+import com.ssafy.TmT.exception.ErrorCode;
 import com.ssafy.TmT.util.JwtUtil;
 import com.ssafy.TmT.util.SecurityUtil;
 
@@ -85,6 +87,9 @@ public class AccountService {
 	    // 적금 계좌 정보 조회
 	    SavingsAccountDetailDTO savingsAccountDto = accountDao.findSavingsAccountByAccountId(accountId);
 
+	    if (savingsAccountDto == null) throw new CustomException(ErrorCode.ACCOUNT_NOT_FOUND);
+
+	    
 	    // 조건에 맞는 거래내역 조회
 	    List<TransactionDTO> transactions = transactionDao.findTransactionsByAccountId(searchCondition);
 
@@ -120,6 +125,8 @@ public class AccountService {
 	    // 자유 입출금 계좌 정보 조회
 	    FreeAccountDetailDTO freeAccountDto = accountDao.findFreeAccountByAccountId(accountId);
 
+	    if (freeAccountDto == null) throw new CustomException(ErrorCode.ACCOUNT_NOT_FOUND);
+	    
 	    // 조건에 맞는 거래내역 조회
 	    List<TransactionDTO> transactions = transactionDao.findTransactionsByAccountId(searchCondition);
 
