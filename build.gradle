@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.ssafy'
-version = '0.5.7-SNAPSHOT'
+version = '0.5.9-SNAPSHOT'
 
 java {
 	toolchain {

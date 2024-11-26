@@ -33,6 +33,8 @@ public class MemberControllerImpl implements MemberController {
 	@Override
 	public ResponseEntity<String> modifyBudgetTransaction(@PathVariable Long budgetTransactionId, @RequestBody ModifyBudgetTransactionRequest request) {
 		log.info("컨트롤러 : 가계부 내역 수정");
+		System.out.println("컨트롤러 : " + budgetTransactionId);
+		System.out.println("컨트롤러 : " + request);
 		memberService.modifyBudgetTransaction(budgetTransactionId, request);
 		return ResponseEntity.ok("가계부 내역이 성공적으로 수정되었습니다");
 	}

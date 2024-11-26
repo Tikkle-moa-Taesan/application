@@ -54,6 +54,8 @@ public class MemberService {
 
 	@Transactional
 	public void modifyBudgetTransaction(Long budgetTransactionId, ModifyBudgetTransactionRequest request) {
+	System.out.println(request);
+		
 		int result = memberDao.modifyBudgetTransaction(budgetTransactionId, request);
 		if (result == 0) throw new CustomException(ErrorCode.BUDGET_TRANSACTION_MODIFY_FAILED);
 		return;
