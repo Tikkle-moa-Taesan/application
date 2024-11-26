@@ -375,31 +375,77 @@ public class OpenAIService {
 		return prompt.toString();
 	}
 
+
 	private String formatResponse(String content) {
-		// OpenAI 응답 메시지를 정형화된 형식으로 변환
-		StringBuilder formatted = new StringBuilder();
+	    // OpenAI 응답 메시지를 정형화된 형식으로 변환
+	    StringBuilder formatted = new StringBuilder();
+	    boolean isListStarted = false;
 
-		// 줄바꿈 제거 및 각 문장 정리
-		String[] lines = content.split("\\n");
-		for (String line : lines) {
-			line = line.trim(); // 앞뒤 공백 제거
-			if (!line.isEmpty()) {
-				if (line.startsWith("-") || line.startsWith("*")) {
-					// 항목 형태일 경우
-					formatted.append("<li>").append(line.substring(1).trim()).append("</li>\n");
-				} else if (line.matches("\\d+\\..*")) {
-					// 번호로 시작하는 경우 (1. 항목 형태)
-					formatted.append("<h3>").append(line).append("</h3>\n");
-				} else {
-					// 일반 텍스트
-					formatted.append("<p>").append(line).append("</p>\n");
-				}
-			}
-		}
+	    // 줄바꿈 제거 및 각 문장 정리
+	    String[] lines = content.split("\\n");
+	    for (String line : lines) {
+	        line = line.trim(); // 앞뒤 공백 제거
+	        if (!line.isEmpty()) {
+	            if (line.startsWith("-") || line.startsWith("*")) {
+	                // 리스트 항목 시작
+	                if (!isListStarted) {
+	                    formatted.append("<ul>\n"); // <ul> 시작
+	                    isListStarted = true;
+	                }
+	                formatted.append("<li>").append(line.substring(1).trim()).append("</li>\n");
+	            } else {
+	                // 리스트 종료
+	                if (isListStarted) {
+	                    formatted.append("</ul>\n"); // <ul> 종료
+	                    isListStarted = false;
+	                }
 
-		// HTML 스타일로 반환
-		return "<div class='ai-response'>\n" + formatted.toString() + "</div>";
+	                if (line.matches("\\d+\\..*")) {
+	                    // 번호로 시작하는 경우 (1. 항목 형태)
+	                    formatted.append("<h3>").append(line).append("</h3>\n");
+	                } else {
+	                    // 일반 텍스트
+	                    formatted.append("<p>").append(line).append("</p>\n");
+	                }
+	            }
+	        }
+	    }
+
+	    // 남아있는 <ul> 태그 닫기
+	    if (isListStarted) {
+	        formatted.append("</ul>\n");
+	    }
+
+	    // HTML 스타일로 반환
+	    return "<div class='ai-response'>\n" + formatted.toString() + "</div>";
 	}
+
+	
+	//	private String formatResponse(String content) {
+//		// OpenAI 응답 메시지를 정형화된 형식으로 변환
+//		StringBuilder formatted = new StringBuilder();
+//
+//		// 줄바꿈 제거 및 각 문장 정리
+//		String[] lines = content.split("\\n");
+//		for (String line : lines) {
+//			line = line.trim(); // 앞뒤 공백 제거
+//			if (!line.isEmpty()) {
+//				if (line.startsWith("-") || line.startsWith("*")) {
+//					// 항목 형태일 경우
+//					formatted.append("<li>").append(line.substring(1).trim()).append("</li>\n");
+//				} else if (line.matches("\\d+\\..*")) {
+//					// 번호로 시작하는 경우 (1. 항목 형태)
+//					formatted.append("<h3>").append(line).append("</h3>\n");
+//				} else {
+//					// 일반 텍스트
+//					formatted.append("<p>").append(line).append("</p>\n");
+//				}
+//			}
+//		}
+//
+//		// HTML 스타일로 반환
+//		return "<div class='ai-response'>\n" + formatted.toString() + "</div>";
+//	}
 	
 	public Map<String, Object> convertJsonToMap(String jsonData) {
 	    ObjectMapper objectMapper = new ObjectMapper();
