@@ -69,6 +69,7 @@ public class AccountService {
 	    searchCondition.setAccountId(accountId);
 	    searchCondition.setOffset(page * searchCondition.getSize());
 	    searchCondition.setTransactionType(request.getTransactionType());
+	    searchCondition.setPeriod(request.getPeriod());
 	    
 	    // 시작 날짜 계산
 	    LocalDateTime now = LocalDateTime.now();
@@ -76,7 +77,7 @@ public class AccountService {
 
 	    if (request.getPeriod() == 3) {
 	        startDate = now.minusMonths(2).withDayOfMonth(1); // 최근 3개월
-	    } else if (searchCondition.getPeriod() == 6) {
+	    } else if (request.getPeriod() == 6) {
 	        startDate = now.minusMonths(5).withDayOfMonth(1); // 최근 6개월
 	    } else {
 	        startDate = now.withDayOfMonth(1); // 이번 달
@@ -98,23 +99,30 @@ public class AccountService {
 	}
 
 	public FreeAccountDetailResponse findFreeAccountDetail(Long accountId, int page, SearchRequest request) {
-	    if (request == null) {
+
+		System.out.println(request);
+		if (request == null) {
 	    	request = new SearchRequest(); // 기본값 설정
 	    }
 
+		System.out.println(request.getPeriod());
 	    SearchCondition searchCondition = new SearchCondition();
 	    // SearchCondition에 기본 필드 설정
 	    searchCondition.setAccountId(accountId);
 	    searchCondition.setOffset(page * searchCondition.getSize());
 	    searchCondition.setTransactionType(request.getTransactionType());
+	    searchCondition.setPeriod(request.getPeriod());
 	    
 	    // 시작 날짜 계산
 	    LocalDateTime now = LocalDateTime.now();
 	    LocalDateTime startDate;
 
 	    if (request.getPeriod() == 3) {
+	    	System.out.println("3개월입니다");
+	    	
 	        startDate = now.minusMonths(2).withDayOfMonth(1); // 최근 3개월
-	    } else if (searchCondition.getPeriod() == 6) {
+	    } else if (request.getPeriod() == 6) {
+	    	System.out.println("6개월입니다");
 	        startDate = now.minusMonths(5).withDayOfMonth(1); // 최근 6개월
 	    } else {
 	        startDate = now.withDayOfMonth(1); // 이번 달
