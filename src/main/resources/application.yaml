@@ -15,15 +15,15 @@ spring:
       client:
         registration:
           kakao:
-#            redirect-uri: "http://localhost:5173/login/kakao/code"
-            redirect-uri: "https://www.teemobudget.site/login/kakao/code"
+            redirect-uri: "http://localhost:5173/login/kakao/code"
+#            redirect-uri: "https://www.teemobudget.site/login/kakao/code"
             authorization-grant-type: authorization_code
             scope: 
             client-name: Kakao
             provider: kakao
           google:
-#            redirect-uri: "http://localhost:5173/login/google/code"
-            redirect-uri: "https://www.teemobudget.site/login/google/code"
+            redirect-uri: "http://localhost:5173/login/google/code"
+#            redirect-uri: "https://www.teemobudget.site/login/google/code"
             authorization-grant-type: authorization_code
             client-name: Google
             provider: google

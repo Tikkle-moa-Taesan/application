@@ -12,13 +12,10 @@ import com.ssafy.TmT.entity.Account;
 
 public interface AccountDao {
 
-	// 1번 api. 자유 계좌 조회
 	List<FreeAccountResponse> findFreeAccounts(Long MemberId);
 
-	// 2번 api. 적금 계좌 조회
 	List<SavingsAccountResponse> findSavingsAccounts(Long MemberId);
 
-	// 3번 api. 총 자산 조회
 	BalanceResponse getTotalBalance(Long MemberId);
 
 	FreeAccountDetailDTO findFreeAccountByAccountId(Long accountId);
@@ -30,9 +27,5 @@ public interface AccountDao {
 	int insertAccounts(List<Account> accounts);
 	
 	int updateBalance(Account account);
-	
-//	List<AccountDTO> findAccountsBySearchCondition(SearchCondition searchCondition);
-
-//	Long findMemberIdByAccountId(Long accountId);
 	
 }
