@@ -107,10 +107,10 @@ public class BudgetControllerImpl implements BudgetController{
 	}
 
 	@Override
-	public ResponseEntity<BudgetCategoryResponse> modifyBudget(UpdateBudgetRequest request) {
+	public ResponseEntity<String> modifyBudget(UpdateBudgetRequest request) {
 		log.info("컨트롤러 : 이번달 예산 수정");
 		budgetService.modifyBudget(request);
-		return null;
+		return ResponseEntity.ok("수정 완료되었습니다");
 	}
 	
 	
