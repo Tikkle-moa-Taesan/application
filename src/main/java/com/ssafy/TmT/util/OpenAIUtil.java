@@ -39,7 +39,7 @@ public class OpenAIUtil {
             Map.of("role", "system", "content", "다음은 사용자의 예산 및 지출 데이터입니다. 이에 기반해 조언을 제공하세요."),
             Map.of("role", "user", "content", jsonData)
         ));
-        requestBody.put("max_completion_tokens", 500);
+        requestBody.put("max_completion_tokens", 2000);
         requestBody.put("temperature", 0.7);
         requestBody.put("n", 1);
 

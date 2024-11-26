@@ -48,7 +48,6 @@ public class OAuthProvider {
     @Value("${spring.security.oauth2.client.provider.kakao.authorization-uri}")
     private String kakaoAuthorizationUri;
 
-
     @Value("${spring.security.oauth2.client.registration.google.client-id}")
     private String googleClientId;
 
@@ -94,16 +93,16 @@ public class OAuthProvider {
         return response.get("id_token");
     }
 
-    // Google 로그인 URL 생성
-    public String generateGoogleLoginUrl(String state) {
-        return UriComponentsBuilder.fromHttpUrl("https://accounts.google.com/o/oauth2/v2/auth")
-            .queryParam("client_id", googleClientId)
-            .queryParam("redirect_uri", googleRedirectUri)
-            .queryParam("response_type", "code")
-            .queryParam("scope", "openid email profile")
-            .queryParam("state", state)
-            .toUriString();
-    }
+//    // Google 로그인 URL 생성
+//    public String generateGoogleLoginUrl(String state) {
+//        return UriComponentsBuilder.fromHttpUrl("https://accounts.google.com/o/oauth2/v2/auth")
+//            .queryParam("client_id", googleClientId)
+//            .queryParam("redirect_uri", googleRedirectUri)
+//            .queryParam("response_type", "code")
+//            .queryParam("scope", "openid email profile")
+//            .queryParam("state", state)
+//            .toUriString();
+//    }
     
     // **ID Token 디코딩: Kakao**
     public KakaoIdTokenPayload decodeKakaoIdToken(String idToken) {
@@ -165,7 +164,6 @@ public class OAuthProvider {
     	headers.set("Accept", "application/json");
     	
     	log.info("Authorization URL: {}", authorizationUrl); // 요청 URL 확인
-//    	 ResponseEntity<String> response = apiUtil.sendGetRequest(authorizationUrl, headers, String.class);
     	
         return apiUtil.sendGetRequest(authorizationUrl,headers, String.class).getBody();
     }

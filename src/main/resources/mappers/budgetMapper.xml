@@ -50,47 +50,43 @@
 
 
 	<!-- BudgetTransaction 업데이트 -->
-	<insert id="updateBudgetTransaction"
-		parameterType="UpdateBudgetTransactionsDTO">
-		INSERT INTO BudgetTransaction (
-		budget_id,
-		transaction_id,
-		account_id,
-		category_code,
-		transaction_datetime,
-		amount,
-		merchant_name,
-		transaction_type
-		)
-		SELECT
-		#{budgetId} AS budget_id,
-		t.transaction_id,
-		t.account_id,
-		t.category_code,
-		t.transaction_datetime,
-		t.amount,
-		t.merchant_name,
-		t.transaction_type
-		FROM
-		Transaction t
-		WHERE
-		t.account_id IN (
-		SELECT account_id
-		FROM Account
-		WHERE member_id =
-		#{memberId}
-		)
-		AND t.transaction_datetime BETWEEN
-		DATE_FORMAT(DATE_SUB(CURRENT_DATE, INTERVAL 6 MONTH), '%Y-%m-01')
-		AND CURRENT_DATE
-		AND t.transaction_id NOT IN (
-		SELECT
-		transaction_id
-		FROM
-		BudgetTransaction
-		WHERE budget_id = #{budgetId}
-		);
-	</insert>
+<insert id="updateBudgetTransaction" parameterType="UpdateBudgetTransactionsDTO">
+    INSERT INTO BudgetTransaction (
+        budget_id,
+        transaction_id,
+        account_id,
+        category_code,
+        transaction_datetime,
+        amount,
+        merchant_name,
+        transaction_type
+    )
+    SELECT
+        #{budgetId} AS budget_id,
+        t.transaction_id,
+        t.account_id,
+        t.category_code,
+        t.transaction_datetime,
+        t.amount,
+        t.merchant_name,
+        t.transaction_type
+    FROM
+        Transaction t
+    WHERE
+        t.account_id IN (
+            SELECT account_id
+            FROM Account
+            WHERE member_id = #{memberId}
+        )
+        AND t.transaction_datetime BETWEEN
+            DATE_FORMAT(#{createdMonth}, '%Y-%m-01') AND
+            LAST_DAY(#{createdMonth})
+        AND t.transaction_id NOT IN (
+            SELECT transaction_id
+            FROM BudgetTransaction
+            WHERE budget_id = #{budgetId}
+        );
+</insert>
 
 
 	<select id="getCurrentBudgetId" parameterType="long"

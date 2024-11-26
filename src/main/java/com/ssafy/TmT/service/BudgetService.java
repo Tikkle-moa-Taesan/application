@@ -149,21 +149,26 @@ public class BudgetService {
 //	}
 
 	@Transactional
-	public void updateBudgetTransactions() { // 여기서 최근 6개월간..
-		Long memberId = getAuthenticatedMemberId();
+	public void updateBudgetTransactions() {
+	    Long memberId = getAuthenticatedMemberId();
 
-		// 1. 최근 6개월의 Budget 데이터 생성
-		for (int i = 0; i < 6; i++) {
-			 final int monthOffset = i; // effectively final 변수로 할당
-			// 해당 월의 Budget ID 조회 또는 생성
-			Long budgetId = budgetDao.getPreviousBudgetId(memberId, monthOffset)
-					.orElseGet(() -> createBudgetForMonth(memberId, monthOffset));
+	    // 최근 6개월 동안의 Budget 데이터 생성 및 BudgetTransaction 업데이트
+	    for (int i = 0; i < 6; i++) {
+	        final int monthOffset = i;
 
-			// BudgetTransaction 업데이트
-			UpdateBudgetTransactionsDTO updateBudgetTransactionsDTO = new UpdateBudgetTransactionsDTO(memberId,
-					budgetId);
-			budgetDao.updateBudgetTransaction(updateBudgetTransactionsDTO);
-		}
+	        // 해당 월의 Budget ID 조회 또는 생성
+	        Long budgetId = budgetDao.getPreviousBudgetId(memberId, monthOffset)
+	                .orElseGet(() -> createBudgetForMonth(memberId, monthOffset));
+
+	        // 해당 월의 시작 날짜 계산
+	        LocalDate createdMonth = LocalDate.now().minusMonths(monthOffset).withDayOfMonth(1);
+
+	        // BudgetTransaction 업데이트
+	        UpdateBudgetTransactionsDTO updateBudgetTransactionsDTO = new UpdateBudgetTransactionsDTO(
+	            memberId, budgetId, createdMonth
+	        );
+	        budgetDao.updateBudgetTransaction(updateBudgetTransactionsDTO);
+	    }
 	}
 
 	private Long createBudgetForMonth(Long memberId, int monthsAgo) {

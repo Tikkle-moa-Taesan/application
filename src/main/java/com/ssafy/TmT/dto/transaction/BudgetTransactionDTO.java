@@ -23,9 +23,6 @@ public class BudgetTransactionDTO {
 	// 결제 금액 : 얼마를 결제했는지
 	private Long amount;
 	
-	// 잔액	: 얼마가 남았는지
-//	private Long balanceAfter;
-	
 	// 거래명	: 거래 내역 이름
 	private String merchantName;
 	
@@ -36,6 +33,6 @@ public class BudgetTransactionDTO {
 	private String accountName;
 	
 	// 연결되어있는 태그
-	private List<Tag> tags;
+//	private List<Tag> tags;
 
 }

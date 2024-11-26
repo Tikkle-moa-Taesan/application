@@ -4,7 +4,6 @@ package com.ssafy.TmT.dao;
 import org.apache.ibatis.annotations.Param;
 
 import com.ssafy.TmT.dto.member.MemberPreviewDataDTO;
-import com.ssafy.TmT.dto.member.MemberTotalDataDTO;
 import com.ssafy.TmT.dto.member.ModifyBudgetTransactionRequest;
 import com.ssafy.TmT.dto.oauth.LoginDTO;
 import com.ssafy.TmT.dto.oauth.Profile;
@@ -17,7 +16,7 @@ public interface MemberDao {
 
 	Profile getProfile(Long memberId);
 
-	MemberTotalDataDTO getAllData(Long memberId);
+	String getAllData(Long memberId);
 
 	MemberPreviewDataDTO getPreviewData(Long memberId);
 
